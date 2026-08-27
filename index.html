@@ -1158,30 +1158,17 @@
       color: #f87171;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .main-container {
-        flex-direction: column;
-        height: auto;
-        overflow: visible;
-      }
-      .sidebar {
-        width: 100%;
-        height: 22rem;
-        border-right: none;
-        border-bottom: 1px solid var(--panel-border);
-      }
-      .content-area {
-        padding: 1rem;
-      }
-      .card, .sim-result-card {
-        padding: 1.5rem;
-      }
-      .sim-details-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    /* ==========================================================================
+       Responsive Layout & Mobile Polish
+       ========================================================================== */
+    .header-main-row {
+      display: contents;
     }
-  
+
+    .mobile-sidebar-toggle {
+      display: none;
+    }
+
     .mode-switcher::-webkit-scrollbar {
       display: none;
     }
@@ -1189,13 +1176,216 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    @media (max-width: 860px) {
+      header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.6rem 0.8rem;
+        gap: 0.45rem;
+      }
+      
+      .header-main-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+
+      .logo-text h1 {
+        font-size: 1.05rem;
+      }
+
+      .logo-icon {
+        width: 2.1rem;
+        height: 2.1rem;
+        font-size: 1.05rem;
+        border-radius: 0.6rem;
+      }
+
+      .header-controls {
+        gap: 0.5rem;
+      }
+
+      .github-link-btn {
+        padding: 0.25rem 0.55rem;
+        font-size: 0.75rem;
+      }
+
+      .mode-switcher {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0.2rem;
+        gap: 0.25rem;
+      }
+
+      .mode-btn {
+        padding: 0.35rem 0.7rem;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow-x: hidden;
+      }
+
+      .main-container {
+        flex-direction: column;
+        height: auto;
+        min-height: calc(100vh - 105px);
+        overflow: visible;
+      }
+
+      .mobile-sidebar-toggle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: calc(100% - 1.5rem);
+        margin: 0.75rem auto 0;
+        padding: 0.75rem 1rem;
+        background: var(--panel-bg);
+        border: 1px solid var(--panel-border);
+        border-radius: 0.75rem;
+        color: var(--text-main);
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        transition: var(--transition);
+      }
+
+      .mobile-sidebar-toggle:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        max-height: none;
+        border-right: none;
+        border-bottom: 1px solid var(--panel-border);
+        padding: 0;
+      }
+
+      /* Collapsed sidebar state on mobile */
+      .sidebar.mobile-collapsed .sidebar-header,
+      .sidebar.mobile-collapsed .question-list,
+      .sidebar.mobile-collapsed .nav-footnote {
+        display: none !important;
+      }
+
+      .sidebar-header {
+        padding: 0.85rem 1rem 0.5rem;
+      }
+
+      .question-list {
+        max-height: 18rem;
+        overflow-y: auto;
+      }
+
+      .content-area {
+        padding: 0.85rem 0.65rem 3rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .card {
+        padding: 1.25rem 1rem;
+        border-radius: 1rem;
+        gap: 1.25rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .card-header {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+
+      .question-text {
+        font-size: 1rem;
+        line-height: 1.55;
+      }
+
+      .option-button {
+        padding: 0.8rem 0.85rem;
+        font-size: 0.88rem;
+        gap: 0.5rem;
+      }
+
+      .option-badge {
+        width: 1.55rem;
+        height: 1.55rem;
+        font-size: 0.75rem;
+        flex-shrink: 0;
+      }
+
+      .code-container {
+        font-size: 0.8rem;
+        margin: 0.4rem 0;
+        max-width: 100%;
+        overflow-x: auto;
+      }
+
+      .line-numbers {
+        padding: 0 0.5rem;
+      }
+
+      .code-content {
+        padding-left: 0.6rem;
+      }
+
+      .actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+      }
+
+      .actions .btn {
+        flex: 1 1 calc(50% - 0.5rem);
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .explanation-container {
+        padding: 1rem 0.85rem;
+      }
+
+      .sim-result-card {
+        padding: 1.5rem 1rem;
+        gap: 1.2rem;
+      }
+
+      .grade-circle {
+        width: 7rem;
+        height: 7rem;
+      }
+
+      .grade-val {
+        font-size: 2.2rem;
+      }
+
+      .sim-details-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+      }
+    }
 </style>
 </head>
 <body>
 
   <!-- Header -->
   <header>
-    <div class="logo-container">
+    <div class="header-main-row">
+      <div class="logo-container">
       <div class="logo-icon">C</div>
       <div class="logo-text">
         <h1>so2quiz <span style="font-size: 0.78rem; font-weight: 500; color: var(--text-muted); opacity: 0.75; font-family: var(--font-sans); margin-left: 0.35rem; letter-spacing: 0;">di <a href="https://github.com/Gio0203c" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; transition: var(--transition);" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='inherit'">Gio0203c</a></span></h1>
@@ -1203,6 +1393,8 @@
       </div>
     </div>
     
+    </div>
+
     <!-- Mode Switcher -->
     <div class="mode-switcher">
       <button class="mode-btn active" id="btn-mode-practice" onclick="switchMode('practice')">Esercitazione</button>
@@ -1238,7 +1430,11 @@
   <div class="main-container">
     
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar mobile-collapsed" id="app-sidebar">
+      <button class="mobile-sidebar-toggle" id="mobile-sidebar-btn" onclick="toggleMobileSidebar()">
+        <span id="mobile-sidebar-title">📋 Elenco Domande & Filtri</span>
+        <span id="mobile-sidebar-icon">▾</span>
+      </button>
       <div class="sidebar-header">
         <!-- Stats Container -->
         <div class="stats-container" id="sidebar-stats" style="display: none;">
@@ -1326,6 +1522,18 @@
   <script src="domande_old_type.js"></script>
   
   <script>
+
+    // Mobile Sidebar Toggle
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('app-sidebar');
+      const icon = document.getElementById('mobile-sidebar-icon');
+      if (!sidebar) return;
+      
+      const isCollapsed = sidebar.classList.toggle('mobile-collapsed');
+      if (icon) {
+        icon.textContent = isCollapsed ? '▾' : '▴';
+      }
+    }
     // Load local questions variable
     const localQuestions = typeof QUESTIONS !== 'undefined' ? QUESTIONS : [];
     const oldTypeQuestions = typeof OLD_TYPE_QUESTIONS !== 'undefined' ? OLD_TYPE_QUESTIONS : [];
@@ -2159,6 +2367,20 @@
       renderSidebar();
       renderActiveQuestion();
       updateStats();
+      
+      // On mobile: auto-collapse drawer and scroll smoothly to question card
+      if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById('app-sidebar');
+        if (sidebar && !sidebar.classList.contains('mobile-collapsed')) {
+          sidebar.classList.add('mobile-collapsed');
+          const icon = document.getElementById('mobile-sidebar-icon');
+          if (icon) icon.textContent = '▾';
+        }
+        const card = document.getElementById('quiz-card') || document.getElementById('content-area');
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
     }
 
     // Simple code highlighting parser for C code in questions
@@ -2386,7 +2608,7 @@
 
         function getGuideHtml() {
       return `
-        <div class="card" style="text-align: left; max-width: 52rem; height: 100%; display: flex; flex-direction: column; padding: 2.2rem; gap: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+        <div class="card guide-card" style="text-align: left; max-width: 52rem; height: 100%; display: flex; flex-direction: column; padding: 2.2rem; gap: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
           <div style="border-bottom: 1px solid var(--panel-border); padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
             <div>
               <h2 style="font-size: 1.8rem; font-weight: 800; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Guida di Studio & Cheatsheet</h2>
