@@ -20,8 +20,7 @@ Non serve installare nulla:
 1. Clona o scarica la repository.
 2. Fai doppio click su **`index.html`** per aprirlo direttamente nel tuo browser preferito (Chrome, Firefox, Safari, Edge).
 
-Oppure provalo online tramite **GitHub Pages**:
-🔗 **[Live Demo](https://gio0203c.github.io/so2quiz/)**
+Oppure provalo online tramite **GitHub Pages** cliccando **[qui](https://gio0203c.github.io/so2quiz/)**!
 
 ---
 
