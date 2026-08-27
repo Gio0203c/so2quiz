@@ -1,0 +1,3373 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>so2quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Dark Theme (Default) Variables */
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0b0f19 0%, #111827 100%);
+      --panel-bg: rgba(17, 24, 39, 0.75);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --primary-glow: rgba(59, 130, 246, 0.15);
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.1);
+      --error: #ef4444;
+      --error-bg: rgba(239, 68, 68, 0.1);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.1);
+      
+      /* Code Editor Variable Themes */
+      --code-bg: #090d16;
+      --code-header-bg: #0f1422;
+      --code-text: #e5e7eb;
+      --c-kw: #f43f5e;
+      --c-type: #38bdf8;
+      --c-str: #34d399;
+      --c-num: #fb7185;
+      --c-comm: #6b7280;
+      --c-pp: #c084fc;
+      
+      --font-sans: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Light Theme Variables (Soft Slate Modern Palette) */
+    [data-theme="light"] {
+      --bg-gradient: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+      --panel-bg: rgba(255, 255, 255, 0.94);
+      --panel-border: rgba(100, 116, 139, 0.18);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-glow: rgba(37, 99, 235, 0.12);
+      --success: #059669;
+      --success-bg: rgba(5, 150, 105, 0.12);
+      --error: #dc2626;
+      --error-bg: rgba(220, 38, 38, 0.12);
+      --warning: #d97706;
+      --warning-bg: rgba(217, 119, 6, 0.12);
+      
+      /* Light Code Editor Colors (High Contrast Soft Slate) */
+      --code-bg: #f1f5f9;
+      --code-header-bg: #e2e8f0;
+      --code-text: #0f172a;
+      --c-kw: #be123c;
+      --c-type: #1d4ed8;
+      --c-str: #15803d;
+      --c-num: #b91c1c;
+      --c-comm: #64748b;
+      --c-pp: #7c3aed;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+    }
+    [data-theme="dark"] ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    /* Layout */
+    header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--panel-border);
+      padding: 0.75rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    [data-theme="dark"] header {
+      background: rgba(11, 15, 25, 0.85);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .logo-text h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Mode Switcher */
+    .mode-switcher {
+      display: flex;
+      flex-wrap: nowrap;
+      background: rgba(0, 0, 0, 0.05);
+      padding: 0.25rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--panel-border);
+      gap: 0.25rem;
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    [data-theme="dark"] .mode-switcher {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .mode-btn {
+      white-space: nowrap;
+      flex-shrink: 0;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.4rem 1rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .mode-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Header controls (right side) */
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.03);
+      padding: 0.6rem 0.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--panel-border);
+      font-size: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    [data-theme="dark"] .stats-container {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .stat-value.success { color: var(--success); }
+    .stat-value.error { color: var(--error); }
+    .stat-value.warning { color: var(--warning); }
+
+    /* Theme Toggle Slider */
+    .theme-switch-container {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(0, 0, 0, 0.03);
+      border: 1px solid var(--panel-border);
+      padding: 0.35rem 0.5rem;
+      border-radius: 2rem;
+      transition: var(--transition);
+    }
+
+    [data-theme="dark"] .theme-switch-container {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .theme-switch-slider {
+      width: 2.6rem;
+      height: 1.3rem;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 1rem;
+      position: relative;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] .theme-switch-slider {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .theme-switch-knob {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: calc(1.3rem - 4px);
+      height: calc(1.3rem - 4px);
+      background-color: var(--primary);
+      border-radius: 50%;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    }
+
+    [data-theme="dark"] .theme-switch-knob {
+      transform: translateX(1.3rem);
+      background-color: var(--primary-hover);
+    }
+
+    .theme-label-icon {
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      opacity: 0.6;
+    }
+
+    .theme-label-icon:hover {
+      color: var(--text-main);
+      opacity: 0.9;
+    }
+
+    .theme-label-icon.active {
+      color: var(--primary);
+      opacity: 1;
+    }
+
+    [data-theme="dark"] .theme-label-icon.active {
+      color: var(--primary-hover);
+    }
+
+    .main-container {
+      flex: 1;
+      display: flex;
+      position: relative;
+      height: calc(100vh - 4.5rem);
+      overflow: hidden;
+    }
+
+    @media (min-width: 769px) {
+      body {
+        height: 100vh;
+        overflow: hidden;
+      }
+      header {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+      }
+      .header-controls {
+        justify-content: flex-end;
+      }
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      background: rgba(255, 255, 255, 0.1);
+      border-right: 1px solid var(--panel-border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      width: 20rem;
+    }
+
+    [data-theme="dark"] .sidebar {
+      background: rgba(11, 15, 25, 0.5);
+    }
+
+    .sidebar-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    /* Custom Checkbox Styles */
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      user-select: none;
+      margin-top: 0.25rem;
+    }
+
+    .checkbox-container input {
+      display: none;
+    }
+
+    .checkbox-custom {
+      width: 1.1rem;
+      height: 1.1rem;
+      border: 1px solid var(--panel-border);
+      border-radius: 0.35rem;
+      background: rgba(0, 0, 0, 0.05);
+      position: relative;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    [data-theme="dark"] .checkbox-custom {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .checkbox-container input:checked + .checkbox-custom {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .checkbox-container input:checked + .checkbox-custom::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 1px;
+      width: 4px;
+      height: 8px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .filter-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    select, .search-input {
+      background: #f3f4f6;
+      border: 1px solid var(--panel-border);
+      color: var(--text-main);
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    [data-theme="dark"] select, [data-theme="dark"] .search-input {
+      background: #1f2937;
+    }
+
+    select:focus, .search-input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Simulation Control Box */
+    .sim-control-box {
+      background: rgba(59, 130, 246, 0.05);
+      border: 1px dashed rgba(59, 130, 246, 0.2);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .sim-timer-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sim-timer {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--warning);
+    }
+
+    .btn-submit-exam {
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      width: 100%;
+    }
+
+    .btn-submit-exam:hover {
+      background: #059669;
+    }
+
+    .question-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .question-item {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-main);
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      gap: 0.75rem;
+      transition: var(--transition);
+      align-items: flex-start;
+      user-select: none;
+    }
+
+    .question-item:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    [data-theme="dark"] .question-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .question-item.active {
+      background: var(--primary-glow);
+      border-color: rgba(59, 130, 246, 0.3);
+      color: var(--primary);
+    }
+
+    [data-theme="dark"] .question-item.active {
+      color: #fff;
+    }
+
+    .q-badge {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      opacity: 0.6;
+      margin-top: 0.1rem;
+    }
+
+    .q-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .q-topic {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .q-preview {
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    /* Question States */
+    .question-item.correct {
+      border-left: 3px solid var(--success);
+      background: var(--success-bg);
+    }
+    .question-item.incorrect {
+      border-left: 3px solid var(--error);
+      background: var(--error-bg);
+    }
+    .question-item.answered-sim {
+      border-left: 3px solid var(--primary);
+      background: rgba(59, 130, 246, 0.04);
+    }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--panel-border);
+      border-radius: 1.25rem;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 52rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      animation: fadeIn 0.3s ease-out;
+      transition: background 0.3s ease, border 0.3s ease;
+    }
+
+    [data-theme="dark"] .card {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 1rem;
+    }
+
+    .q-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .q-topic-pill {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      padding: 0.25rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .q-number-pill {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .question-text {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      font-weight: 400;
+      white-space: pre-wrap;
+    }
+
+    .question-text code {
+      font-family: var(--font-mono);
+      background: rgba(0, 0, 0, 0.04);
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.25rem;
+      font-size: 0.9em;
+      color: #be123c;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    [data-theme="dark"] .question-text code {
+      background: rgba(255, 255, 255, 0.06);
+      color: #f472b6;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    /* IDE-like Code View */
+    .code-container {
+      background: var(--code-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      font-family: var(--font-mono);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+      margin: 0.5rem 0;
+      transition: background 0.3s ease;
+    }
+
+    [data-theme="dark"] .code-container {
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+    }
+
+    .code-header {
+      background: var(--code-header-bg);
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s ease;
+    }
+
+    .code-body {
+      display: flex;
+      overflow-x: auto;
+      padding: 1rem 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .line-numbers {
+      text-align: right;
+      color: #9ca3af;
+      padding: 0 1rem;
+      border-right: 1px solid var(--panel-border);
+      user-select: none;
+    }
+
+    [data-theme="dark"] .line-numbers {
+      color: #4b5563;
+    }
+
+    .code-content {
+      padding-left: 1.25rem;
+      white-space: pre;
+      color: var(--code-text);
+      transition: color 0.3s ease;
+    }
+
+    /* Syntax Highlighting */
+    .c-kw { color: var(--c-kw); font-weight: 600; }
+    .c-type { color: var(--c-type); font-weight: 600; }
+    .c-str { color: var(--c-str); }
+    .c-num { color: var(--c-num); }
+    .c-comm { color: var(--c-comm); font-style: italic; }
+    .c-pp { color: var(--c-pp); font-weight: 600; }
+
+    /* Options */
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .option-button {
+      background: rgba(0, 0, 0, 0.01);
+      border: 1px solid var(--panel-border);
+      border-radius: 0.75rem;
+      padding: 1.1rem 1.25rem;
+      color: var(--text-main);
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .option-button:hover:not(:disabled) {
+      background: rgba(0, 0, 0, 0.03);
+      border-color: rgba(0, 0, 0, 0.15);
+      transform: translateX(4px);
+    }
+
+    [data-theme="dark"] .option-button:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    [data-theme="light"] .option-button {
+      background: #ffffff;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+
+    [data-theme="light"] .option-button:hover:not(:disabled) {
+      background: #f8fafc;
+      border-color: var(--primary);
+    }
+
+    .option-button:focus {
+      border-color: var(--primary);
+    }
+
+    .option-button.selected {
+      background: rgba(59, 130, 246, 0.08);
+      border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.1);
+    }
+
+    .option-badge {
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 0.5rem;
+      background: rgba(0, 0, 0, 0.05);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      margin-right: 1rem;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+
+    [data-theme="dark"] .option-badge {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .option-button.selected .option-badge {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Verification Colors */
+    .option-button.correct {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: var(--success);
+    }
+    .option-button.correct .option-badge {
+      background: var(--success);
+      color: white;
+    }
+
+    .option-button.incorrect {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: var(--error);
+    }
+    .option-button.incorrect .option-badge {
+      background: var(--error);
+      color: white;
+    }
+
+    .option-status {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .option-status.correct { color: var(--success); }
+    .option-status.incorrect { color: var(--error); }
+
+    /* Action Buttons */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid transparent;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+    .btn-primary:disabled {
+      background: rgba(59, 130, 246, 0.2);
+      color: rgba(255, 255, 255, 0.3);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--panel-border);
+      color: var(--text-main);
+    }
+    .btn-secondary:hover:not(:disabled) {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+    [data-theme="dark"] .btn-secondary:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .btn-secondary:disabled {
+      color: rgba(255, 255, 255, 0.2);
+      cursor: not-allowed;
+    }
+
+    /* Explanation Container */
+    .explanation-container {
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid var(--panel-border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] .explanation-container {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .explanation-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--warning);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .explanation-text {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-main);
+      opacity: 0.95;
+    }
+    .explanation-text strong {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+    [data-theme="dark"] .explanation-text strong {
+      color: #ffffff;
+    }
+    .explanation-text em {
+      font-style: italic;
+      color: var(--text-muted);
+    }
+    .explanation-text code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      background: rgba(59, 130, 246, 0.08);
+      color: #2563eb;
+      border: 1px solid rgba(59, 130, 246, 0.15);
+    }
+    [data-theme="dark"] .explanation-text code {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+    .exp-p {
+      margin: 0 0 0.75rem 0;
+    }
+    .exp-p:last-child {
+      margin-bottom: 0;
+    }
+    .exp-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0.75rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .exp-item {
+      position: relative;
+      padding-left: 1.25rem;
+      line-height: 1.55;
+    }
+    .exp-item::before {
+      content: "•";
+      position: absolute;
+      left: 0.25rem;
+      color: var(--warning);
+      font-weight: bold;
+      font-size: 1.1rem;
+      line-height: 1.4;
+    }
+    .exp-code-block {
+      margin: 0.75rem 0;
+      padding: 0.85rem 1rem;
+      background: var(--code-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+    .exp-code-block code {
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      color: var(--code-text) !important;
+    }
+
+    /* Simulation Result Dashboard Card */
+    .sim-result-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 1.25rem;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 52rem;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      animation: fadeIn 0.4s ease-out;
+      transition: background 0.3s ease;
+    }
+
+    [data-theme="dark"] .sim-result-card {
+      background: linear-gradient(135deg, rgba(31, 41, 55, 0.9) 0%, rgba(17, 24, 39, 0.95) 100%);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+    }
+
+    .grade-circle {
+      width: 8.5rem;
+      height: 8.5rem;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 6px solid var(--panel-border);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      margin: 0.5rem 0;
+    }
+
+    [data-theme="dark"] .grade-circle {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .grade-circle.insufficient {
+      border-color: var(--error);
+      background: var(--error-bg);
+      color: var(--error);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
+    }
+
+    .grade-circle.sufficient {
+      border-color: var(--success);
+      background: var(--success-bg);
+      color: var(--success);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+    }
+
+    .grade-val {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .grade-max {
+      font-size: 0.9rem;
+      opacity: 0.7;
+      margin-top: 0.2rem;
+    }
+
+    .grade-label {
+      font-size: 1.3rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sim-details-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      width: 100%;
+      max-width: 38rem;
+      margin: 1rem 0;
+    }
+
+    .sim-detail-card {
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid var(--panel-border);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    [data-theme="dark"] .sim-detail-card {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .sim-detail-val {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .sim-detail-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* Practice Info Footnote */
+    .nav-footnote {
+      padding: 1rem 1.25rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--panel-border);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .btn-reset {
+      color: #ef4444;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .btn-reset:hover {
+      color: #f87171;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+      }
+      .sidebar {
+        width: 100%;
+        height: 22rem;
+        border-right: none;
+        border-bottom: 1px solid var(--panel-border);
+      }
+      .content-area {
+        padding: 1rem;
+      }
+      .card, .sim-result-card {
+        padding: 1.5rem;
+      }
+      .sim-details-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  
+    .mode-switcher::-webkit-scrollbar {
+      display: none;
+    }
+    .mode-switcher {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">C</div>
+      <div class="logo-text">
+        <h1>so2quiz</h1>
+        <p>Esercitati con i quiz di Sistemi Operativi II</p>
+      </div>
+    </div>
+    
+    <!-- Mode Switcher -->
+    <div class="mode-switcher">
+      <button class="mode-btn active" id="btn-mode-practice" onclick="switchMode('practice')">Esercitazione</button>
+      <button class="mode-btn" id="btn-mode-sim" onclick="switchMode('simulation')">Simulazione Esame</button>
+      <button class="mode-btn" id="btn-mode-review" onclick="switchMode('review')">Ripasso Errori</button>
+      <button class="mode-btn" id="btn-mode-guide" onclick="switchMode('guide')">Guida Studio</button>
+      <button class="mode-btn" id="btn-mode-endless" onclick="switchMode('endless')">Modalità Hardcore</button>
+    </div>
+
+    <!-- Header Controls (Stats + Theme Toggle) -->
+    <div class="header-controls">
+      <!-- Theme Switch Slider -->
+      <div class="theme-switch-container">
+        <span class="theme-label-icon light-label" onclick="setTheme('light')" title="Tema Chiaro">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </span>
+        <div class="theme-switch-slider" onclick="toggleTheme()" title="Cambia Tema">
+          <div class="theme-switch-knob"></div>
+        </div>
+        <span class="theme-label-icon dark-label" onclick="setTheme('dark')" title="Tema Scuro">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <!-- Stats Container -->
+        <div class="stats-container" id="sidebar-stats" style="display: none;">
+          <div class="stat-item" id="stat-progress-container">
+            <span class="stat-label">Risposte</span>
+            <span class="stat-value" id="stats-progress">0/0</span>
+          </div>
+          <div class="stat-item" id="stat-score-container">
+            <span class="stat-label">Punteggio</span>
+            <span class="stat-value warning" id="stats-score">0 pt</span>
+          </div>
+          <div class="stat-item" id="stat-grade-container">
+            <span class="stat-label">Voto</span>
+            <span class="stat-value success" id="stats-grade">0.0/25</span>
+          </div>
+        </div>
+
+        <!-- Simulation controls (visible in simulation mode) -->
+        <div class="sim-control-box" id="sim-controls" style="display: none;">
+          <div class="sim-timer-box">
+            <span class="filter-label">Tempo Rimasto</span>
+            <span class="sim-timer" id="sim-timer">45:00</span>
+          </div>
+          <button class="btn-submit-exam" onclick="submitSimulation()">Concludi e Calcola Voto</button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="filter-group" id="search-group">
+          <label class="filter-label" for="search-input">Cerca Domanda</label>
+          <input type="text" id="search-input" class="search-input" placeholder="Parole chiave, codice, ecc..." oninput="handleSearch(this.value)">
+        </div>
+
+        <div class="filter-group" id="filter-exam-group">
+          <label class="filter-label" for="filter-exam">Tipologia Domande</label>
+          <select id="filter-exam">
+            <option value="all">Tutte le domande (solo 4 opzioni)</option>
+            <option value="old_type">Domande Vecchie (5 opzioni)</option>
+          </select>
+        </div>
+        <div class="filter-group" id="filter-topic-group">
+          <label class="filter-label" for="filter-topic">Filtra per Argomento</label>
+          <select id="filter-topic">
+            <option value="all">Tutti gli argomenti</option>
+          </select>
+        </div>
+        
+        <!-- Options Shuffling Toggle -->
+        <div class="filter-group" id="setting-shuffle-group">
+          <label class="checkbox-container" style="margin-bottom: 8px;">
+            <input type="checkbox" id="setting-shuffle-options" checked onchange="toggleShuffleOptions()">
+            <span class="checkbox-custom"></span>
+            <span>Mescola ordine risposte</span>
+          </label>
+          <label class="checkbox-container">
+            <input type="checkbox" id="setting-shuffle-questions" onchange="toggleShuffleQuestions()">
+            <span class="checkbox-custom"></span>
+            <span>Mescola ordine domande</span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="question-list" id="question-list">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="nav-footnote">
+        <span>Usa tasti [1-4] e [Invio]</span>
+        <button class="btn-reset" id="btn-reset-quiz" onclick="resetQuiz()">Resetta Quiz</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content-area" id="content-area">
+      <div class="card" id="quiz-card">
+        <!-- Rendered dynamically -->
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Load Data -->
+  <script src="domande_global.js"></script>
+  <script src="domande_old_type.js"></script>
+  
+  <script>
+    // Load local questions variable
+    const localQuestions = typeof QUESTIONS !== 'undefined' ? QUESTIONS : [];
+    const oldTypeQuestions = typeof OLD_TYPE_QUESTIONS !== 'undefined' ? OLD_TYPE_QUESTIONS : [];
+    
+
+            
+
+    // Calculate grade based on score and total questions
+    function calculateGrade(score, maxPoints, totalQuestions) {
+      const gradeTable = [
+        { min: 88, max: 90, label: "30L" },
+        { min: 86, max: 87, label: "30" },
+        { min: 84, max: 85, label: "29" },
+        { min: 83, max: 83, label: "28" },
+        { min: 82, max: 82, label: "27" },
+        { min: 81, max: 81, label: "26" },
+        { min: 73, max: 80, label: "25" },
+        { min: 69, max: 72, label: "24" },
+        { min: 65, max: 68, label: "23" },
+        { min: 61, max: 64, label: "22" },
+        { min: 57, max: 60, label: "21" },
+        { min: 53, max: 56, label: "20" },
+        { min: 49, max: 52, label: "19" },
+        { min: 48, max: 48, label: "18" },
+        { min: -999, max: 47, label: "INSUF" }
+      ];
+
+      // If it is a 45-question simulation, use the official grade table
+      if (totalQuestions === 45) {
+        for (const entry of gradeTable) {
+          if (score >= entry.min && score <= entry.max) {
+            const passed = entry.label !== "INSUF";
+            return { grade: entry.label, passed, label: passed ? `${entry.label}/30` : "INSUF" };
+          }
+        }
+        if (score > 90) {
+          return { grade: "30L", passed: true, label: "30L/30" };
+        }
+        return { grade: "INSUF", passed: false, label: "INSUF" };
+      } else {
+        // For practice mode: normalize to a /30 scale
+        const maxScore = totalQuestions * 2;
+        let gradeRaw = maxScore > 0 ? (score / maxScore) * 30 : 0;
+        if (gradeRaw < 0) gradeRaw = 0;
+        const grade = Math.round(gradeRaw * 10) / 10;
+        return { grade: String(grade), passed: grade >= 18, label: `${grade}/30` };
+      }
+    }
+
+    // Application State
+    let state = {
+      questions: [],
+      filteredQuestions: [],
+      currentIndex: 0,
+      selectedAnswer: null, // index of option selected currently
+      
+      // Mode: 'practice' | 'simulation'
+      mode: 'practice',
+
+      // Endless Mode Storage
+      endlessScore: 0,
+      endlessHighScore: parseInt(localStorage.getItem('so2_crocette_endless_high') || '0'),
+      endlessGameOver: false,
+      endlessAnswer: null,
+      endlessTime: 0,
+      endlessBestTime: parseInt(localStorage.getItem('so2_crocette_hardcore_best_time') || '0'),
+      endlessTimerId: null,
+      endlessQuote: "",
+
+      
+      // Practice Mode Storage
+      checkedAnswers: {}, // { questionId: { selected: index, correct: bool } }
+      
+      // Simulation Mode State
+      simAnswers: {}, // { questionId: selectedIndex }
+      simTimeRemaining: 45 * 60, // 45 minutes in seconds
+      simTimerId: null,
+      simActive: false,
+      simFinished: false,
+      simResult: null,
+
+      // Shuffle settings
+      shuffleOptions: true,
+      shuffleQuestions: false,
+      shuffledIndices: {},
+
+      // Filter settings
+      selectedExam: 'all',
+      selectedTopic: 'all',
+      searchQuery: '',
+
+      // Guide settings
+      currentGuideSection: 0
+    };
+
+    // Theme Switch Logic
+    function initTheme() {
+      const savedTheme = localStorage.getItem('so2_crocette_theme') || 'dark';
+      document.body.setAttribute('data-theme', savedTheme);
+      updateThemeIcons(savedTheme);
+    }
+
+    function setTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem('so2_crocette_theme', theme);
+      updateThemeIcons(theme);
+    }
+
+    function toggleTheme() {
+      const currentTheme = document.body.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+    }
+
+    function updateThemeIcons(theme) {
+      const lightLabel = document.querySelector('.light-label');
+      const darkLabel = document.querySelector('.dark-label');
+      if (lightLabel && darkLabel) {
+        if (theme === 'light') {
+          lightLabel.classList.add('active');
+          darkLabel.classList.remove('active');
+        } else {
+          lightLabel.classList.remove('active');
+          darkLabel.classList.add('active');
+        }
+      }
+    }
+
+    // Generate shuffled indices mapping for all questions
+    function generateShuffledIndices() {
+      state.shuffledIndices = {};
+      state.questions.forEach(q => {
+        const arr = [];
+        for (let i = 0; i < q.options.length; i++) {
+          arr.push(i);
+        }
+        
+        if (state.shuffleOptions) {
+          // Fisher-Yates shuffle
+          for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+          }
+        }
+        
+        state.shuffledIndices[q.id] = arr;
+      });
+    }
+
+    function toggleShuffleOptions() {
+      state.shuffleOptions = document.getElementById('setting-shuffle-options').checked;
+      generateShuffledIndices();
+      renderActiveQuestion();
+    }
+
+    function toggleShuffleQuestions() {
+      state.shuffleQuestions = document.getElementById('setting-shuffle-questions').checked;
+      applyFilters();
+    }
+
+    // Initialize application
+    function init() {
+      initTheme();
+
+      state.questions = [...localQuestions, ...oldTypeQuestions];
+      state.shuffleQuestions = document.getElementById('setting-shuffle-questions').checked;
+      
+      generateShuffledIndices();
+      loadProgress();
+      populateFilters();
+      applyFilters();
+      
+      // Event listeners
+      document.getElementById('filter-exam').addEventListener('change', (e) => {
+        state.selectedExam = e.target.value;
+        applyFilters();
+      });
+      document.getElementById('filter-topic').addEventListener('change', (e) => {
+        state.selectedTopic = e.target.value;
+        applyFilters();
+      });
+
+      // Keyboard support
+      document.addEventListener('keydown', handleKeyPress);
+    }
+
+    // Switch between Practice, Simulation, Review and Guide modes
+    function switchMode(newMode) {
+      if (state.mode === newMode) return;
+
+      if (state.mode === 'simulation' && state.simActive && !state.simFinished) {
+        if (!confirm('Uscendo dalla simulazione perderai tutti i progressi dell\'esame corrente. Sicuro di voler uscire?')) {
+          return;
+        }
+      }
+
+      state.mode = newMode;
+      
+      if (newMode !== 'simulation') {
+        state.selectedExam = 'all';
+        const filterExamEl = document.getElementById('filter-exam');
+        if (filterExamEl) filterExamEl.value = 'all';
+      }
+
+      // Reset search
+      state.searchQuery = '';
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.value = '';
+      }
+      
+      // Toggle active states in UI headers
+      document.getElementById('btn-mode-practice').classList.toggle('active', newMode === 'practice');
+      document.getElementById('btn-mode-sim').classList.toggle('active', newMode === 'simulation');
+      document.getElementById('btn-mode-review').classList.toggle('active', newMode === 'review');
+      document.getElementById('btn-mode-guide').classList.toggle('active', newMode === 'guide');
+      const btnEndless = document.getElementById('btn-mode-endless'); if(btnEndless) btnEndless.classList.toggle('active', newMode === 'endless');
+
+      // Reset filters and views appropriately
+      if (newMode === 'simulation') {
+        // Take 45 random questions from the global pool (4-option questions only)
+        const globalPool = localQuestions.filter(q => q.options && q.options.length === 4);
+        const shuffledGlobal = [...globalPool];
+        for (let i = shuffledGlobal.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledGlobal[i], shuffledGlobal[j]] = [shuffledGlobal[j], shuffledGlobal[i]];
+        }
+        state.filteredQuestions = shuffledGlobal.slice(0, Math.min(45, shuffledGlobal.length));
+        state.selectedExam = 'random';
+
+        state.simAnswers = {};
+        state.simTimeRemaining = 45 * 60;
+        state.simActive = true;
+        state.simFinished = false;
+        state.simResult = null;
+        generateShuffledIndices(); // Fresh shuffle for exam
+
+        document.getElementById('filter-exam-group').style.display = 'none';
+        document.getElementById('filter-topic-group').style.display = 'none';
+        document.getElementById('search-group').style.display = 'none';
+        document.getElementById('sim-controls').style.display = 'flex';
+        document.getElementById('btn-reset-quiz').style.display = 'none';
+        document.getElementById('setting-shuffle-group').style.display = 'none';
+
+        state.currentIndex = 0;
+        state.selectedAnswer = null;
+
+        clearInterval(state.simTimerId);
+        state.simTimerId = setInterval(updateSimulationTimer, 1000);
+        updateSimulationTimerDisplay();
+
+      } else if (newMode === 'review') {
+        clearInterval(state.simTimerId);
+        clearInterval(state.endlessTimerId);
+        state.simActive = false;
+        state.simFinished = false;
+
+        document.getElementById('filter-exam-group').style.display = 'none';
+        document.getElementById('filter-topic-group').style.display = 'none';
+        document.getElementById('search-group').style.display = 'flex';
+        document.getElementById('sim-controls').style.display = 'none';
+        document.getElementById('btn-reset-quiz').style.display = 'none';
+        document.getElementById('setting-shuffle-group').style.display = 'none';
+
+        applyFilters();
+      } else if (newMode === 'endless') {
+        clearInterval(state.simTimerId);
+        state.simActive = false;
+        state.simFinished = false;
+
+        document.getElementById('filter-exam-group').style.display = 'none';
+        document.getElementById('filter-topic-group').style.display = 'none';
+        document.getElementById('search-group').style.display = 'none';
+        document.getElementById('sim-controls').style.display = 'none';
+        document.getElementById('btn-reset-quiz').style.display = 'none';
+        document.getElementById('setting-shuffle-group').style.display = 'none';
+
+        startEndless();
+        return;
+      } else if (newMode === 'guide') {
+        clearInterval(state.simTimerId);
+        clearInterval(state.endlessTimerId);
+        state.simActive = false;
+        state.simFinished = false;
+
+        document.getElementById('filter-exam-group').style.display = 'none';
+        document.getElementById('filter-topic-group').style.display = 'none';
+        document.getElementById('search-group').style.display = 'none';
+        document.getElementById('sim-controls').style.display = 'none';
+        document.getElementById('btn-reset-quiz').style.display = 'none';
+        document.getElementById('setting-shuffle-group').style.display = 'none';
+
+        state.currentGuideSection = 0;
+      } else {
+        clearInterval(state.simTimerId);
+        clearInterval(state.endlessTimerId);
+        state.simActive = false;
+        state.simFinished = false;
+
+        document.getElementById('filter-exam-group').style.display = 'flex';
+        document.getElementById('filter-topic-group').style.display = 'flex';
+        document.getElementById('search-group').style.display = 'flex';
+        document.getElementById('sim-controls').style.display = 'none';
+        document.getElementById('btn-reset-quiz').style.display = 'block';
+        document.getElementById('setting-shuffle-group').style.display = 'block';
+
+        applyFilters();
+      }
+
+      renderSidebar();
+      renderActiveQuestion();
+      updateStats();
+    }
+
+    // Timer functions for simulation
+    
+    function startEndless() {
+      clearInterval(state.endlessTimerId);
+      const shuffled = [...localQuestions];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      state.filteredQuestions = shuffled;
+      state.currentIndex = 0;
+      state.endlessScore = 0;
+      state.endlessGameOver = false;
+      state.endlessAnswer = null;
+      state.selectedAnswer = null;
+      state.endlessQuote = "";
+      
+      state.endlessTime = 0;
+      state.endlessTimerId = setInterval(updateEndlessTimer, 1000);
+      
+      generateShuffledIndices();
+      renderSidebar();
+      renderActiveQuestion();
+      updateStats();
+    }
+
+    function nextEndlessQuestion() {
+      if (state.currentIndex < state.filteredQuestions.length - 1) {
+         state.currentIndex++;
+         state.endlessAnswer = null;
+         state.selectedAnswer = null;
+         
+         // Resume endless stopwatch
+         clearInterval(state.endlessTimerId);
+         state.endlessTimerId = setInterval(updateEndlessTimer, 1000);
+         
+         renderActiveQuestion();
+         renderSidebar();
+         updateStats();
+      } else {
+         startEndless();
+      }
+    }
+
+    function formatDuration(s) {
+      const minutes = Math.floor(s / 60);
+      const secs = s % 60;
+      return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function updateEndlessTimer() {
+      if (state.mode === 'endless' && !state.endlessGameOver && !state.endlessAnswer) {
+        state.endlessTime++;
+        const endlessTimeVal = document.getElementById('stats-endless-time');
+        if (endlessTimeVal) {
+          endlessTimeVal.textContent = formatDuration(state.endlessTime);
+        }
+      }
+    }
+
+    function updateSimulationTimer() {
+      if (state.simTimeRemaining <= 0) {
+        clearInterval(state.simTimerId);
+        alert('Tempo scaduto! L\'esame verrà consegnato automaticamente.');
+        submitSimulation();
+      } else {
+        state.simTimeRemaining--;
+        updateSimulationTimerDisplay();
+      }
+    }
+
+    function updateSimulationTimerDisplay() {
+      const minutes = Math.floor(state.simTimeRemaining / 60);
+      const seconds = state.simTimeRemaining % 60;
+      const formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      document.getElementById('sim-timer').textContent = formatted;
+    }
+
+    function renderEndlessVictoryScreen(container) {
+      container.innerHTML = `
+        <div class="sim-result-card" style="max-width: 42rem; animation: fadeIn 0.6s ease-out; text-align: center; padding: 3rem 2rem; margin: 0 auto;">
+          <span class="q-topic-pill" style="background: var(--warning-bg); color: var(--warning); font-weight: 800; padding: 0.4rem 1rem; font-size: 0.85rem; border-radius: 9999px; display: inline-block; margin-bottom: 1.5rem;">🏆 MODALITÀ HARDCORE COMPLETATA</span>
+          <div style="font-size: 6rem; margin: 1rem 0 2rem; filter: drop-shadow(0 8px 24px rgba(245, 158, 11, 0.4)); animation: pulse 2s infinite; line-height: 1;">🏆</div>
+          <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 0.8rem; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--warning), #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            COMPLIMENTI!
+          </h1>
+          <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; max-width: 30rem; margin: 0 auto 1.2rem;">
+            Hai superato la sfida definitiva di Sistemi Operativi II rispondendo correttamente a tutte le <strong>${state.filteredQuestions.length}</strong> domande di fila senza commettere alcun errore!
+          </p>
+          <p style="font-style: italic; color: var(--text-muted); font-size: 0.95rem; max-width: 30rem; margin: 0 auto 2.5rem; line-height: 1.5;">
+            «Supera te stesso e supererai il mondo»<br>
+            <small style="font-size: 0.82rem; font-style: normal; opacity: 0.85;">— Sant'Agostino</small>
+          </p>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 26rem; margin: 0 auto 3rem;">
+            <div style="background: rgba(0,0,0,0.03); padding: 1.25rem; border-radius: 1rem; border: 1px solid var(--panel-border); display: flex; flex-direction: column; gap: 0.25rem;">
+              <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Tempo Impiegato</span>
+              <span style="font-size: 2.2rem; font-family: var(--font-mono); font-weight: 800; color: var(--success); line-height: 1.1;">${formatDuration(state.endlessTime)}</span>
+            </div>
+            <div style="background: rgba(0,0,0,0.03); padding: 1.25rem; border-radius: 1rem; border: 1px solid var(--panel-border); display: flex; flex-direction: column; gap: 0.25rem;">
+              <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Record Tempo</span>
+              <span style="font-size: 2.2rem; font-family: var(--font-mono); font-weight: 800; color: var(--warning); line-height: 1.1;">${state.endlessBestTime === 0 ? '--:--' : formatDuration(state.endlessBestTime)}</span>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 1rem; justify-content: center;">
+            <button class="btn btn-primary" onclick="startEndless()" style="padding: 0.8rem 2.2rem; font-weight: 700; font-size: 0.95rem;">
+              Riprova la Sfida
+            </button>
+            <button class="btn btn-secondary" onclick="switchMode('practice')" style="padding: 0.8rem 2.2rem; font-weight: 700; font-size: 0.95rem;">
+              Torna all'Esercitazione
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Submit Simulation and calculate grades
+    function submitSimulation() {
+      if (state.simFinished) return;
+      
+      clearInterval(state.simTimerId);
+      state.simFinished = true;
+      state.simActive = false;
+
+      let correct = 0;
+      let wrong = 0;
+      let blank = 0;
+
+      state.filteredQuestions.forEach(q => {
+        const answer = state.simAnswers[q.id];
+        if (answer === undefined) {
+          blank++;
+        } else if (answer === q.correct_index) {
+          correct++;
+        } else {
+          wrong++;
+        }
+      });
+
+      const score = (correct * 2) + (wrong * -1);
+      const maxPoints = state.filteredQuestions.length * 2;
+      
+      const gradeObj = calculateGrade(score, maxPoints, state.filteredQuestions.length);
+
+      state.simResult = {
+        score: score,
+        maxPoints: maxPoints,
+        grade: gradeObj.grade,
+        gradeLabel: gradeObj.label,
+        passed: gradeObj.passed,
+        correct: correct,
+        wrong: wrong,
+        blank: blank
+      };
+
+      renderSidebar();
+      renderActiveQuestion();
+      updateStats();
+    }
+
+    // Load progress from LocalStorage
+    function loadProgress() {
+      const saved = localStorage.getItem('so2_crocette_progress');
+      if (saved) {
+        try {
+          state.checkedAnswers = JSON.parse(saved);
+        } catch(e) {
+          console.error(e);
+        }
+      }
+    }
+
+    // Save progress to LocalStorage
+    function saveProgress() {
+      localStorage.setItem('so2_crocette_progress', JSON.stringify(state.checkedAnswers));
+      updateStats();
+    }
+
+    // Populate drop-down filters dynamically
+    function populateFilters() {
+      const topics = new Set();
+      state.questions.forEach(q => {
+        if (q.topic) topics.add(q.topic);
+      });
+
+      const topicSelect = document.getElementById('filter-topic');
+      topicSelect.innerHTML = '<option value="all">Tutti gli argomenti</option>';
+      Array.from(topics).sort().forEach(topic => {
+        const opt = document.createElement('option');
+        opt.value = topic;
+        opt.textContent = topic;
+        topicSelect.appendChild(opt);
+      });
+    }
+
+    // Apply filters and re-render sidebar
+    function applyFilters() {
+      const query = state.searchQuery || '';
+
+      if (state.mode === 'review') {
+        state.filteredQuestions = state.questions.filter(q => {
+          const checked = state.checkedAnswers[q.id];
+          const isError = checked && !checked.correct;
+          if (!isError) return false;
+
+          if (query) {
+            return q.question.toLowerCase().includes(query) || 
+                   (q.topic && q.topic.toLowerCase().includes(query)) ||
+                   q.options.some(opt => opt.toLowerCase().includes(query));
+          }
+          return true;
+        });
+      } else {
+        state.filteredQuestions = state.questions.filter(q => {
+          const isOldType = q.options && q.options.length === 5;
+          const matchExam = state.selectedExam === 'all' ? !isOldType : isOldType;
+          const matchTopic = state.selectedTopic === 'all' || q.topic === state.selectedTopic;
+          
+          if (!matchExam || !matchTopic) return false;
+
+          if (query) {
+            return q.question.toLowerCase().includes(query) || 
+                   (q.topic && q.topic.toLowerCase().includes(query)) ||
+                   q.options.some(opt => opt.toLowerCase().includes(query));
+          }
+          return true;
+        });
+      }
+
+      // Shuffle filtered questions if enabled
+      if (state.shuffleQuestions && (state.mode === 'practice' || state.mode === 'review')) {
+        for (let i = state.filteredQuestions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [state.filteredQuestions[i], state.filteredQuestions[j]] = [state.filteredQuestions[j], state.filteredQuestions[i]];
+        }
+      }
+
+      state.currentIndex = state.filteredQuestions.length > 0 ? 0 : null;
+      state.selectedAnswer = null;
+      renderSidebar();
+      renderActiveQuestion();
+      updateStats();
+    }
+
+    function handleSearch(value) {
+      state.searchQuery = value.toLowerCase().trim();
+      applyFilters();
+    }
+
+    // Calculate and update stats header
+    function updateStats() {
+      const statsContainer = document.getElementById('sidebar-stats');
+      if (state.mode === 'practice') {
+        if (statsContainer) statsContainer.style.display = 'flex';
+        document.getElementById('stat-progress-container').querySelector('.stat-label').textContent = 'Risposte:';
+        document.getElementById('stat-progress-container').style.display = 'flex';
+        document.getElementById('stat-score-container').style.display = 'flex';
+        document.getElementById('stat-grade-container').style.display = 'flex';
+        document.getElementById('stat-grade-container').querySelector('.stat-label').textContent = 'Voto:';
+
+        const total = state.filteredQuestions.length;
+        let completed = 0;
+        let correct = 0;
+        let wrong = 0;
+
+        state.filteredQuestions.forEach(q => {
+          if (state.checkedAnswers[q.id]) {
+            completed++;
+            if (state.checkedAnswers[q.id].correct) {
+              correct++;
+            } else {
+              wrong++;
+            }
+          }
+        });
+
+        const score = (correct * 2) + (wrong * -1);
+        const maxPoints = total * 2;
+        const gradeObj = calculateGrade(score, maxPoints, total);
+
+        document.getElementById('stats-progress').textContent = `${completed}/${total}`;
+        document.getElementById('stats-score').textContent = `${score} pt`;
+        
+        const gradeEl = document.getElementById('stats-grade');
+        
+        if (completed === 0) {
+          gradeEl.className = 'stat-value success';
+          gradeEl.textContent = '0.0/30';
+        } else {
+          gradeEl.textContent = gradeObj.label;
+          if (!gradeObj.passed) {
+            gradeEl.className = 'stat-value error';
+            if (gradeObj.grade === 'INSUF') {
+              gradeEl.innerHTML = `INSUF`;
+            } else {
+              gradeEl.innerHTML = `${gradeObj.label} <span style="font-size: 0.6rem; font-weight: 800;">(Insuff.)</span>`;
+            }
+          } else {
+            gradeEl.className = 'stat-value success';
+            gradeEl.innerHTML = `${gradeObj.label} <span style="font-size: 0.6rem; font-weight: 800;">(Superato)</span>`;
+          }
+        }
+
+      
+      } else if (state.mode === 'endless') {
+        if (statsContainer) statsContainer.style.display = 'none';
+      } else if (state.mode === 'review') {
+        document.getElementById('stat-progress-container').querySelector('.stat-label').textContent = 'Errori rimasti:';
+        document.getElementById('stat-progress-container').style.display = 'flex';
+        document.getElementById('stat-score-container').style.display = 'none';
+        document.getElementById('stat-grade-container').style.display = 'none';
+
+        const totalErrors = state.questions.filter(q => {
+          const checked = state.checkedAnswers[q.id];
+          return checked && !checked.correct;
+        }).length;
+
+        document.getElementById('stats-progress').textContent = `${totalErrors}`;
+
+      } else
+      if (state.mode === 'guide') {
+        if (statsContainer) statsContainer.style.display = 'none';
+        document.getElementById('stat-progress-container').style.display = 'none';
+        document.getElementById('stat-score-container').style.display = 'none';
+        document.getElementById('stat-grade-container').style.display = 'none';
+      } else {
+        if (state.simFinished && state.simResult) {
+          if (statsContainer) statsContainer.style.display = 'flex';
+          document.getElementById('stat-progress-container').querySelector('.stat-label').textContent = 'Risposte';
+          document.getElementById('stat-progress-container').style.display = 'flex';
+          document.getElementById('stat-score-container').style.display = 'flex';
+          document.getElementById('stat-grade-container').style.display = 'flex';
+          document.getElementById('stat-grade-container').querySelector('.stat-label').textContent = 'Voto';
+
+          const res = state.simResult;
+          document.getElementById('stats-progress').textContent = `${res.correct + res.wrong}/${state.filteredQuestions.length}`;
+          document.getElementById('stats-score').textContent = `${res.score} pt`;
+          
+          const gradeEl = document.getElementById('stats-grade');
+          gradeEl.textContent = res.gradeLabel;
+          
+          if (!res.passed) {
+            gradeEl.className = 'stat-value error';
+            if (res.grade === 'INSUF') {
+              gradeEl.innerHTML = `INSUF`;
+            } else {
+              gradeEl.innerHTML = `${res.gradeLabel} <span style="font-size: 0.6rem; font-weight: 800;">(Insuff.)</span>`;
+            }
+          } else {
+            gradeEl.className = 'stat-value success';
+            gradeEl.innerHTML = `${res.gradeLabel} <span style="font-size: 0.6rem; font-weight: 800;">(Superato)</span>`;
+          }
+        } else {
+          if (statsContainer) statsContainer.style.display = 'none';
+          document.getElementById('stat-progress-container').style.display = 'none';
+          document.getElementById('stat-score-container').style.display = 'none';
+          document.getElementById('stat-grade-container').style.display = 'none';
+        }
+      }
+    }
+
+    // Render left sidebar listing
+    function renderSidebar() {
+      const listContainer = document.getElementById('question-list');
+      listContainer.innerHTML = '';
+      
+      if (state.mode === 'endless') {
+        listContainer.innerHTML = `
+          <div style="padding: 2.5rem 1.5rem; text-align: center; display: flex; flex-direction: column; gap: 1.5rem; animation: fadeIn 0.4s ease-out;">
+            <div style="font-size: 5rem; line-height: 1; filter: drop-shadow(0 4px 12px rgba(245, 158, 11, 0.3)); margin-bottom: 0.5rem;">🔥</div>
+            <h3 style="color: var(--primary); font-size: 1.6rem; font-weight: 800; margin: 0; letter-spacing: -0.02em;">Modalità Hardcore</h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.4; margin: 0; max-width: 15rem; align-self: center;">
+              Rispondi correttamente per continuare. Al primo errore si ricomincia da capo!
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%; margin-top: 0.5rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: 100%;">
+                <div style="background: rgba(0,0,0,0.03); padding: 0.75rem; border-radius: 0.75rem; border: 1px solid var(--panel-border); display: flex; flex-direction: column; gap: 0.15rem;">
+                  <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Punti</div>
+                  <div style="font-size: 1.8rem; font-family: var(--font-mono); font-weight: 800; color: var(--success); line-height: 1.1;">${state.endlessScore}</div>
+                </div>
+                <div style="background: rgba(0,0,0,0.03); padding: 0.75rem; border-radius: 0.75rem; border: 1px solid var(--panel-border); display: flex; flex-direction: column; gap: 0.15rem;">
+                  <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Record Punti</div>
+                  <div style="font-size: 1.8rem; font-family: var(--font-mono); font-weight: 800; color: var(--warning); line-height: 1.1;">${state.endlessHighScore}</div>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: 100%;">
+                <div style="background: rgba(0,0,0,0.03); padding: 0.75rem; border-radius: 0.75rem; border: 1px solid var(--panel-border); display: flex; flex-direction: column; gap: 0.15rem;">
+                  <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Tempo</div>
+                  <div id="stats-endless-time" style="font-size: 1.8rem; font-family: var(--font-mono); font-weight: 800; color: var(--success); line-height: 1.1;">${formatDuration(state.endlessTime)}</div>
+                </div>
+                <div style="background: rgba(0,0,0,0.03); padding: 0.75rem; border-radius: 0.75rem; border: 1px solid var(--panel-border); display: flex; flex-direction: column; gap: 0.15rem;">
+                  <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Record Tempo</div>
+                  <div style="font-size: 1.8rem; font-family: var(--font-mono); font-weight: 800; color: var(--warning); line-height: 1.1;">${state.endlessBestTime === 0 ? '--:--' : formatDuration(state.endlessBestTime)}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (state.mode === 'guide') {
+        const topics = [
+          { name: "1. Compilazione, Linkage e Preprocessore", target: "section-1" },
+          { name: "2. Input/Output e Gestione Stringhe", target: "section-2" },
+          { name: "3. Gestione dei Processi (System Calls)", target: "section-3" },
+          { name: "4. Programmazione Concorrente (Threads)", target: "section-4" },
+          { name: "5. Gestione della Memoria Dinamica", target: "section-5" },
+          { name: "6. Permessi del Filesystem Unix", target: "section-6" },
+          { name: "7. System Call di I/O e File Locking", target: "section-7" },
+          { name: "8. Gestione Utenti e Comandi Unix", target: "section-8" }
+        ];
+
+        topics.forEach((t, idx) => {
+          const item = document.createElement('button');
+          item.className = 'question-item';
+          if (idx === state.currentGuideSection) {
+            item.classList.add('active');
+          }
+          item.innerHTML = `
+            <span class="q-badge" style="font-family: var(--font-sans); font-size: 0.85rem; font-weight: 700; opacity: 0.8;">#${idx+1}</span>
+            <div class="q-info">
+              <span class="q-preview" style="font-weight: 500; font-size: 0.85rem; white-space: normal; text-overflow: clip; overflow: visible;">${t.name.split('. ')[1]}</span>
+            </div>
+          `;
+          item.addEventListener('click', () => {
+            state.currentGuideSection = idx;
+            renderSidebar();
+            const targetEl = document.getElementById(t.target);
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
+          listContainer.appendChild(item);
+        });
+        return;
+      }
+
+      if (state.mode === 'endless' && state.endlessScore === state.filteredQuestions.length && state.filteredQuestions.length > 0) {
+        renderEndlessVictoryScreen(container);
+        return;
+      }
+
+      if (state.filteredQuestions.length === 0) {
+        if (state.mode === 'review') {
+          listContainer.innerHTML = '<div class="empty-state">Ottimo! Nessun errore registrato da ripassare.</div>';
+        } else {
+          listContainer.innerHTML = '<div class="empty-state">Nessuna crocetta corrispondente ai filtri.</div>';
+        }
+        return;
+      }
+
+      state.filteredQuestions.forEach((q, idx) => {
+        const item = document.createElement('button');
+        item.className = 'question-item';
+        if (idx === state.currentIndex && !(state.mode === 'simulation' && state.simFinished && state.currentIndex === null)) {
+          item.classList.add('active');
+        }
+
+        if (state.mode === 'practice' || state.mode === 'review') {
+          const checked = state.checkedAnswers[q.id];
+          if (checked) {
+            if (checked.correct) {
+              item.classList.add('correct');
+            } else {
+              item.classList.add('incorrect');
+            }
+          }
+        } else {
+          const answered = state.simAnswers[q.id] !== undefined;
+          if (state.simFinished) {
+            const isCorrect = state.simAnswers[q.id] === q.correct_index;
+            if (answered) {
+              if (isCorrect) {
+                item.classList.add('correct');
+              } else {
+                item.classList.add('incorrect');
+              }
+            } else {
+              item.classList.add('unanswered');
+            }
+          } else {
+            if (answered) {
+              item.classList.add('answered-sim');
+            }
+          }
+        }
+
+        const numLabel = String(idx + 1).padStart(2, '0');
+
+        item.innerHTML = `
+          <span class="q-badge">${numLabel}</span>
+          <div class="q-info">
+            <span class="q-topic">${q.topic || 'Sistemi Operativi'}</span>
+            <span class="q-preview">${q.question.replace(/```[\s\S]*?```/g, '[Codice]').replace(/[`*#]/g, '')}</span>
+          </div>
+        `;
+
+        item.addEventListener('click', () => {
+          selectQuestion(idx);
+        });
+
+        listContainer.appendChild(item);
+      });
+    }
+
+    // Select a question
+    function selectQuestion(idx) {
+      state.currentIndex = idx;
+      if (state.mode === 'practice' || state.mode === 'review') {
+        state.selectedAnswer = null;
+      } else {
+        const q = state.filteredQuestions[idx];
+        state.selectedAnswer = state.simAnswers[q.id] !== undefined ? state.simAnswers[q.id] : null;
+      }
+      renderSidebar();
+      renderActiveQuestion();
+      updateStats();
+    }
+
+    // Simple code highlighting parser for C code in questions
+    function highlightCode(code) {
+      if (!code) return '';
+      let escaped = code
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      const rules = [
+        { regex: /(\/\/.*|\/\*[\s\S]*?\*\/)/g, klass: 'c-comm' },
+        { regex: /(#include\s+&lt;.*&gt;|#include\s+".*"|#define\s+\w+|#ifdef|#endif)/g, klass: 'c-pp' },
+        { regex: /(".*?"|'.*?')/g, klass: 'c-str' },
+        { regex: /\b(int|char|float|double|void|struct|union|unsigned|static|const|size_t|pid_t|pthread_t)\b/g, klass: 'c-type' },
+        { regex: /\b(return|while|for|if|else|switch|case|break|continue|sizeof|typedef)\b/g, klass: 'c-kw' },
+        { regex: /\b(\d+)\b/g, klass: 'c-num' },
+      ];
+
+      let formatted = escaped;
+      const placeholders = [];
+      
+      rules.forEach((rule, idx) => {
+        formatted = formatted.replace(rule.regex, (match) => {
+          const id = `___PH_${idx}_${placeholders.length}___`;
+          placeholders.push({ id, html: `<span class="${rule.klass}">${match}</span>` });
+          return id;
+        });
+      });
+
+      placeholders.forEach(ph => {
+        formatted = formatted.replace(ph.id, ph.html);
+      });
+
+      return formatted;
+    }
+
+    // Process markdown-like formatting in the question body
+    function parseQuestionText(text) {
+      const parts = [];
+      let lastIndex = 0;
+      const codeRegex = /```[ \t]*(\w*)[ \t]*\r?\n([\s\S]*?)```/g;
+      let match;
+
+      while ((match = codeRegex.exec(text)) !== null) {
+        const textBefore = text.substring(lastIndex, match.index);
+        if (textBefore) {
+          parts.push({ type: 'text', content: textBefore });
+        }
+
+        parts.push({
+          type: 'code',
+          lang: match[1] || 'c',
+          content: match[2].trim()
+        });
+
+        lastIndex = codeRegex.lastIndex;
+      }
+
+      const textRemaining = text.substring(lastIndex);
+      if (textRemaining) {
+        parts.push({ type: 'text', content: textRemaining });
+      }
+
+      return parts.map(part => {
+        if (part.type === 'code') {
+          const highlighted = highlightCode(part.content);
+          const lines = part.content.split('\n');
+          const lineNumbersHtml = lines.map((_, i) => `<div>${i + 1}</div>`).join('');
+          
+          return `
+            <div class="code-container">
+              <div class="code-header">
+                <span>Codice sorgente (${part.lang.toUpperCase()})</span>
+                <span>C C11</span>
+              </div>
+              <div class="code-body">
+                <div class="line-numbers">${lineNumbersHtml}</div>
+                <div class="code-content">${highlighted}</div>
+              </div>
+            </div>
+          `;
+        } else {
+          let html = part.content
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/`([^`]+)`/g, '<code>$1</code>');
+          return `<div class="question-text">${html}</div>`;
+        }
+      }).join('');
+    }
+
+    // Helper to dynamically translate letters (A, B, C, D, E) in the explanation based on the shuffled options
+    function getDynamicExplanation(q) {
+      let exp = q.explanation || '';
+      if (!exp) return exp;
+
+      const mapping = state.shuffledIndices[q.id];
+      if (!mapping) return exp;
+
+      const letterMap = {};
+      for (let origIdx = 0; origIdx < q.options.length; origIdx++) {
+        const dispIdx = mapping.indexOf(origIdx);
+        if (dispIdx !== -1) {
+          const origLetter = String.fromCharCode(65 + origIdx);
+          const dispLetter = String.fromCharCode(65 + dispIdx);
+          letterMap[origLetter] = dispLetter;
+        }
+      }
+
+      const placeholders = {
+        'A': '___PLACEHOLDER_A___',
+        'B': '___PLACEHOLDER_B___',
+        'C': '___PLACEHOLDER_C___',
+        'D': '___PLACEHOLDER_D___',
+        'E': '___PLACEHOLDER_E___'
+      };
+
+      // 1. Replace with placeholders
+      Object.keys(placeholders).forEach(letter => {
+        const regex = new RegExp(`\\b([Oo]pzione|[Aa]ll\\’[Oo]pzione|[Aa]ll\\’[Oo]pt|[Aa]ll\'[Oo]pzione|[Aa]ll\'[Oo]pt|[Oo]pt|[Rr]isposta|[Rr]isposte)\\s+(${letter})\\b`, 'gi');
+        exp = exp.replace(regex, (match, prefix, l) => {
+          return `${prefix} ${placeholders[letter]}`;
+        });
+        
+        const regexBold = new RegExp(`\\*\\*([Oo]pzione|[Rr]isposta)?\\s*(${letter})\\*\\*`, 'gi');
+        exp = exp.replace(regexBold, (match, prefix, l) => {
+          const pref = prefix ? prefix + ' ' : '';
+          return `**${pref}${placeholders[letter]}**`;
+        });
+      });
+
+      // 2. Replace placeholders with the current displayed letters
+      Object.keys(placeholders).forEach(letter => {
+        const dispLetter = letterMap[letter] || letter;
+        const placeholder = placeholders[letter];
+        exp = exp.split(placeholder).join(dispLetter);
+      });
+
+      return exp;
+    }
+
+    // Helper to format explanation text (renders markdown bold, italics, code blocks, lists, and escapes HTML entities)
+    function formatExplanation(text) {
+      if (!text) return '<p class="exp-p">Nessuna spiegazione dettagliata fornita.</p>';
+      
+      // 1. Escape raw HTML entities
+      let html = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      // 2. Extract and protect multi-line code blocks: ```lang\n...```
+      const codeBlocks = [];
+      html = html.replace(/```(?:[a-zA-Z0-9_-]*)\n?([\s\S]*?)```/g, (match, code) => {
+        codeBlocks.push(code.trim());
+        return `\n___CODE_BLOCK_${codeBlocks.length - 1}___\n`;
+      });
+
+      // 3. Extract and protect inline code blocks: `code`
+      const inlineCodes = [];
+      html = html.replace(/`([^`]+)`/g, (match, code) => {
+        inlineCodes.push(code);
+        return `___INLINE_CODE_${inlineCodes.length - 1}___`;
+      });
+
+      // 4. Convert Markdown Bold: **text** -> <strong>text</strong>
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+      // 5. Convert Markdown Italic: *text* -> <em>$1</em> (avoiding single stars in math/pointers)
+      html = html.replace(/(^|[^*])\*([^*\n]+?)\*([^*]|$)/g, '$1<em>$2</em>$3');
+
+      // 6. Restore inline code
+      inlineCodes.forEach((code, idx) => {
+        html = html.split(`___INLINE_CODE_${idx}___`).join(`<code>${code}</code>`);
+      });
+
+      // 7. Parse lines into structured paragraphs, bullet lists, and code blocks
+      const lines = html.split('\n');
+      const out = [];
+      let inList = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) {
+          if (inList) {
+            out.push('</ul>');
+            inList = false;
+          }
+          continue;
+        }
+
+        const blockMatch = line.match(/^___CODE_BLOCK_(\d+)___$/);
+        if (blockMatch) {
+          if (inList) {
+            out.push('</ul>');
+            inList = false;
+          }
+          const blockIdx = parseInt(blockMatch[1]);
+          const codeContent = codeBlocks[blockIdx];
+          out.push(`<pre class="exp-code-block"><code>${codeContent}</code></pre>`);
+        } else if (line.startsWith('- ') || line.startsWith('* ')) {
+          if (!inList) {
+            out.push('<ul class="exp-list">');
+            inList = true;
+          }
+          const itemContent = line.replace(/^[-*]\s+/, '').trim();
+          out.push(`<li class="exp-item">${itemContent}</li>`);
+        } else {
+          if (inList) {
+            out.push('</ul>');
+            inList = false;
+          }
+          out.push(`<p class="exp-p">${line}</p>`);
+        }
+      }
+
+      if (inList) {
+        out.push('</ul>');
+      }
+
+      return out.join('');
+    }
+
+        function getGuideHtml() {
+      return `
+        <div class="card" style="text-align: left; max-width: 52rem; height: 100%; display: flex; flex-direction: column; padding: 2.2rem; gap: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+          <div style="border-bottom: 1px solid var(--panel-border); padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+            <div>
+              <h2 style="font-size: 1.8rem; font-weight: 800; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Guida di Studio & Cheatsheet</h2>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">Sistemi Operativi II — Riepilogo delle nozioni e trucchi per superare lo scritto</p>
+            </div>
+            <span style="font-size: 2rem;">📚</span>
+          </div>
+          
+          <div id="guide-scroll-container" style="flex: 1; overflow-y: auto; padding-right: 0.75rem; display: flex; flex-direction: column; gap: 2.5rem; scroll-behavior: smooth;">
+            
+            <!-- SEZIONE 1 -->
+            <section id="section-1" style="scroll-margin-top: 1rem;">
+              <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; border-left: 4px solid var(--primary); padding-left: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>🛠️</span> 1. Compilazione, Linkage e Preprocessore C
+              </h3>
+              <div style="display: flex; flex-direction: column; gap: 1.2rem; line-height: 1.6; font-size: 0.95rem;">
+                <div>
+                  <strong>Direttive <code>#include</code>: parentesi angolari <code>&lt;&gt;</code> vs virgolette <code>""</code></strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><code>#include &lt;stdio.h&gt;</code>: Cerca l'header file direttamente nei <span style="color: #3498db; font-weight: bold;">percorsi di sistema predefiniti</span> (es. <code>/usr/include</code>). Usato per librerie standard.</li>
+                    <li><code>#include "mioheader.h"</code>: Cerca l'header file partendo dalla <span style="color: #e67e22; font-weight: bold;">directory corrente</span> del progetto. Se non lo trova, esegue successivamente la ricerca nei percorsi di sistema.</li>
+                  </ul>
+                  <div style="background: rgba(230,126,34,0.08); border-left: 4px solid #e67e22; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem;">
+                    ⚠️ <strong>WARNING:</strong> Se scrivi <code>#include "stdio.h"</code> e il compilatore non lo trova nella cartella locale, i compilatori moderni cercheranno comunque nelle librerie di sistema come fallback. Tuttavia, su configurazioni rigide questo potrebbe generare warning o errori di compilazione.
+                  </div>
+                </div>
+                <div>
+                  <strong>La parola chiave <code>static</code> in C</strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><strong>Variabili globali statiche</strong>: Hanno <span style="color: #e67e22; font-weight: bold;">internal linkage</span> (collegamento interno). Sono visibili solo all'interno del file in cui sono dichiarate e non sono accessibili da altri file sorgente con <code>extern</code>.</li>
+                    <li><strong>Funzioni statiche</strong>: Sono invocabili esclusivamente all'interno del file sorgente in cui sono definite.</li>
+                    <li><strong>Variabili locali statiche</strong>: Vengono allocate nella memoria dati statica. <span style="color: #2ecc71; font-weight: bold;">Conservano il loro valore</span> tra chiamate successive e si inizializzano una sola volta.</li>
+                  </ul>
+                </div>
+                <div>
+                  <strong>Inclusione di file sorgente (<code>#include "file.c"</code>)</strong>
+                  <div style="background: rgba(231,76,60,0.08); border-left: 4px solid #e74c3c; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem; color: #c0392b;">
+                    🛑 <strong>CAUTION: ERRORE DI LINKER (SIMBOLI DUPLICATI)</strong><br>
+                    Se includi direttamente un file <code>.c</code> e compili entrambi i file contemporaneamente (es. <code>gcc hw1.c hw2.c</code>), otterrai un <span style="color: #e74c3c; font-weight: bold;">errore del linker per simboli duplicati</span> (es. definizioni multiple del <code>main</code>).
+                    <strong>Soluzione:</strong> Compila solo il file principale (es. <code>gcc hw1.c -o out</code>).
+                  </div>
+                </div>
+                <div>
+                  <strong>Regole sui Nomi delle Variabili in C</strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li>Possono contenere solo lettere, cifre e l'underscore (<code>_</code>). L'uso del trattino (es. <span style="color: #e74c3c; font-weight: bold;"><code>g-shock</code></span>) è vietato perché interpretato come sottrazione, causando un <span style="color: #e74c3c; font-weight: bold;">errore di compilazione</span>.</li>
+                  </ul>
+                </div>
+                <div>
+                  <strong>Assegnamento Diretto di Strutture</strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li>È <span style="color: #2ecc71; font-weight: bold;">del tutto lecito</span> assegnare una struct a un'altra dello stesso tipo (es. <code>pA = pB;</code>). Il compilatore esegue una copia byte-per-byte di tutti i membri.</li>
+                  </ul>
+                </div>
+                <div style="background: rgba(52,152,219,0.08); border-left: 4px solid #3498db; padding: 0.8rem 1rem; border-radius: 6px; margin-top: 0.5rem;">
+                  <strong>🔍 RISOLUZIONE ESERCIZI: Precedenza degli Operatori in C</strong>
+                  <br>
+                  Negli esercizi che chiedono se un'espressione C come <code>x & y == 7</code> sia vera o falsa:
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><strong>Regola Teorica:</strong> Gli operatori di confronto (<code>==</code>, <code>!=</code>) hanno la precedenza sugli operatori bitwise (<code>&</code>, <code>|</code>, <code>^</code>) e su quelli logici (<code>&&</code>, <code>||</code>).</li>
+                    <li><strong>Risoluzione Pratica:</strong> Se <code>x = 1, y = 7</code>:
+                      <ol style="margin-left: 1rem;">
+                        <li>L'espressione <code>x & y == 7</code> viene valutata come <code>x & (y == 7)</code>.</li>
+                        <li>Poiché <code>y</code> è 7, <code>y == 7</code> vale <code>1</code> (vero).</li>
+                        <li>L'espressione diventa quindi <code>1 & 1</code> (AND bit a bit), che vale <code>1</code> (vero).</li>
+                        <li>Quindi l'espressione <code>x & y == 7</code> è <strong>vera</strong>.</li>
+                      </ol>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+            
+            <!-- SEZIONE 2 -->
+            <section id="section-2" style="scroll-margin-top: 1rem;">
+              <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; border-left: 4px solid var(--primary); padding-left: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>📝</span> 2. Input/Output e Gestione Stringhe in C
+              </h3>
+              <div style="display: flex; flex-direction: column; gap: 1.2rem; line-height: 1.6; font-size: 0.95rem;">
+                <div>
+                  <strong><code>scanf</code> e Matching Failure</strong>
+                  <br>
+                  La funzione <code>scanf</code> legge lo standard input e restituisce il numero di elementi convertiti con successo.
+                  <div style="background: rgba(230,126,34,0.08); border-left: 4px solid #e67e22; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem;">
+                    ⚠️ <strong>WARNING: IL TRAPPO DEL MATCHING FAILURE</strong><br>
+                    Se l'input inserito non corrisponde al tipo specificato (es. inserire una lettera <code>'w'</code> quando si attende un intero <code>%d</code>):
+                    <br>1. La lettura si interrompe immediatamente.
+                    <br>2. La variabile rimane inalterata.
+                    <br>3. <span style="color: #e74c3c; font-weight: bold;">Il carattere errato rimane nel buffer di stdin</span> e farà fallire le letture successive.
+                  </div>
+                </div>
+                <div>
+                  <strong>Copia sicura di stringhe: <code>strncpy</code></strong>
+                  <br>
+                  <code>char *strncpy(char *dest, const char *src, size_t n);</code>
+                  <div style="background: rgba(231,76,60,0.08); border-left: 4px solid #e74c3c; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem;">
+                    🚨 <strong>IMPORTANT: MANCANZA DEL NULL TERMINATOR</strong><br>
+                    Se la lunghezza di <code>src</code> è maggiore o uguale a <code>n</code>, la stringa copiata in <code>dest</code> <span style="color: #e74c3c; font-weight: bold;">non sarà terminata dal carattere nullo ('\0')</span>. È obbligatorio aggiungerlo manualmente a fine array.
+                  </div>
+                </div>
+                <div>
+                  <strong>Operatori di Incremento (<code>++n</code> vs <code>n++</code>)</strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><strong>Pre-incremento (<code>++n</code>)</strong>: Incrementa prima di valutare l'espressione. Esempio con <code>n=2</code>: <code>2 * (++n)</code> = <code>6</code> (con <code>n=3</code>).</li>
+                    <li><strong>Post-incremento (<code>n++</code>)</strong>: Valuta l'espressione ed incrementa solo dopo. Esempio con <code>n=2</code>: <code>2 * (n++)</code> = <code>4</code> (e poi <code>n=3</code>).</li>
+                  </ul>
+                  <div style="background: rgba(231,76,60,0.08); border-left: 4px solid #e74c3c; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem; color: #c0392b;">
+                    🛑 <strong>CAUTION: LOOP INFINITO</strong><br>
+                    Un controllo come <code>while (++K > 10)</code> con <code>K=10</code> incrementa subito <code>K</code> a 11, valutando <code>11 > 10</code> come vero. Genera un loop infinito se <code>K</code> non viene modificato nel ciclo.
+                  </div>
+                </div>
+              </div>
+            </section>
+            
+            <!-- SEZIONE 3 -->
+            <section id="section-3" style="scroll-margin-top: 1rem;">
+              <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; border-left: 4px solid var(--primary); padding-left: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>⚙️</span> 3. Gestione dei Processi (System Calls)
+              </h3>
+              <div style="display: flex; flex-direction: column; gap: 1.2rem; line-height: 1.6; font-size: 0.95rem;">
+                <div>
+                  <strong>La System Call <span style="color: #3498db; font-weight: bold;"><code>fork()</code></span></strong>
+                  <br>
+                  Clona il processo chiamante. Restituisce:
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><span style="color: #2ecc71; font-weight: bold;"><code>0</code></span> nel processo <strong>figlio</strong>.</li>
+                    <li>Il <span style="color: #3498db; font-weight: bold;">PID del figlio</span> (maggiore di 0) nel processo <strong>padre</strong>.</li>
+                    <li><code>-1</code> in caso di errore.</li>
+                  </ul>
+                </div>
+                <div>
+                  <strong>La System Call <span style="color: #3498db; font-weight: bold;"><code>execve()</code></span></strong>
+                  <br>
+                  Sostituisce il programma corrente con un nuovo eseguibile.
+                  <div style="background: rgba(52,152,219,0.08); border-left: 4px solid #3498db; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem;">
+                    ℹ️ <strong>NOTA: COSA VIENE CONSERVATO</strong><br>
+                    Sebbene stack, heap e variabili vengano cancellati, i <strong>descrittori dei file aperti (file descriptors)</strong> e i relativi lock <span style="color: #2ecc71; font-weight: bold;">rimangono aperti e validi</span> (tranne se impostati con <code>FD_CLOEXEC</code>).
+                  </div>
+                </div>
+                <div>
+                  <strong>Attesa dei processi figli: <span style="color: #3498db; font-weight: bold;"><code>waitpid(-1, &amp;status, 0)</code></span></strong>
+                  <br>
+                  Il PID <code>-1</code> indica di attendere la terminazione di <span style="color: #2ecc71; font-weight: bold;">un qualsiasi figlio</span>, comportandosi in modo identico a <code>wait(&amp;status)</code>.
+                </div>
+                <div>
+                  <strong>Layout di Memoria: Stack vs Heap</strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><strong>Stack</strong>: Gestito in LIFO. La funzione <span style="color: #3498db; font-weight: bold;"><code>alloca()</code></span> alloca memoria dinamica sullo stack frame chiamante, che viene rilasciata automaticamente quando la funzione ritorna.</li>
+                    <li><strong>Heap</strong>: Allocazione manuale (<code>malloc</code>, <code>calloc</code>, <code>realloc</code>) e rilascio esplicito con <code>free</code>.</li>
+                  </ul>
+                </div>
+                <div style="background: rgba(52,152,219,0.08); border-left: 4px solid #3498db; padding: 0.8rem 1rem; border-radius: 6px; margin-top: 0.5rem;">
+                  <strong>🔍 RISOLUZIONE ESERCIZI: Calcolo dell'output di fork() multiple</strong>
+                  <br>
+                  Negli esercizi in cui occorre calcolare quante volte viene stampata una stringa con fork multiple in pipe o condizioni logiche:
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><strong>Regola Teorica:</strong> L'operatore <code>&&</code> esegue il cortocircuito. Se il primo termine è falso (0), il secondo non viene valutato. L'operatore <code>||</code> cortocircuita se il primo termine è vero (diverso da 0).</li>
+                    <li><strong>Risoluzione Pratica:</strong> Se viene eseguito <code>if (fork() && fork()) { printf("A\n"); }</code>:
+                      <ol style="margin-left: 1rem;">
+                        <li>Il primo <code>fork()</code> viene chiamato. Crea un figlio.
+                          <br>• Nel <strong>figlio</strong>, restituisce <code>0</code> (falso). L'operatore <code>&&</code> cortocircuita, il figlio salta il secondo operando, esce dall'if senza stampare.
+                          <br>• Nel <strong>padre</strong>, restituisce <code>PID</code> (vero). Valuta il secondo operando.
+                        </li>
+                        <li>Il secondo <code>fork()</code> viene chiamato (solo dal padre originario). Crea un altro figlio.
+                          <br>• Nel <strong>nuovo figlio</strong>, restituisce <code>0</code> (falso). L'intero <code>if</code> valuta a falso, quindi non stampa.
+                          <br>• Nel <strong>padre originario</strong>, restituisce <code>PID</code> (vero). Entrambi gli operandi sono veri, quindi esegue <code>printf("A\n")</code>.
+                        </li>
+                        <li>La lettera <code>"A"</code> viene quindi stampata <strong>1 sola volta</strong>.</li>
+                      </ol>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+            
+            <!-- SEZIONE 4 -->
+            <section id="section-4" style="scroll-margin-top: 1rem;">
+              <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; border-left: 4px solid var(--primary); padding-left: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>🧵</span> 4. Programmazione Concorrente (POSIX Threads)
+              </h3>
+              <div style="display: flex; flex-direction: column; gap: 1.2rem; line-height: 1.6; font-size: 0.95rem;">
+                <div>
+                  <strong>Creazione ed Attesa Thread: <code>pthread_create</code> e <code>pthread_join</code></strong>
+                  <br>
+                  <code>pthread_create</code> avvia un thread parallelo e sovrascrive la variabile <code>pthread_t</code> passata con il Thread ID.
+                  <div style="background: rgba(230,126,34,0.08); border-left: 4px solid #e67e22; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem;">
+                    ⚠️ <strong>WARNING: SOVRASCRITTURA DI TID</strong><br>
+                    Se riutilizzi la stessa variabile <code>tid</code> per lanciare due thread senza fare <code>pthread_join</code> in mezzo:
+                    <pre style="margin: 0.4rem 0; font-family: monospace; color: #e74c3c;">
+pthread_create(&amp;tid, NULL, worker, NULL); 
+pthread_create(&amp;tid, NULL, worker, NULL); // Sovrascrive tid!
+pthread_join(tid, NULL); // Attende SOLO il secondo thread!</pre>
+                    Il primo thread non potrà più essere unito, rimanendo in stato <strong>zombie</strong>.
+                  </div>
+                </div>
+                <div style="background: rgba(52,152,219,0.08); border-left: 4px solid #3498db; padding: 0.8rem 1rem; border-radius: 6px; margin-top: 0.5rem;">
+                  <strong>🔍 RISOLUZIONE ESERCIZI: Condivisione delle Risorse nei Thread</strong>
+                  <br>
+                  Negli esercizi che chiedono cosa viene modificato da un thread all'interno del processo:
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><strong>Regola Teorica:</strong> Tutti i thread dello stesso processo condividono lo spazio degli indirizzi globale (variabili globali, heap, descrittori dei file). Hanno invece stack separati e registri di CPU unici.</li>
+                    <li><strong>Risoluzione Pratica:</strong> Se un thread esegue un'assegnazione come <code>global_var = 100;</code>, tutti gli altri thread vedranno immediatamente la modifica. Per sincronizzare accessi concorrenti ed evitare <em>race conditions</em> su dati condivisi, è obbligatorio usare i <code>mutex</code> o i <code>semafori</code>.</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+            
+            <!-- SEZIONE 5 -->
+            <section id="section-5" style="scroll-margin-top: 1rem;">
+              <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; border-left: 4px solid var(--primary); padding-left: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>💾</span> 5. Gestione della Memoria Dinamica in C
+              </h3>
+              <div style="display: flex; flex-direction: column; gap: 1.2rem; line-height: 1.6; font-size: 0.95rem;">
+                <div>
+                  <strong>Inizializzazione a zero: <code>calloc</code> vs <code>malloc</code> + <code>memset</code></strong>
+                  <br>
+                  Entrambi i metodi allocano memoria sull'heap e la azzerano (bit a 0). <code>calloc</code> previene integer overflow nel calcolo delle dimensioni rispetto alla moltiplicazione manuale in <code>malloc</code>.
+                </div>
+                <div>
+                  <strong>Deallocazione di Matrici 2D</strong>
+                  <br>
+                  Per deallocare una matrice dinamica (es. <code>double **mat</code>) senza perdite di memoria:
+                  <ol style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li>Liberare prima ciascuna riga in un ciclo: <span style="color: #3498db; font-weight: bold;"><code>free(mat[i]);</code></span></li>
+                    <li>Liberare infine il puntatore principale: <span style="color: #3498db; font-weight: bold;"><code>free(mat);</code></span></li>
+                  </ol>
+                  <div style="background: rgba(231,76,60,0.08); border-left: 4px solid #e74c3c; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem; color: #c0392b;">
+                    🛑 <strong>CAUTION:</strong> Liberando prima il puntatore principale <code>free(mat)</code> si perde l'indirizzo delle righe, causando un permanente <strong>memory leak</strong> (perdita di memoria).
+                  </div>
+                </div>
+              </div>
+            </section>
+            
+            <!-- SEZIONE 6 -->
+            <section id="section-6" style="scroll-margin-top: 1rem;">
+              <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; border-left: 4px solid var(--primary); padding-left: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>🔑</span> 6. Permessi del Filesystem Unix (chmod e Bit Speciali)
+              </h3>
+              <div style="display: flex; flex-direction: column; gap: 1.2rem; line-height: 1.6; font-size: 0.95rem;">
+                <div>
+                  <strong>La cifra dei Bit Speciali (Cifra Ottale 1)</strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><strong>SetUID (valore <span style="color: #e67e22; font-weight: bold;">4</span>)</strong>: Esegue il file con i privileges del <em>proprietario</em> (es. <code>passwd</code>). Simbolo: <code>s</code> al posto di <code>x</code> del proprietario.</li>
+                    <li><strong>SetGID (valore <span style="color: #e67e22; font-weight: bold;">2</span>)</strong>: Esegue con i privileges del <em>gruppo proprietario</em>, o eredita il gruppo della cartella per i nuovi file. Simbolo: <code>s</code> al posto di <code>x</code> del gruppo.</li>
+                    <li><strong>Sticky Bit (valore <span style="color: #e67e22; font-weight: bold;">1</span>)</strong>: Impedisce ad utenti non proprietari di cancellare/rinominare file in una directory condivisa (es. <code>/tmp</code>). Simbolo: <code>t</code> nei permessi altri.</li>
+                  </ul>
+                </div>
+                <div>
+                  <strong>Permessi Standard</strong>: Lettura (<code>r</code>=4), Scrittura (<code>w</code>=2), Esecuzione (<code>x</code>=1).
+                </div>
+                <div style="background: rgba(46,204,113,0.08); border-left: 4px solid #2ecc71; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem;">
+                  ⭐ <strong>Scomposizione permessi (es. <code>6774</code>):</strong>
+                  <br>• Cifra speciale <code>6</code> = <code>SetUID (4) + SetGID (2)</code>.
+                  <br>• Proprietario <code>7</code> = <code>rwx</code> (con SetUID diventa <span style="color: #2ecc71; font-weight: bold;"><code>rws</code></span>).
+                  <br>• Gruppo <code>7</code> = <code>rwx</code> (con SetGID diventa <span style="color: #2ecc71; font-weight: bold;"><code>rws</code></span>).
+                  <br>• Altri <code>4</code> = <span style="color: #2ecc71; font-weight: bold;"><code>r--</code></span>.
+                  <br>• Stringa simbolica: <span style="color: #2ecc71; font-weight: bold;"><code>-rwsrwsr--</code></span>.
+                </div>
+                <div>
+                  <strong>Permessi Minimi per le Directory</strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li>Lettura (<code>r</code>): Permette di elencare i nomi dei file contenuti.</li>
+                    <li>Esecuzione (<code>x</code>): Permette di attraversare la directory ed accedere ai file all'interno (es. fare <code>cd</code> o <code>cat</code>).</li>
+                  </ul>
+                  <div style="background: rgba(46,204,113,0.08); border-left: 4px solid #2ecc71; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem;">
+                    🚨 <strong>IMPORTANT:</strong> I permessi minimi richiesti su una cartella per poter elencare i file e contemporaneamente accedere/leggere i loro contenuti sono <span style="color: #2ecc71; font-weight: bold;"><code>r-x</code></span> (valore 5). Senza <code>x</code>, la lettura fallirà.
+                  </div>
+                </div>
+                <div>
+                  <strong>I tre Timestamps</strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><mark style="background-color: #f1c40f; color: #000; padding: 0.05rem 0.2rem; border-radius: 2px;"><code>atime</code></mark>: Ultima lettura del file (es. <code>cat</code>, <code>grep</code>).</li>
+                    <li><mark style="background-color: #f1c40f; color: #000; padding: 0.05rem 0.2rem; border-radius: 2px;"><code>mtime</code></mark>: Ultima modifica del contenuto.</li>
+                    <li><mark style="background-color: #f1c40f; color: #000; padding: 0.05rem 0.2rem; border-radius: 2px;"><code>ctime</code></mark>: Modifica dei metadati o inode (es. cambio permessi con <code>chmod</code> o rinomina).</li>
+                  </ul>
+                  <br>
+                  Il comando <span style="color: #3498db; font-weight: bold;"><code>stat</code></span> mostra tutti e tre i timestamp. Il comando <span style="color: #3498db; font-weight: bold;"><code>touch</code></span> aggiorna atime e mtime al tempo corrente.
+                </div>
+                <div style="background: rgba(52,152,219,0.08); border-left: 4px solid #3498db; padding: 0.8rem 1rem; border-radius: 6px; margin-top: 0.5rem;">
+                  <strong>🔍 RISOLUZIONE ESERCIZI: Bit Speciali e Rappresentazione Simbolica</strong>
+                  <br>
+                  Negli esercizi che chiedono il significato di una maschera come <code>4755</code> o della rappresentazione <code>-rwsr-xr-x</code>:
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><strong>Regola Teorica:</strong> La prima cifra ottale (da 0 a 7) rappresenta i bit speciali: 4 = SetUID, 2 = SetGID, 1 = Sticky. Le altre tre cifre indicano User, Group e Others.</li>
+                    <li><strong>Risoluzione Pratica:</strong> Se l'esercizio ti mostra <code>/usr/bin/passwd</code> con permessi <code>4755</code>:
+                      <ol style="margin-left: 1rem;">
+                        <li>La prima cifra è <code>4</code>, il che indica che il bit **SetUID** è settato.</li>
+                        <li>La seconda cifra <code>7</code> indica permessi di lettura, scrittura ed esecuzione per il proprietario (User).</li>
+                        <li>Ciò significa simbolicamente \`-rwsr-xr-x\` (la \`s\` sostituisce la \`x\` dello user).</li>
+                        <li>Il comportamento pratico è che l'utente comune che lancia questo eseguibile acquisisce temporaneamente i permessi del proprietario del file (\`root\`), consentendogli di modificare la password shadow.</li>
+                      </ol>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+            
+            <!-- SEZIONE 7 -->
+            <section id="section-7" style="scroll-margin-top: 1rem;">
+              <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; border-left: 4px solid var(--primary); padding-left: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>📂</span> 7. System Call di I/O e File Locking
+              </h3>
+              <div style="display: flex; flex-direction: column; gap: 1.2rem; line-height: 1.6; font-size: 0.95rem;">
+                <div>
+                  <strong>File Descriptor vs Stream <code>FILE *</code></strong>
+                  <br>
+                  Le system call lavorano sui descrittori di file di basso livello (interi, es. <code>open()</code>). Le funzioni standard C lavorano su stream identificati da <code>FILE *</code> (es. <code>fopen()</code>). Non vanno scambiati o confusi.
+                </div>
+                <div>
+                  <strong>La virgola nella system call <code>open()</code>: Flags vs Mode</strong>
+                  <br>
+                  La signature completa è <code>int open(const char *path, int flags, mode_t mode);</code>
+                  <div style="background: rgba(231,76,60,0.08); border-left: 4px solid #e74c3c; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem; color: #c0392b;">
+                    🛑 <strong>CAUTION: LA TRAPPOLA DELLA VIRGOLA</strong><br>
+                    I flag di stato (es. <code>O_RDWR | O_CREAT</code>) e i permessi del file (es. <code>S_IRUSR | S_IWUSR</code>) sono <strong>due argomenti distinti</strong> della funzione e vanno separati da una <mark style="background-color: #f1c40f; color: #000; padding: 0.05rem 0.2rem; border-radius: 2px;"><strong>virgola</strong></mark>, non combinati con l'operatore OR bitwise <code>|</code>.
+                    <br>• <span style="color: #2ecc71; font-weight: bold;">CORRETTO (3 parametri):</span> <code>open("filename", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);</code>
+                    <br>• <span style="color: #e74c3c; font-weight: bold;">ERRATO (2 parametri):</span> <code>open("filename", O_RDWR | O_CREAT | S_IRUSR | S_IWUSR);</code>
+                    <br><em>Nell'errore, i permessi vengono fusi nei flags e il terzo argomento (permessi) rimarrà indefinito, creando il file con diritti casuali (garbage).</em>
+                  </div>
+                </div>
+                <div>
+                  <strong>Creazione esclusiva: <code>O_CREAT | O_EXCL</code></strong>
+                  <br>
+                  Se il file esiste già, la system call fallisce ritornando <code>-1</code> ed impostando <code>errno</code> a <code>EEXIST</code>.
+                </div>
+                <div>
+                  <strong>File Locking via <code>fcntl</code></strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><code>F_RDLCK</code>: Lock di lettura (condiviso).</li>
+                    <li><code>F_WRLCK</code>: Lock di scrittura (esclusivo).</li>
+                  </ul>
+                  <div style="background: rgba(230,126,34,0.08); border-left: 4px solid #e67e22; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem;">
+                    ⚠️ <strong>WARNING: IL TRAPPO DI <code>F_GETLK</code></strong><br>
+                    Il comando <code>F_GETLK</code> <span style="color: #e74c3c; font-weight: bold;">NON imposta alcun blocco</span>. Serve solo a verificare la disponibilità del lock. Se è disponibile, restituisce <code>F_UNLCK</code> nel campo <code>l_type</code>.
+                  </div>
+                </div>
+                <div>
+                  <strong>Hard Links e Inode (<code>ln</code>)</strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li>Creare un link fisico con <code>ln file1 link1</code> fa puntare entrambi <span style="color: #2ecc71; font-weight: bold;">allo stesso identico inode</span>, condividendo metadati, permessi e contenuti.</li>
+                  </ul>
+                </div>
+                <div>
+                  <strong>Ottenere l'Inode di un File</strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li>Si usa <code>stat nomefile</code> o <code>ls -i nomefile</code>.</li>
+                    <li><span style="color: #e74c3c; font-weight: bold;">Attenzione:</span> Il comando <code>stat -f nomefile</code> mostra lo <strong>stato del filesystem</strong>, non l'inode del singolo file!</li>
+                  </ul>
+                </div>
+                <div>
+                  <strong>Copia Selettiva con <code>dd</code>: <code>skip</code> vs <code>seek</code></strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li>Per copiare esattamente i primi 100 caratteri (byte) da un file: <code>dd if=filein of=fileout bs=100 count=1</code>.</li>
+                  </ul>
+                  <div style="background: rgba(52,152,219,0.08); border-left: 4px solid #3498db; padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.4rem;">
+                    💡 <strong>TRUCCO MNEMONICO: <code>skip</code> vs <code>seek</code></strong><br>
+                    • <mark style="background-color: #f1c40f; color: #000; padding: 0.05rem 0.2rem; border-radius: 2px;"><code>skip=N</code></mark>: Salta <code>N</code> blocchi sul file di <strong>input</strong> (<code>if</code>).
+                    <br><em>Associazione:</em> sk<span style="color: #3498db; font-weight: bold;">i</span>p ha la lettera <span style="color: #3498db; font-weight: bold;">i</span> come <span style="color: #3498db; font-weight: bold;">i</span>nput (<code>if</code>).
+                    <br>• <mark style="background-color: #f1c40f; color: #000; padding: 0.05rem 0.2rem; border-radius: 2px;"><code>seek=N</code></mark>: Si posiziona (seek) a <code>N</code> blocchi sul file di <strong>output</strong> (<code>of</code>).
+                    <br><em>Associazione:</em> se<span style="color: #e67e22; font-weight: bold;">e</span>k si riferisce all'operazione di posizionamento della testina di scrittura sul file di output (<code>of</code>).
+                  </div>
+                </div>
+                <div>
+                  <strong>Mappatura di Memoria: <code>mmap</code> e <code>msync</code></strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><code>mmap</code> mappa un file in memoria. Con <code>MAP_SHARED</code>, le modifiche in RAM sono sincronizzabili su disco mediante la system call <span style="color: #3498db; font-weight: bold;"><code>msync(addr, len, flags)</code></span>.</li>
+                  </ul>
+                </div>
+                <div style="background: rgba(52,152,219,0.08); border-left: 4px solid #3498db; padding: 0.8rem 1rem; border-radius: 6px; margin-top: 0.5rem;">
+                  <strong>🔍 RISOLUZIONE ESERCIZI: Copia di porzioni di File con <code>dd</code></strong>
+                  <br>
+                  Negli esercizi che chiedono di copiare una determinata porzione di file a partire da un offset:
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><strong>Regola Teorica:</strong> 
+                      <br>• <code>bs</code> indica la dimensione del blocco in byte.
+                      <br>• <code>skip</code> salta byte in *input* (da dove iniziare a leggere).
+                      <br>• <code>seek</code> salta byte in *output* (dove scrivere nel file destinazione).
+                      <br>• <code>count</code> indica quanti blocchi copiare.
+                    </li>
+                    <li><strong>Risoluzione Pratica:</strong> Se devi copiare 100 caratteri a partire dal decimo da <code>filein</code> a <code>fileout</code>:
+                      <ol style="margin-left: 1rem;">
+                        <li>Imposta la granularità a 1 byte: <code>bs=1</code>.</li>
+                        <li>Per iniziare dal 10° carattere, devi saltare i primi 10: <code>skip=10</code>.</li>
+                        <li>Per copiare 100 caratteri, specifichi: <code>count=100</code>.</li>
+                        <li>Comando finale: <code>dd if=filein of=fileout bs=1 skip=10 count=100</code>.</li>
+                      </ol>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+            
+            <!-- SEZIONE 8 -->
+            <section id="section-8" style="scroll-margin-top: 1rem;">
+              <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; border-left: 4px solid var(--primary); padding-left: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>👥</span> 8. Gestione Utenti e Comandi Unix
+              </h3>
+              <div style="display: flex; flex-direction: column; gap: 1.2rem; line-height: 1.6; font-size: 0.95rem;">
+                <div>
+                  <strong>Security delle Password: <code>/etc/shadow</code></strong>
+                  <br>
+                  Il file <code>/etc/shadow</code> contiene le password cifrate (leggibile solo da root). Il comando <code>passwd</code> ha il bit **SetUID attivo**, permettendo a chiunque di modificare temporaneamente il file shadow per cambiare la propria password.
+                </div>
+                <div>
+                  <strong>Creazione Utente: <code>adduser</code> vs <code>useradd</code></strong>
+                  <br>
+                  <code>useradd</code> è l'utility nativa di basso livello. <code>adduser</code> è lo script interattivo Perl di alto livello che configura automaticamente cartella home e password.
+                </div>
+                <div>
+                  <strong>Comandi Privilegiati: <code>sudo</code> vs <code>su</code></strong>
+                  <br>
+                  <code>sudo</code> esegue comandi richiedendo la password <em>personale dell'utente</em>. <code>su</code> avvia una shell richiedendo la password <em>dell'utente target</em> (ovvero password di root).
+                </div>
+                <div>
+                  <strong>Visualizzazione ad Albero: <code>tree</code></strong>
+                  <br>
+                  Per impostare la profondità massima dell'albero a 3 livelli, si usa l'opzione <mark style="background-color: #f1c40f; color: #000; padding: 0.05rem 0.2rem; border-radius: 2px;"><code>-L 3</code></mark> (es. <code>tree -L 3 dir1</code>).
+                  <br>
+                  <span style="color: #e74c3c; font-weight: bold;">Attenzione:</span> Opzioni come <code>--max-depth</code> non sono supportate da <code>tree</code>.
+                </div>
+                <div>
+                  <strong>Pipeline in Background</strong>
+                  <br>
+                  Concatenare più comandi tramite pipe in background (es. <code>sleep 30 | sleep 15 | sleep 10 &amp;</code>) crea <span style="color: #2ecc71; font-weight: bold;">un unico job in background</span> complessivo dal sistema.
+                </div>
+                <div>
+                  <strong>Montaggio Filesystem</strong>
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><code>/etc/fstab</code>: Filesystem montati automaticamente all'avvio.</li>
+                    <li><code>/etc/mtab</code>: Filesystem attualmente montati in tempo reale.</li>
+                  </ul>
+                </div>
+                <div>
+                  <strong>Tolleranza delle modalità di <code>fopen</code> in Linux</strong>
+                  <br>
+                  La modalità non standard <span style="color: #2ecc71; font-weight: bold;"><code>"rw+"</code></span> viene tollerata dalla libreria <code>glibc</code> di Linux ed interpretata come <code>"r+"</code> (lettura/scrittura su file esistente), per cui la chiamata funziona e scrive senza crashare.
+                </div>
+                <div style="background: rgba(52,152,219,0.08); border-left: 4px solid #3498db; padding: 0.8rem 1rem; border-radius: 6px; margin-top: 0.5rem;">
+                  <strong>🔍 RISOLUZIONE ESERCIZI: Pipeline in Background e Job Control</strong>
+                  <br>
+                  Negli esercizi che chiedono quanti job in background o quanti processi vengono creati da una riga di comando:
+                  <ul style="margin-left: 1.5rem; margin-top: 0.25rem;">
+                    <li><strong>Regola Teorica:</strong> Una pipeline (comandi uniti da <code>|</code>) viene eseguita in parallelo in processi separati. L'operatore <code>&</code> alla fine mette l'intera pipeline in background, considerandola come un singolo **Job** (lavoro della shell).</li>
+                    <li><strong>Risoluzione Pratica:</strong> Se esegui <code>sleep 30 | sleep 15 | sleep 10 &</code>:
+                      <ol style="margin-left: 1rem;">
+                        <li>Vengono creati 3 processi separati, uno per ciascun comando \`sleep\`.</li>
+                        <li>Tutti e 3 i processi vengono collegati da pipe.</li>
+                        <li>Il carattere <code>&amp;</code> mette in background l'intera pipeline come **1 singolo Job** nella tabella dei job della shell (assegnandole un ID tipo \`[1]\`).</li>
+                      </ol>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+            
+          </div>
+        </div>
+      `;
+    }
+
+    // Render active question detail card or simulation dashboard
+    function renderActiveQuestion() {
+      const container = document.getElementById('content-area');
+
+      if (state.mode === 'guide') {
+        container.innerHTML = getGuideHtml();
+        const targetId = `section-${state.currentGuideSection + 1}`;
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          setTimeout(() => {
+            targetEl.scrollIntoView({ behavior: 'auto', block: 'start' });
+          }, 50);
+        }
+        return;
+      }
+
+      if (state.mode === 'simulation' && state.simFinished && state.currentIndex === null) {
+        renderSimulationDashboard(container);
+        return;
+      }
+
+      if (state.mode === 'endless' && state.endlessScore === state.filteredQuestions.length && state.filteredQuestions.length > 0) {
+        renderEndlessVictoryScreen(container);
+        return;
+      }
+
+      if (state.filteredQuestions.length === 0) {
+        if (state.mode === 'review') {
+          container.innerHTML = `
+            <div class="sim-result-card" style="max-width: 42rem;">
+              <span class="filter-label">Ripasso Errori</span>
+              <div style="font-size: 4rem; margin: 1rem 0;">🎉</div>
+              <h2 style="font-weight: 700; margin-bottom: 0.5rem;">Nessun errore da ripassare!</h2>
+              <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                Ottimo lavoro! Non hai risposte errate registrate nella modalità Esercitazione. Continua così!
+              </p>
+              <button class="btn btn-primary" onclick="switchMode('practice')">Torna all'Esercitazione</button>
+            </div>
+          `;
+        } else {
+          container.innerHTML = '<div class="empty-state">Seleziona una domanda dal menu laterale per iniziare.</div>';
+        }
+        return;
+      }
+
+      const q = state.filteredQuestions[state.currentIndex];
+      if (!q) {
+        container.innerHTML = '<div class="empty-state">Seleziona una domanda dal menu laterale per iniziare.</div>';
+        return;
+      }
+
+      let isVerified = false;
+      let checked = null;
+      if (state.mode === 'endless') {
+         isVerified = !!state.endlessAnswer;
+         checked = state.endlessAnswer;
+      } else {
+         checked = state.checkedAnswers[q.id];
+         isVerified = state.mode === 'practice' ? !!checked : (state.mode === 'review' ? !!checked : state.simFinished);
+      }
+
+      let html = `
+        <div class="card" id="quiz-card">
+          <div class="card-header">
+            <div class="q-meta">
+              <span class="q-topic-pill">${q.topic || 'Argomento'}</span>
+              <span class="q-number-pill">Quesito ${state.currentIndex + 1} di ${state.filteredQuestions.length}</span>
+            </div>
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono)">ID: ${q.id}</span>
+          </div>
+      `;
+
+      html += `<div>${parseQuestionText(q.question)}</div>`;
+
+      html += `<div class="options-grid">`;
+      const mapping = state.shuffledIndices[q.id] || Array.from({length: q.options.length}, (_, i) => i);
+      mapping.forEach((origIdx, uiIdx) => {
+        const opt = q.options[origIdx];
+        const optionLetter = String.fromCharCode(65 + uiIdx);
+        let optionClass = '';
+        let isCorrect = origIdx === q.correct_index;
+        
+        let isSelected = false;
+        if (state.mode === 'practice' || state.mode === 'review') {
+          isSelected = state.selectedAnswer === origIdx || (isVerified && checked && checked.selected === origIdx);
+        } else if (state.mode === 'endless') {
+          isSelected = state.selectedAnswer === origIdx || (isVerified && checked && checked.selected === origIdx);
+        } else {
+          isSelected = state.selectedAnswer === origIdx || state.simAnswers[q.id] === origIdx;
+        }
+        
+        if (isVerified) {
+          if (isCorrect) {
+            optionClass = 'correct';
+          } else if (isSelected) {
+            optionClass = 'incorrect';
+          }
+        } else if (isSelected) {
+          optionClass = 'selected';
+        }
+
+        let statusText = '';
+        if (isVerified) {
+          if (isCorrect) {
+            statusText = '<span class="option-status correct">✓ Corretta</span>';
+          } else if (isSelected) {
+            statusText = '<span class="option-status incorrect">✗ Errata</span>';
+          }
+        }
+
+        html += `
+          <button class="option-button ${optionClass}" onclick="selectOption(${origIdx})" ${isVerified ? 'disabled' : ''}>
+            <div>
+              <span class="option-badge">${optionLetter}</span>
+              <span>${opt.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/`([^`]+)`/g, '<code>$1</code>')}</span>
+            </div>
+            ${statusText}
+          </button>
+        `;
+      });
+      html += `</div>`;
+
+      const isNextDisabled = state.currentIndex >= state.filteredQuestions.length - 1;
+      const isPrevDisabled = state.currentIndex <= 0;
+
+      if (state.mode === 'practice') {
+        const isVerifyDisabled = state.selectedAnswer === null || isVerified;
+        html += `
+          <div class="actions">
+            <button class="btn btn-secondary" onclick="navigate(-1)" ${isPrevDisabled ? 'disabled' : ''}>← Precedente</button>
+            
+            ${isVerified ? 
+              `<button class="btn btn-primary" onclick="navigate(1)" ${isNextDisabled ? 'disabled' : ''}>Successiva →</button>` :
+              `<button class="btn btn-primary" onclick="verifyAnswer()" ${isVerifyDisabled ? 'disabled' : ''}>Verifica Risposta</button>`
+            }
+          </div>
+        `;
+      
+      } else if (state.mode === 'endless') {
+        if (state.endlessGameOver) {
+          html += `
+            <div class="actions" style="flex-direction: column; gap: 0.8rem; align-items: center; width: 100%;">
+              <span style="font-size: 1.1rem; color: var(--error); font-weight: 700; text-align: center;">${state.endlessQuote}</span>
+              <button class="btn btn-primary" onclick="startEndless()">Ricomincia da capo</button>
+            </div>
+          `;
+        } else if (isVerified) {
+          html += `
+            <div class="actions" style="width: 100%;">
+              <span style="font-size: 0.95rem; color: var(--success); font-weight: 700; display: flex; align-items: center; gap: 0.3rem;">
+                ${state.endlessQuote}
+              </span>
+              <button class="btn btn-primary" onclick="nextEndlessQuestion()">Prossima Domanda →</button>
+            </div>
+          `;
+        } else {
+          const isVerifyDisabled = state.selectedAnswer === null;
+          html += `
+            <div class="actions" style="width: 100%;">
+              <span style="font-size: 0.85rem; color: var(--text-muted);">Punteggio: ${state.endlessScore}</span>
+              <button class="btn btn-primary" onclick="verifyAnswer()" ${isVerifyDisabled ? 'disabled' : ''}>Verifica Risposta</button>
+            </div>
+          `;
+        }
+      } else if (state.mode === 'review') {
+        if (checked) {
+          if (checked.correct) {
+            html += `
+              <div class="actions">
+                <span style="font-size: 0.95rem; color: var(--success); font-weight: 700; display: flex; align-items: center; gap: 0.3rem;">
+                  🎉 Risposta Corretta!
+                </span>
+                <button class="btn btn-primary" onclick="removeErrorAndContinue()">Rimuovi e Continua →</button>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="actions">
+                <button class="btn btn-secondary" onclick="navigate(-1)" ${isPrevDisabled ? 'disabled' : ''}>← Precedente</button>
+                <button class="btn btn-primary" onclick="retryReviewQuestion('${q.id}')">Riprova Quesito</button>
+                <button class="btn btn-secondary" onclick="navigate(1)" ${isNextDisabled ? 'disabled' : ''}>Successiva →</button>
+              </div>
+            `;
+          }
+        } else {
+          const isVerifyDisabled = state.selectedAnswer === null;
+          html += `
+            <div class="actions">
+              <button class="btn btn-secondary" onclick="cancelRetry('${q.id}')">Annulla</button>
+              <button class="btn btn-primary" onclick="verifyAnswer()" ${isVerifyDisabled ? 'disabled' : ''}>Verifica Risposta</button>
+            </div>
+          `;
+        }
+      } else {
+        html += `
+          <div class="actions">
+            <button class="btn btn-secondary" onclick="navigate(-1)" ${isPrevDisabled ? 'disabled' : ''}>← Precedente</button>
+            
+            ${state.simFinished && state.currentIndex === state.filteredQuestions.length - 1 ? 
+              `<button class="btn btn-primary" onclick="showDashboardOverview()">Mostra Risultati Esame</button>` :
+              `<button class="btn btn-primary" onclick="navigate(1)" ${isNextDisabled ? 'disabled' : ''}>Successiva →</button>`
+            }
+          </div>
+        `;
+      }
+
+      if (isVerified) {
+        html += `
+          <div class="explanation-container">
+            <div class="explanation-title">
+              <span>💡</span> Spiegazione Didattica
+            </div>
+            <div class="explanation-text">${formatExplanation(getDynamicExplanation(q))}</div>
+          </div>
+        `;
+      }
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    // Render the Simulation Final Results Dashboard
+    function renderSimulationDashboard(container) {
+      const res = state.simResult;
+      const isSufficient = res.passed;
+      
+      let html = `
+        <div class="sim-result-card">
+          <span class="filter-label">Risultato della simulazione</span>
+          
+          <div class="grade-circle ${isSufficient ? 'sufficient' : 'insufficient'}">
+            <span class="grade-val" style="font-size: ${res.grade === 'INSUF' ? '2.1rem' : '2.8rem'};">${res.grade}</span>
+            <span class="grade-max">${res.grade === '30L' ? 'e lode' : 'su 30'}</span>
+          </div>
+          
+          <div class="grade-label ${isSufficient ? 'success' : 'error'}">
+            ${isSufficient ? 'Superato!' : 'Insufficiente'}
+          </div>
+
+          <p style="font-size: 0.95rem; color: var(--text-muted); max-width: 32rem; line-height: 1.5;">
+            L'esame consiste in 45 domande. Ciascuna risposta corretta attribuisce <b>+2 punti</b>, ciascuna errata <b>-1 punto</b> e le risposte omesse <b>0 punti</b>. Il voto finale è calcolato in base alla tabella ufficiale dei punteggi d'esame.
+          </p>
+
+          <div class="sim-details-grid">
+            <div class="sim-detail-card" style="border-top: 3px solid var(--success)">
+              <span class="sim-detail-val success">${res.correct}</span>
+              <span class="sim-detail-label">Corrette (+2)</span>
+            </div>
+            <div class="sim-detail-card" style="border-top: 3px solid var(--error)">
+              <span class="sim-detail-val error">${res.wrong}</span>
+              <span class="sim-detail-label">Errate (-1)</span>
+            </div>
+            <div class="sim-detail-card" style="border-top: 3px solid var(--warning)">
+              <span class="sim-detail-val warning">${res.blank}</span>
+              <span class="sim-detail-label">Non Date (0)</span>
+            </div>
+            <div class="sim-detail-card" style="border-top: 3px solid var(--primary)">
+              <span class="sim-detail-val" style="color: var(--primary)">${res.score} <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted)">/90</span></span>
+              <span class="sim-detail-label">Punti Totali</span>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; margin-top: 1rem; width: 100%; max-width: 25rem;">
+            <button class="btn btn-secondary" style="flex: 1;" onclick="switchMode('practice')">Torna a Pratica</button>
+            <button class="btn btn-primary" style="flex: 1;" onclick="reviewSimulationQuestions()">Rivedi Risposte</button>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+    function reviewSimulationQuestions() {
+      state.currentIndex = 0;
+      renderSidebar();
+      renderActiveQuestion();
+    }
+
+    function showDashboardOverview() {
+      state.currentIndex = null;
+      renderSidebar();
+      renderActiveQuestion();
+    }
+
+    function retryReviewQuestion(qId) {
+      const checked = state.checkedAnswers[qId];
+      if (checked) {
+        state.lastFailedSelection = {
+          id: qId,
+          selected: checked.selected
+        };
+      }
+      delete state.checkedAnswers[qId];
+      state.selectedAnswer = null;
+      renderActiveQuestion();
+      renderSidebar();
+    }
+
+    function cancelRetry(qId) {
+      if (state.lastFailedSelection && state.lastFailedSelection.id === qId) {
+        state.checkedAnswers[qId] = {
+          selected: state.lastFailedSelection.selected,
+          correct: false
+        };
+      } else {
+        state.checkedAnswers[qId] = {
+          selected: 0,
+          correct: false
+        };
+      }
+      state.selectedAnswer = null;
+      renderActiveQuestion();
+      renderSidebar();
+    }
+
+    function removeErrorAndContinue() {
+      const remainingErrors = state.questions.filter(q => {
+        const checked = state.checkedAnswers[q.id];
+        return checked && !checked.correct;
+      });
+      
+      if (remainingErrors.length === 0) {
+        state.filteredQuestions = [];
+        state.currentIndex = null;
+      } else {
+        let nextIndex = state.currentIndex;
+        state.filteredQuestions = remainingErrors;
+        if (nextIndex >= state.filteredQuestions.length) {
+          nextIndex = state.filteredQuestions.length - 1;
+        }
+        state.currentIndex = nextIndex;
+      }
+      
+      state.selectedAnswer = null;
+      renderSidebar();
+      renderActiveQuestion();
+      updateStats();
+    }
+
+    // Keyboard support logic
+    function handleKeyPress(e) {
+      if (state.mode === 'guide') {
+        if (['1', '2', '3', '4', '5', '6', '7', '8'].includes(e.key)) {
+          const sectionIdx = parseInt(e.key) - 1;
+          state.currentGuideSection = sectionIdx;
+          renderSidebar();
+          const targetEl = document.getElementById(`section-${sectionIdx + 1}`);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+        return;
+      }
+
+      const q = state.filteredQuestions[state.currentIndex];
+      if (!q) return;
+
+      let isVerified = false;
+      let checked = null;
+      if (state.mode === 'endless') {
+         isVerified = !!state.endlessAnswer;
+         checked = state.endlessAnswer;
+      } else {
+         checked = state.checkedAnswers[q.id];
+         isVerified = state.mode === 'practice' ? !!checked : (state.mode === 'review' ? !!checked : state.simFinished);
+      }
+
+      if (!isVerified && ['1', '2', '3', '4'].includes(e.key)) {
+        const uiIdx = parseInt(e.key) - 1;
+        const mapping = state.shuffledIndices[q.id] || Array.from({length: q.options.length}, (_, i) => i);
+        if (uiIdx < mapping.length) {
+          const origIdx = mapping[uiIdx];
+          selectOption(origIdx);
+        }
+      }
+
+      
+      if (e.key === 'Enter') {
+        if (state.mode === 'endless') {
+          if (!isVerified && state.selectedAnswer !== null) {
+            verifyAnswer();
+          } else if (isVerified && !state.endlessGameOver) {
+            nextEndlessQuestion();
+          } else if (isVerified && state.endlessGameOver) {
+            startEndless();
+          }
+        } else if (state.mode === 'practice') {
+
+          if (!isVerified && state.selectedAnswer !== null) {
+            verifyAnswer();
+          } else if (isVerified && state.currentIndex < state.filteredQuestions.length - 1) {
+            navigate(1);
+          }
+        
+      } else if (state.mode === 'endless') {
+        if (state.endlessGameOver) {
+          html += `
+            <div class="actions" style="flex-direction: column; gap: 0.8rem; align-items: center; width: 100%;">
+              <span style="font-size: 1.1rem; color: var(--error); font-weight: 700; text-align: center;">${state.endlessQuote}</span>
+              <button class="btn btn-primary" onclick="startEndless()">Ricomincia da capo</button>
+            </div>
+          `;
+        } else if (isVerified) {
+          html += `
+            <div class="actions" style="width: 100%;">
+              <span style="font-size: 0.95rem; color: var(--success); font-weight: 700; display: flex; align-items: center; gap: 0.3rem;">
+                ${state.endlessQuote}
+              </span>
+              <button class="btn btn-primary" onclick="nextEndlessQuestion()">Prossima Domanda →</button>
+            </div>
+          `;
+        } else {
+          const isVerifyDisabled = state.selectedAnswer === null;
+          html += `
+            <div class="actions" style="width: 100%;">
+              <span style="font-size: 0.85rem; color: var(--text-muted);">Punteggio: ${state.endlessScore}</span>
+              <button class="btn btn-primary" onclick="verifyAnswer()" ${isVerifyDisabled ? 'disabled' : ''}>Verifica Risposta</button>
+            </div>
+          `;
+        }
+      } else if (state.mode === 'review') {
+          if (!isVerified && state.selectedAnswer !== null) {
+            verifyAnswer();
+          } else if (isVerified && checked && checked.correct) {
+            removeErrorAndContinue();
+          } else if (isVerified && state.currentIndex < state.filteredQuestions.length - 1) {
+            navigate(1);
+          }
+        } else {
+          if (state.currentIndex < state.filteredQuestions.length - 1) {
+            navigate(1);
+          } else if (state.simFinished) {
+            showDashboardOverview();
+          }
+        }
+      }
+
+      if (state.mode !== 'endless' && e.key === 'ArrowRight' && state.currentIndex < state.filteredQuestions.length - 1) {
+        navigate(1);
+      }
+      if (state.mode !== 'endless' && e.key === 'ArrowLeft' && state.currentIndex > 0) {
+        navigate(-1);
+      }
+    }
+
+    // Select an option click handler
+    function selectOption(idx) {
+      const q = state.filteredQuestions[state.currentIndex];
+      
+      if (state.mode === 'practice' || state.mode === 'review') {
+        if (state.checkedAnswers[q.id]) return;
+        state.selectedAnswer = idx;
+      } else if (state.mode === 'endless') {
+        if (state.endlessAnswer) return;
+        state.selectedAnswer = idx;
+      } else {
+        if (state.simFinished) return;
+        
+        if (state.simAnswers[q.id] === idx) {
+          delete state.simAnswers[q.id];
+          state.selectedAnswer = null;
+        } else {
+          state.simAnswers[q.id] = idx;
+          state.selectedAnswer = idx;
+        }
+      }
+      
+      renderActiveQuestion();
+      renderSidebar();
+    }
+
+    // Verify option logic (Practice mode only)
+    function verifyAnswer() {
+      const q = state.filteredQuestions[state.currentIndex];
+      if (state.selectedAnswer === null) return;
+      
+      const isCorrect = state.selectedAnswer === q.correct_index;
+      
+      if (state.mode === 'endless') {
+        if (state.endlessAnswer) return;
+        state.endlessAnswer = { selected: state.selectedAnswer, correct: isCorrect };
+        
+        // Pause timer on verification
+        clearInterval(state.endlessTimerId);
+        
+        if (isCorrect) {
+          state.endlessScore++;
+          if (state.endlessScore > state.endlessHighScore) {
+            state.endlessHighScore = state.endlessScore;
+            localStorage.setItem('so2_crocette_endless_high', state.endlessHighScore);
+          }
+          // Save record time ONLY when completing all questions in the test (score === total questions)
+          if (state.endlessScore === state.filteredQuestions.length) {
+            if (state.endlessBestTime === 0 || state.endlessTime < state.endlessBestTime) {
+              state.endlessBestTime = state.endlessTime;
+              localStorage.setItem('so2_crocette_hardcore_best_time', state.endlessBestTime);
+            }
+            state.endlessQuote = `🏆 Vittoria! Hai completato tutte le domande in ${formatDuration(state.endlessTime)}!`;
+          } else {
+            state.endlessQuote = "Risposta corretta (+1 punto)";
+          }
+        } else {
+          state.endlessGameOver = true;
+          state.endlessQuote = `💥 Game Over<br><span style="font-size: 1.3rem; margin-top: 0.6rem; display: block; color: var(--text-muted); font-family: var(--font-mono);">Punteggio finale: ${state.endlessScore}</span><span style="font-size: 0.92rem; margin-top: 1rem; display: block; font-style: italic; font-weight: normal; color: var(--text-muted); line-height: 1.5;">«La determinazione è fallire per 19 volte e avere successo la ventesima.»<br><small style="font-size: 0.8rem; font-style: normal; opacity: 0.85;">— Julie Andrews</small></span>`;
+        }
+        renderActiveQuestion();
+        renderSidebar();
+        return;
+      }
+
+      if (state.checkedAnswers[q.id]) return;
+
+      state.checkedAnswers[q.id] = {
+        selected: state.selectedAnswer,
+        correct: isCorrect
+      };
+
+      saveProgress();
+      renderActiveQuestion();
+      renderSidebar();
+    }
+
+    // Navigate questions (+1 or -1)
+    function navigate(dir) {
+      const targetIndex = state.currentIndex + dir;
+      if (targetIndex >= 0 && targetIndex < state.filteredQuestions.length) {
+        selectQuestion(targetIndex);
+      }
+    }
+
+    // Reset quiz stats and storage
+    function resetQuiz() {
+      if (confirm('Sei sicuro di voler resettare tutte le risposte date finora? L\'intera cronologia andrà persa.')) {
+        state.checkedAnswers = {};
+        state.selectedAnswer = null;
+        generateShuffledIndices(); // Fresh shuffle on reset
+        saveProgress();
+        selectQuestion(0);
+      }
+    }
+
+    // Load progress from LocalStorage
+    function loadProgress() {
+      const saved = localStorage.getItem('so2_crocette_progress');
+      if (saved) {
+        try {
+          state.checkedAnswers = JSON.parse(saved);
+        } catch(e) {
+          console.error(e);
+        }
+      }
+    }
+
+    // Start App
+    window.addEventListener('DOMContentLoaded', () => {
+      init();
+    });
+  </script>
+</body>
+</html>

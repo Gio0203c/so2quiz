@@ -1,0 +1,13 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE & Editor configurations
+.vscode/
+.idea/
+.antigravitycli/
+
+# Backup & Temporary files
+*.bak
+*.log
+*.tmp
