@@ -242,6 +242,34 @@
     .stat-value.error { color: var(--error); }
     .stat-value.warning { color: var(--warning); }
 
+    /* GitHub Star Button */
+    .github-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--panel-border);
+      color: var(--text-main);
+      padding: 0.35rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    [data-theme="dark"] .github-link-btn {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .github-link-btn:hover {
+      background: var(--primary-glow);
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
     /* Theme Toggle Slider */
     .theme-switch-container {
       display: flex;
@@ -1184,8 +1212,13 @@
       <button class="mode-btn" id="btn-mode-endless" onclick="switchMode('endless')">Modalità Hardcore</button>
     </div>
 
-    <!-- Header Controls (Stats + Theme Toggle) -->
+    <!-- Header Controls (GitHub Star + Theme Toggle) -->
     <div class="header-controls">
+      <a href="https://github.com/Gio0203c/so2quiz" target="_blank" rel="noopener noreferrer" class="github-link-btn" title="Vedi su GitHub & lascia una stella ⭐">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <span>GitHub ⭐</span>
+      </a>
+
       <!-- Theme Switch Slider -->
       <div class="theme-switch-container">
         <span class="theme-label-icon light-label" onclick="setTheme('light')" title="Tema Chiaro">
