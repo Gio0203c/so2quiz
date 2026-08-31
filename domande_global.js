@@ -1,4 +1,5 @@
-const QUESTIONS = [
+const QUESTIONS = 
+[
   {
     "id": 1,
     "topic": "Gestione Utenti",
@@ -244,7 +245,7 @@ const QUESTIONS = [
       "Nessuna risposta (0 punti)"
     ],
     "correct_index": 2,
-    "explanation": "La system call `wait` (`pid_t wait(int *wstatus);`) sospende l'esecuzione del processo chiamante finché uno dei suoi figli non termina. Se un processo figlio è già terminato ed è nello stato 'zombie', la chiamata ritorna immediatamente, ripulendo lo zombie e restituendo il PID del figlio terminato.\n\n**Analisi delle opzioni:**\n- **Opzione B (Corretta):** La wait si sblocca non appena termina il primo figlio o se ce n'è già uno terminato.\n- **Opzione A (Errata):** Non attende tutti i figli, ma si sblocca al primo che termina.\n- **Opzione C (Errata):** Non attende il processo padre (che è il chiamante).\n- **Opzione D (Errata):** Essendo la B corretta, questa opzione non si applica."
+    "explanation": "Il comando `tree` mostra graficamente la gerarchia delle directory a partire da una radice specificata.\n\nL'opzione `-L <level>` (Level/Depth limit) indica a `tree` la profondità massima di discesa da visualizzare nell'albero. Pertanto, il comando appropriato per mostrare l'albero a partire da `dir1` fino a una profondità di 3 livelli è `tree -L 3 dir1`.\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** `tree -L 3 dir1` imposta correttamente il limite massimo di profondità a 3.\n- **Opzione A (Errata):** L'opzione `-d` elenca solo le directory (escludendo i file) e non accetta un parametro numerico di profondità come `3`.\n- **Opzione B (Errata):** `--max-depth=3` non è un'opzione valida del comando `tree` (è usata invece da `du` e `find`), generando un errore di sintassi.\n- **Opzione D (Errata):** Essendo l'opzione C corretta, questa opzione non si applica."
   },
   {
     "id": 20,
@@ -257,7 +258,7 @@ const QUESTIONS = [
       "Perché la direttiva dice di cercare il file stdio.h nella directory corrente, mentre tale header file è solitamente memorizzato in un'altra directory del filesystem."
     ],
     "correct_index": 3,
-    "explanation": "La funzione `pthread_join(pthread_t thread, void **retval)` attende la terminazione del thread specificato. Se il thread è già terminato, la funzione ritorna immediatamente. Essa permette inoltre di recuperare il valore di ritorno del thread tramite il secondo argomento `retval`.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Attende la terminazione dello specifico thread indicato.\n- **Opzione B (Errata):** Non attende tutti i thread creati, ma solo quello specificato.\n- **Opzione D (Errata):** Non attende il thread chiamante.\n- **Opzione C (Errata):** Essendo la A corretta, questa opzione non si applica."
+    "explanation": "In linguaggio C, la sintassi della direttiva `#include` specifica al preprocessore dove cercare i file header:\n1. `#include <file.h>`: cerca direttamente nei **percorsi di sistema predefiniti** (es. `/usr/include`), dove risiedono gli header standard come `stdio.h`.\n2. `#include \"file.h\"`: cerca prioritariamente nella **directory corrente** (dove si trova il file sorgente in compilazione) e solo in caso di mancato ritrovamento prosegue nelle directory di sistema.\n\nUtilizzando le virgolette (`\"stdio.h\"`), il compilatore si aspetta di trovare il file nella directory di lavoro locale. Se nella directory corrente non esiste un file `stdio.h` o se sono attive regole rigide di compilazione, l'inclusione può fallire o generare errori imprevisti.\n\n**Analisi delle opzioni:**\n- **Opzione D (Corretta):** Spiega con precisione che la direttiva con le virgolette richiede la ricerca prioritaria nella directory locale anziché in quella di sistema.\n- **Opzione C (Errata):** La sintassi con virgolette non dice di cercarlo prioritariamente in `/usr/include`.\n- **Opzione A (Errata):** Può generare errori se il file non è reperibile localmente o se l'ambiente non ammette il fallback automatico.\n- **Opzione B (Errata):** Essendo l'opzione D corretta, questa opzione non si applica."
   },
   {
     "id": 21,
