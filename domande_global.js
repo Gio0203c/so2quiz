@@ -323,7 +323,7 @@ const QUESTIONS =
       "char *myptr(char *)"
     ],
     "correct_index": 1,
-    "explanation": "*Argomento: Puntatori*\n\n**Perché la risposta è corretta:**\nPer dichiarare un puntatore a una funzione, è necessario inserire il simbolo `*` e il nome del puntatore tra parentesi tonde, es. `(*myptr)`, per evitare che l'operatore di deferenziazione si associ al tipo di ritorno. Poiché la funzione ritorna un puntatore a carattere (`char *`) e riceve come argomento un puntatore a carattere (`char *`), la sintassi corretta è `char *(*myptr)(char *)`.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** È errata in quanto l'opzione B risponde in modo esatto e completo al quesito.\n- **Opzione C (`char **myptr(char *)`):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (`char *myptr(char *)`):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
+    "explanation": "*Argomento: Puntatori*\n\n**Perché la risposta è corretta:**\nPer dichiarare un puntatore a una funzione, è necessario inserire il simbolo `*` e il nome del puntatore tra parentesi tonde, es. `(*myptr)`, per evitare che l'operatore di deferenziazione si associ al tipo di ritorno. Poiché la funzione ritorna un puntatore a carattere (`char *`) e riceve come argomento un puntatore a carattere (`char *`), la sintassi corretta è `char *(*myptr)(char *)`.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** È errata in quanto l'opzione B risponde in modo esatto e completo al quesito.\n- **Opzione C (char **myptr(char *)):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (char *myptr(char *)):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
     "id": 26,
@@ -2105,5 +2105,291 @@ const QUESTIONS =
     ],
     "correct_index": 2,
     "explanation": "Un percorso assoluto indica una posizione fissa all'interno della gerarchia del filesystem a partire dalla directory radice (`/`).\n\n- **Perché l'opzione C è corretta:** Il comando `cd /` cambia la directory di lavoro corrente nella root directory, che è il percorso assoluto per eccellenza.\n- **Perché le altre opzioni sono errate:** `.` (opzione A) e `..` (opzione B) indicano rispettivamente la directory corrente e quella superiore, e sono per definizione percorsi relativi, dipendenti dalla posizione corrente nel filesystem."
+  },
+  {
+    "id": 165,
+    "topic": "Inizializzazione Variabili",
+    "question": "Data la seguente funzione ricorsiva:\n```c\nint myfun2(int a){\n    static int b;\n    if (b) return 0;\n    else return ++b*a*myfun2(a-1);\n}\n```\nquale valore e' ritornato dalla chiamata `myfun2(4)`?",
+    "options": [
+      "0",
+      "Nessuna risposta (0 punti)",
+      "4! al quadrato (576).",
+      "Non viene ritornato alcun valore perché la funzione entra in un ciclo ricorsivo infinito."
+    ],
+    "correct_index": 0,
+    "explanation": "La variabile `b` è qualificata come `static`, quindi viene allocata nella memoria statica (segmento BSS) e inizializzata implicitamente a 0 prima dell'avvio del programma; il suo valore persiste tra chiamate successive.\n\n- **Prima chiamata `myfun2(4)`:** `b` vale 0. La condizione `if (b)` è falsa. Si entra nell'else: il pre-incremento `++b` porta `b` a 1 e restituisce 1. L'espressione da valutare diventa `1 * 4 * myfun2(3)`.\n- **Seconda chiamata `myfun2(3)`:** `b` vale 1 (ereditato dalla chiamata precedente). La condizione `if (b)` è vera (1 != 0), quindi la funzione restituisce immediatamente `0`.\n- **Ritorno finale:** L'espressione della prima chiamata si risolve in `1 * 4 * 0 = 0`.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Il valore calcolato e ritornato è esattamente 0.\n- **Opzione C (Errata):** Non calcola il fattoriale completo poiché la ricorsione viene troncata al secondo passo.\n- **Opzione D (Errata):** Non vi è alcuna ricorsione infinita, la condizione di stop scatta alla seconda chiamata.\n- **Opzione B (Errata):** Essendo l'opzione A corretta, questa opzione non si applica."
+  },
+  {
+    "id": 166,
+    "topic": "Inizializzazione Variabili",
+    "question": "Qual è l'output del seguente programma?\n```c\nvoid f(void) {\n    static int c = 0;\n    c++;\n    printf(\"%d \", c);\n}\nint main(void) {\n    f(); f(); f();\n    return 0;\n}\n```",
+    "options": [
+      "1 2 3",
+      "1 1 1",
+      "0 1 2",
+      "Nessuna risposta (0 punti)"
+    ],
+    "correct_index": 0,
+    "explanation": "Una variabile locale statica (`static int c = 0;`) viene allocata nel segmento dati/BSS e inizializzata una sola volta al caricamento del programma. La sua durata di vita coincide con quella dell'intero programma, conservando il proprio valore tra successive invocazioni della funzione `f`.\n\n- 1ª chiamata di `f()`: `c` viene incrementata da 0 a 1 e stampa `1 `.\n- 2ª chiamata di `f()`: `c` parte da 1, viene incrementata a 2 e stampa `2 `.\n- 3ª chiamata di `f()`: `c` parte da 2, viene incrementata a 3 e stampa `3 `.\n\nL'output complessivo a video è `1 2 3 `.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Mostra la sequenza corretta `1 2 3` dovuta alla persistenza della variabile statica.\n- **Opzione B (Errata):** Sarebbe `1 1 1` solo se `c` fosse una variabile automatica ordinaria (`int c = 0;`), riallocata e reinizializzata ad ogni chiamata.\n- **Opzione C (Errata):** L'incremento `c++` avviene prima della stampa, quindi alla prima chiamata `c` vale già 1 e non 0.\n- **Opzione D (Errata):** Essendo l'opzione A corretta, questa opzione non si applica."
+  },
+  {
+    "id": 167,
+    "topic": "Puntatori",
+    "question": "Si consideri il seguente frammento di codice:\n```c\nstruct f2D {\n    double x; // coordinata x\n    double y; // coordinata y\n    int val; // valore della funzione\n} pA;\nvoid main(){\n    struct f2D *p = &pA;\n}\n```\nQuale istruzione C scrive il valore 0 nel campo `val` di `pA` usando il puntatore `p`?",
+    "options": [
+      "Nessuna risposta (0 punti)",
+      "p->val = 0;",
+      "(p*).val = 0;",
+      "p.val = 0;"
+    ],
+    "correct_index": 1,
+    "explanation": "In linguaggio C, quando si accede al membro di una struttura tramite un puntatore alla struttura stessa, si utilizza l'operatore freccia `->`. Tale operatore rappresenta una sintassi abbreviata equivalente alla dereferenziazione esplicita con parentesi: `(*p).val`.\n\n**Analisi delle opzioni:**\n- **Opzione B (Corretta):** `p->val = 0;` dereferenzia correttamente il puntatore `p` e assegna 0 al campo `val` di `pA`.\n- **Opzione C (Errata):** La sintassi `(p*)` non è valida in C; la dereferenziazione con operatore punto richiederebbe `(*p).val = 0;`.\n- **Opzione D (Errata):** L'operatore punto `.` si applica direttamente a una variabile di tipo struct (es. `pA.val = 0;`), e non a un puntatore a struct.\n- **Opzione A (Errata):** Essendo l'opzione B corretta, questa opzione non si applica."
+  },
+  {
+    "id": 168,
+    "topic": "Scope delle Variabili",
+    "question": "Che cosa stampa il seguente frammento di codice:\n```c\nvoid func1() {\n    extern int myvar;\n    void nestfunc1() {\n        myvar = 0;\n    }\n    nestfunc1();\n    myvar = 1;\n}\n\nint myvar = 8;\nvoid main(void) {\n    func1();\n    printf(\"myvar = %d\\n\", myvar);\n}\n```",
+    "options": [
+      "myvar = 0",
+      "myvar = 1",
+      "myvar = 8",
+      "Nessuna risposta (0 punti)"
+    ],
+    "correct_index": 1,
+    "explanation": "La variabile globale `myvar` viene inizializzata a 8.\nQuando `main` invoca `func1()`:\n1. La clausola `extern int myvar;` dichiara la visibilità della variabile globale `myvar`.\n2. Viene definita la funzione annidata `nestfunc1` (estensione GCC) che assegna `myvar = 0;`.\n3. Viene chiamata `nestfunc1()`, azzerando la variabile globale.\n4. Subito dopo, sempre all'interno di `func1()`, viene eseguita l'assegnazione `myvar = 1;`, che sovrascrive la variabile globale col valore 1.\n5. Al ritorno nel `main`, la chiamata `printf` stampa il valore corrente della variabile globale `myvar`, che è `1`.\n\n**Analisi delle opzioni:**\n- **Opzione B (Corretta):** Stampa `myvar = 1` poiché l'assegnazione `myvar = 1;` sovrascrive lo zero impostato da `nestfunc1()`.\n- **Opzione A (Errata):** Sarebbe 0 solo in assenza della successiva istruzione `myvar = 1;`.\n- **Opzione C (Errata):** Sarebbe 8 solo se la variabile globale non fosse mai stata modificata da `func1()`.\n- **Opzione D (Errata):** Essendo l'opzione B corretta, questa opzione non si applica."
+  },
+  {
+    "id": 169,
+    "topic": "Programmazione Concorrente",
+    "question": "Si consideri il seguente frammento di codice (i numeri a lato sono i numeri di riga delle istruzioni):\n```c\n1. pthread_t tid[8];\n2. for (int i=0; i<8; i++)\n3.    pthread_create(&tid[i], NULL, myfun, &i);\n4. for (int i=0; i<8; i++)\n5.    pthread_join(&tid[i], NULL);\n6. printf(\"finito!\");\n```\ndove `myfun` e' una funzione che accetta un puntatore ad intero. Quale delle seguenti affermazioni e' falsa?",
+    "options": [
+      "La stringa \"finito!\" e' inviata su stdout solo quando tutti i thread sono terminati.",
+      "Nessuna risposta (0 punti)",
+      "Il codice crea 8 thread e poi si mette in attesa che tutti terminino.",
+      "La stringa \"finito!\" e' inviata su stdout quando almeno uno dei thread creati (non importa quale) e' terminato."
+    ],
+    "correct_index": 3,
+    "explanation": "La chiamata di libreria `pthread_join(tid, ...)` sospende l'esecuzione del thread chiamante fino a quando il thread specificato non ha completato la propria esecuzione.\nIl ciclo for alle righe 4-5 itera su tutti gli 8 thread (da 0 a 7), eseguendo la join su ciascuno di essi. L'istruzione alla riga 6 (`printf(\"finito!\");`) si trova al di fuori e a valle del ciclo, e può quindi essere eseguita solo dopo che ciascuno degli 8 thread è terminato.\n\n**Analisi delle opzioni:**\n- **Opzione D (Corretta come risposta da selezionare - in quanto FALSA):** L'affermazione che 'finito!' venga stampato al termine di almeno uno dei thread è palesemente falsa: viene stampato solo dopo che tutti gli 8 thread sono terminati.\n- **Opzione A (Vera, non da selezionare):** È un'affermazione vera perché il ciclo di join su tutti gli 8 elementi garantisce la terminazione completa prima di proseguire.\n- **Opzione C (Vera, non da selezionare):** È un'affermazione vera: il primo for crea 8 thread e il secondo attende la terminazione di ciascuno.\n- **Opzione B (Errata):** Essendo l'opzione D falsa, essa costituisce la risposta richiesta dal quesito."
+  },
+  {
+    "id": 170,
+    "topic": "Puntatori",
+    "question": "Che cosa viene stampato dal seguente codice?\n```c\nvoid f(int *p) {\n    p = NULL;\n}\nint main(void) {\n    int x = 5;\n    int *q = &x;\n    f(q);\n    printf(\"%d\", *q);\n    return 0;\n}\n```",
+    "options": [
+      "5",
+      "0",
+      "Comportamento indefinito (uso di un puntatore nullo).",
+      "Nessuna risposta (0 punti)"
+    ],
+    "correct_index": 0,
+    "explanation": "In linguaggio C, il passaggio dei parametri avviene rigorosamente **per valore** (per copia). Quando `f(q)` viene invocata, il parametro formale `p` riceve una copia del puntatore `q` (cioè una copia dell'indirizzo di `x`).\nAll'interno di `f`, l'assegnazione `p = NULL;` modifica unicamente la variabile locale `p` sullo stack di `f`. Il puntatore originale `q` nel frame di `main` rimane inalterato e continua a puntare a `x`.\nAl ritorno nel `main`, l'espressione `*q` dereferenzia validamente `x`, stampando il valore `5`.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Viene stampato 5 perché `q` continua a puntare a `x` (il valore di `q` non è stato alterato da `f`).\n- **Opzione B (Errata):** La variabile `x` non viene azzerata, né viene azzerato il puntatore `q`.\n- **Opzione C (Errata):** Non si verifica alcun comportamento indefinito né segmentation fault, in quanto `q` non è un puntatore nullo.\n- **Opzione D (Errata):** Essendo l'opzione A corretta, questa opzione non si applica."
+  },
+  {
+    "id": 171,
+    "topic": "Sintassi C",
+    "question": "Supponiamo di avere le seguenti variabili:\n```c\nint x=1, y=7;\n```\nquale delle seguenti espressioni logiche e' falsa?",
+    "options": [
+      "(x & y) == 7",
+      "Nessuna risposta (0 punti)",
+      "(x | y) == 7",
+      "(x || y) == (x && y)"
+    ],
+    "correct_index": 0,
+    "explanation": "Esaminiamo le rappresentazioni binarie degli operandi: `x = 1` (`...0001` in binario) e `y = 7` (`...0111` in binario).\n\n- **Opzione A: `(x & y) == 7`**: L'operatore bitwise AND `&` confronta bit a bit: `0001 & 0111 = 0001` (valore decimale 1). Il confronto `1 == 7` è falso (0). Questa espressione logica è pertanto **FALSA** (ed è la risposta richiesta).\n- **Opzione C: `(x | y) == 7`**: L'operatore bitwise OR `|` esegue `0001 | 0111 = 0111` (valore decimale 7). Il confronto `7 == 7` è vero (1).\n- **Opzione D: `(x || y) == (x && y)`**: Gli operatori `||` e `&&` sono operatori booleani logici. Essendo sia `x` che `y` non nulli (veri): `(x || y)` vale 1 e `(x && y)` vale 1. Il confronto `1 == 1` è vero (1).\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta - in quanto FALSA):** `(x & y)` vale 1, rendendo l'uguaglianza con 7 falsa.\n- **Opzione C (Vera, non da selezionare):** L'OR bitwise restituisce effettivamente 7.\n- **Opzione D (Vera, non da selezionare):** Entrambi i membri valgono 1 (vero), quindi l'espressione è vera.\n- **Opzione B (Errata):** Essendo l'opzione A falsa, essa costituisce la risposta esatta."
+  },
+  {
+    "id": 172,
+    "topic": "Puntatori",
+    "question": "Quale dichiarazione crea un puntatore che non può essere riassegnato, ma attraverso il quale i dati puntati possono essere modificati?",
+    "options": [
+      "char const *p;",
+      "char * const p;",
+      "const char *p;",
+      "Nessuna risposta (0 punti)"
+    ],
+    "correct_index": 1,
+    "explanation": "In linguaggio C, la posizione della parola chiave `const` rispetto all'asterisco `*` determina l'oggetto qualificato come immutabile:\n\n- `char * const p;`: `p` è un **puntatore costante** (`const p`) a un carattere modificabile (`char *`). Il puntatore `p` non può essere riassegnato ad un altro indirizzo (es. `p = ptr;` causa errore di compilazione), ma i dati puntati possono essere modificati attraverso dereferenziazione (es. `*p = 'A';` è pienamente lecito).\n- `const char *p;` e `char const *p;`: `p` è un puntatore modificabile a dati costanti (`const char`). Il puntatore può essere riassegnato, ma i dati non possono essere modificati tramite `*p`.\n\n**Analisi delle opzioni:**\n- **Opzione B (Corretta):** `char * const p;` crea esattamente un puntatore costante a dato modificabile.\n- **Opzione A (Errata):** Dichiara un puntatore a caratteri costanti.\n- **Opzione C (Errata):** Sintassi alternativa del tutto equivalente all'opzione A.\n- **Opzione D (Errata):** Essendo l'opzione B corretta, questa opzione non si applica."
+  },
+  {
+    "id": 173,
+    "topic": "Puntatori a Funzione",
+    "question": "Sia dato il seguente frammento di codice:\n```c\nint fun(){\n    // ...\n}\nint (*fptr)();\nfptr = fun;\n```\nQuale istruzione C esegue una chiamata a `fun` tramite il puntatore `fptr`?",
+    "options": [
+      "Nessuna risposta (0 punti)",
+      "*fptr;",
+      "*fptr();",
+      "fptr();"
+    ],
+    "correct_index": 3,
+    "explanation": "Nello standard C, un puntatore a funzione può essere invocato utilizzando direttamente il nome del puntatore seguito dalle parentesi tonde degli argomenti: `fptr();` (oppure con dereferenziazione esplicita racchiusa tra parentesi tonde `(*fptr)();`).\n\n**Analisi delle opzioni:**\n- **Opzione D (Corretta):** `fptr();` è la sintassi standard e corretta per invocare la funzione puntata da `fptr`.\n- **Opzione B (Errata):** `*fptr;` dereferenzia il puntatore ma non invoca la funzione (mancano le parentesi dell'operatore di chiamata).\n- **Opzione C (Errata):** Le parentesi di chiamata `()` hanno precedenza più alta rispetto all'asterisco `*`, quindi `*fptr()` verrebbe interpretato come invocare `fptr()` e poi dereferenziare il valore intero restituito (`int`), generando un errore di tipo del compilatore.\n- **Opzione A (Errata):** Essendo l'opzione D corretta, questa opzione non si applica."
+  },
+  {
+    "id": 174,
+    "topic": "Gestione della Memoria Dinamica",
+    "question": "L'intestazione della funzione di libreria `free` e' la seguente:\n```c\nvoid free(void *ptr);\n```\nChe cosa succede se chiamo `free` due volte con lo stesso `ptr`?",
+    "options": [
+      "In questo caso il comportamento di free e' indefinito.",
+      "Il sistema operativo termina il processo che ha richiesto tale operazione.",
+      "Nessuna risposta (0 punti)",
+      "Nulla, perché il gestore di memoria e' al corrente che ptr e' già stato deallocato."
+    ],
+    "correct_index": 0,
+    "explanation": "Secondo lo standard C (ISO C §7.22.3.4), invocare la funzione `free(ptr)` su un puntatore già deallocato (senza che esso sia stato riassegnato mediante una nuova allocazione) costituisce un **Undefined Behavior** (comportamento indefinito, noto nella sicurezza informatica come vulnerabilità di *double free*).\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Lo standard C definisce formalmente tale operazione come comportamento indefinito.\n- **Opzione B (Errata):** Anche se gli allocatori moderni (es. glibc ptmalloc) effettuano controlli di integrità e possono terminare il processo con segnale di abort (`SIGABRT`), questo è un meccanismo difensivo dell'allocatore a runtime e non un comportamento formalmente garantito dal sistema operativo o dallo standard.\n- **Opzione D (Errata):** La funzione `free` non tiene traccia automaticamente dei puntatori già liberati né li imposta a `NULL`.\n- **Opzione C (Errata):** Essendo l'opzione A corretta, questa opzione non si applica."
+  },
+  {
+    "id": 175,
+    "topic": "Puntatori",
+    "question": "Su un tipico sistema a 64 bit:\n```c\nvoid f(int arr[10]) {\n    printf(\"%zu\", sizeof(arr));\n}\n```\nChe cosa stampa questa funzione?",
+    "options": [
+      "40",
+      "10",
+      "8",
+      "Nessuna risposta (0 punti)"
+    ],
+    "correct_index": 2,
+    "explanation": "In linguaggio C, quando un array è dichiarato come parametro formale nell'intestazione di una funzione (es. `int arr[10]`), avviene la cosiddetta conversione **array decay**: il parametro viene convertito automaticamente dal compilatore in un puntatore al primo elemento (`int *arr`), ignorando la dimensione specificata tra quadre.\nDi conseguenza, all'interno della funzione `f`, l'operatore `sizeof(arr)` valuta l'occupazione in memoria di una variabile puntatore (`sizeof(int *)`).\nSu una tipica architettura a 64 bit, tutti i puntatori occupano **8 byte**, quindi la funzione stampa `8`.\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** Stampa 8 byte, corrispondente alla dimensione di un puntatore su architettura a 64 bit.\n- **Opzione A (Errata):** 40 byte (`10 * sizeof(int)`) sarebbe la dimensione dell'array nel suo contesto originale di dichiarazione locale/globale, non all'interno di una funzione dove decade a puntatore.\n- **Opzione B (Errata):** 10 è il numero di elementi dell'array, non la dimensione in byte.\n- **Opzione D (Errata):** Essendo l'opzione C corretta, questa opzione non si applica."
+  },
+  {
+    "id": 176,
+    "topic": "Puntatori",
+    "question": "Che cosa stampa il seguente frammento di codice:\n```c\nstruct fun2D {\n    long int x;\n    long int y;\n    double val;\n};\nvoid main(){\n    static struct fun2D pA, *p = pA;\n    printf(\"val = %f\\n\", (*p).val);\n}\n```",
+    "options": [
+      "Il codice non compila correttamente.",
+      "Il processo produce segmentation fault.",
+      "Nessuna risposta (0 punti)",
+      "val = 0.000000"
+    ],
+    "correct_index": 0,
+    "explanation": "Nell'istruzione `static struct fun2D pA, *p = pA;`, `pA` è una variabile di tipo struttura `struct fun2D`, mentre `p` è un puntatore a struttura `struct fun2D *`.\nIn C, non è lecito inizializzare un puntatore passando direttamente il valore di una variabile di tipo struttura (errore di tipo: *incompatible types when initializing type 'struct fun2D *' using type 'struct fun2D'*).\nPer inizializzare correttamente il puntatore all'indirizzo di `pA` sarebbe stato obbligatorio l'uso dell'operatore di indirizzo `&`: `*p = &pA;`.\nPoiché il compilatore rifiuta il codice con un errore di sintassi/tipo in compilazione, il programma non compila.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Il codice non compila correttamente a causa dell'incompatibilità di tipo nell'assegnazione al puntatore.\n- **Opzione B (Errata):** Il programma non giunge mai in esecuzione per poter generare un segmentation fault.\n- **Opzione D (Errata):** Non stampa alcun valore poiché la compilazione fallisce.\n- **Opzione C (Errata):** Essendo l'opzione A corretta, questa opzione non si applica."
+  },
+  {
+    "id": 177,
+    "topic": "Puntatori",
+    "question": "Quale delle seguenti affermazioni sul nome di un array in C è vera?",
+    "options": [
+      "Nessuna risposta (0 punti)",
+      "Il nome di array identifica la locazione del puntatore all'array.",
+      "Il nome di un array è una variabile puntatore che può essere modificata.",
+      "Il nome di un array è un sinonimo per la locazione del primo elemento dell'array."
+    ],
+    "correct_index": 3,
+    "explanation": "In linguaggio C, il nome di un array è un identificatore costante associato direttamente alla locazione di memoria in cui risiede il primo elemento dell'array (`&arr[0]`).\nIl nome dell'array non è una variabile puntatore allocata in memoria (non possiede un indirizzo proprio separato né occupa memoria per memorizzare un puntatore) e non è un l-value modificabile (operazioni come `arr = ptr` sono illegali).\n\n**Analisi delle opzioni:**\n- **Opzione D (Corretta):** Il nome dell'array è a tutti gli effetti un sinonimo per l'indirizzo (locazione) del suo primo elemento.\n- **Opzione C (Errata):** Il nome di un array non è una variabile puntatore e non può essere modificato o riassegnato.\n- **Opzione B (Errata):** Non esiste alcuna locazione di memoria separata per un presunto 'puntatore all'array'.\n- **Opzione A (Errata):** Essendo l'opzione D corretta, questa opzione non si applica."
+  },
+  {
+    "id": 178,
+    "topic": "Scope delle Variabili",
+    "question": "Quale delle seguenti affermazioni sulle variabili statiche locali è falsa?",
+    "options": [
+      "Nessuna risposta (0 punti)",
+      "Sono allocate nello heap e inizializzate a 0.",
+      "Mantengono il loro valore tra una chiamata e l'altra della funzione in cui sono definite.",
+      "Sono inizializzate a 0 alla prima chiamata della funzione in cui sono definite."
+    ],
+    "correct_index": 1,
+    "explanation": "Le variabili statiche locali NON vengono allocate nello heap. L'area heap è riservata esclusivamente alla memoria allocata dinamicamente su esplicita richiesta del programmatore mediante le funzioni `malloc`, `calloc` o `realloc`.\nLe variabili statiche (locali o globali) risiedono invece nel segmento dei dati statici del programma: nel segmento BSS se non inizializzate esplicitamente (dove vengono azzerate dal runtime prima dell'avvio del `main`), oppure nel segmento dati inizializzato (Data segment).\n\n**Analisi delle opzioni:**\n- **Opzione B (Corretta come risposta da selezionare - in quanto FALSA):** L'affermazione che le variabili statiche locali siano allocate nello heap è falsa.\n- **Opzione C (Vera, non da selezionare):** È una proprietà fondamentale delle variabili statiche locali mantenere il proprio valore tra successive invocazioni della funzione.\n- **Opzione D (Vera, non da selezionare):** Le variabili statiche locali non inizializzate esplicitamente hanno valore iniziale garantito pari a 0.\n- **Opzione A (Errata):** Essendo l'opzione B falsa, essa costituisce la risposta esatta."
+  },
+  {
+    "id": 179,
+    "topic": "Puntatori",
+    "question": "Volendo dichiarare un array `giorni` di 12 puntatori ad interi, quale delle seguenti dichiarazioni è corretta?",
+    "options": [
+      "int *giorni[12];",
+      "int giorni[1][2];",
+      "int (*giorni)[12];",
+      "Nessuna risposta (0 punti)"
+    ],
+    "correct_index": 0,
+    "explanation": "In C, l'operatore di indicizzazione `[]` ha una priorità di precedenza maggiore rispetto all'operatore di dereferenziazione `*`:\n- `int *giorni[12];`: la precedenza fa sì che `giorni` sia prima di tutto un **array di 12 elementi** (`giorni[12]`), in cui ciascun elemento è un **puntatore a int** (`int *`).\n- `int (*giorni)[12];`: l'uso delle parentesi tonde forza la precedenza sull'asterisco, dichiarando `giorni` come un **singolo puntatore** a un array di 12 interi.\n- `int giorni[1][2];`: dichiara una matrice bidimensionale di interi (1 riga e 2 colonne).\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** `int *giorni[12];` è la corretta dichiarazione di un array di 12 puntatori a intero.\n- **Opzione C (Errata):** Dichiara un puntatore a un array di 12 interi, non un array di puntatori.\n- **Opzione B (Errata):** Dichiara una matrice bidimensionale di interi 1x2.\n- **Opzione D (Errata):** Essendo l'opzione A corretta, questa opzione non si applica."
+  },
+  {
+    "id": 180,
+    "topic": "Scope delle Variabili",
+    "question": "Quale delle seguenti affermazioni sulle variabili statiche locali è vera?",
+    "options": [
+      "Sono inizializzate a 0 ad ogni chiamata della funzione in cui sono definite.",
+      "Nessuna risposta (0 punti)",
+      "Sono allocate nello heap e inizializzate a 0.",
+      "Mantengono il loro valore tra una chiamata e l'altra della funzione in cui sono definite."
+    ],
+    "correct_index": 3,
+    "explanation": "La peculiarità distintiva delle variabili statiche definite all'interno del corpo di una funzione (variabili statiche locali) è la loro durata di memorizzazione: a differenza delle variabili automatiche ordinarie che vengono create sullo stack all'ingresso della funzione e distrutte all'uscita, una variabile statica locale viene allocata nella memoria statica una sola volta all'avvio del programma e preserva il proprio valore tra una chiamata e l'altra per l'intera esecuzione dell'applicazione.\n\n**Analisi delle opzioni:**\n- **Opzione D (Corretta):** Le variabili statiche locali conservano il loro valore tra chiamate successive della funzione.\n- **Opzione A (Errata):** L'inizializzazione avviene una sola volta prima dell'avvio del programma, non ad ogni chiamata della funzione.\n- **Opzione C (Errata):** Sono allocate nel segmento dati statici/BSS, non nello heap.\n- **Opzione B (Errata):** Essendo l'opzione D corretta, questa opzione non si applica."
+  },
+  {
+    "id": 181,
+    "topic": "Programmazione Concorrente",
+    "question": "Si consideri il seguente frammento di codice:\n```c\npthread_t tid;\nint i=0;\npthread_create(&tid, NULL, myfun, &i);\ni++;\npthread_join(tid, NULL);\n```\ndove `myfun` è una funzione che accetta un puntatore ad intero.\nQuesto codice può dare origine ad una race condition tra i thread sulla variabile `i`?",
+    "options": [
+      "Sì, nel caso il thread che esegue myfun definisca a sua volta una variabile locale i.",
+      "No, perché la variabile i è locale al thread principale.",
+      "Sì, perché la variabile i è condivisa tra i due thread.",
+      "Nessuna risposta (0 punti)"
+    ],
+    "correct_index": 2,
+    "explanation": "Il thread principale passa l'indirizzo di memoria della propria variabile `i` (`&i`) come argomento alla funzione `myfun` eseguita dal nuovo thread. Contemporaneamente, il thread principale prosegue l'esecuzione ed effettua l'operazione di incremento `i++` prima che il nuovo thread sia terminato (la chiamata `pthread_join` viene eseguita solo dopo `i++`).\nPoiché la variabile `i` è condivisa tramite puntatore ed entrambi i thread vi accedono contemporaneamente in modo asincrono (con almeno un accesso in scrittura), si verifica una classica **race condition** (corsa critica) priva di sincronizzazione.\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** Si ha una race condition poiché `i` è condivisa e acceduta contemporaneamente da entrambi i thread senza mutua esclusione.\n- **Opzione B (Errata):** Sebbene `i` sia allocata sullo stack del thread principale, l'averne passato l'indirizzo `&i` rende la locazione di memoria accessibile e condivisa con il thread figlio.\n- **Opzione A (Errata):** Una variabile locale dichiarata dentro `myfun` avrebbe scope locale al thread e non interferirebbe con la `i` del thread principale.\n- **Opzione D (Errata):** Essendo l'opzione C corretta, questa opzione non si applica."
+  },
+  {
+    "id": 182,
+    "topic": "Programmazione Concorrente",
+    "question": "Si consideri il seguente frammento di codice:\n```c\npthread_t tid;\nint i=0;\npthread_create(&tid, NULL, myfun, &i);\npthread_join(tid, NULL);\ni++;\n```\ndove `myfun` è una funzione che accetta un puntatore ad intero.\nIl codice di cui sopra è soggetto a race condition sulla variabile `i`?",
+    "options": [
+      "No, perché il thread principale si mette subito in attesa della terminazione del thread appena creato.",
+      "No, perché il thread che esegue myfun opera su una copia locale di i.",
+      "No, perché la variabile i è allocata sullo stack del thread principale.",
+      "Nessuna risposta (0 punti)"
+    ],
+    "correct_index": 0,
+    "explanation": "In questo frammento, il thread principale invoca la system call `pthread_join(tid, NULL)` **immediatamente dopo** la creazione del thread e **prima** di eseguire l'istruzione `i++`.\nLa chiamata `pthread_join` è bloccante: il thread principale viene sospeso e non riprende l'esecuzione finché il thread appena creato con `tid` non ha terminato completamente la propria funzione `myfun`.\nDi conseguenza non vi è alcuna sovrapposizione temporale (concorrenza) tra le operazioni eseguite da `myfun` sulla variabile puntata e l'istruzione `i++` eseguita dal thread principale, escludendo l'insorgere di race condition.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Non si ha race condition perché `pthread_join` serializza l'accesso attendendo la terminazione del thread figlio prima che il main thread esegua `i++`.\n- **Opzione B (Errata):** `myfun` riceve il puntatore `&i`, quindi opera sulla variabile originale e non su una copia locale.\n- **Opzione C (Errata):** Il fatto che `i` sia allocata sullo stack del thread principale non impedirebbe una race condition se i due thread vi accedessero contemporaneamente.\n- **Opzione D (Errata):** Essendo l'opzione A corretta, questa opzione non si applica."
+  },
+  {
+    "id": 183,
+    "topic": "Sintassi C",
+    "question": "Quale delle seguenti dichiarazioni di variabile è non valida, generando quindi un errore di compilazione?",
+    "options": [
+      "float g-stock=9.89;",
+      "float g_stock=9.89;",
+      "Nessuna risposta (0 punti)",
+      "float g__stock=9.89;"
+    ],
+    "correct_index": 0,
+    "explanation": "In linguaggio C, i nomi degli identificatori (variabili, funzioni, ecc.) possono essere composti esclusivamente da lettere (maiuscole e minuscole), cifre numeriche (da 0 a 9, purché non come primo carattere) e il carattere underscore `_`.\nIl carattere trattino `-` non è un carattere alfanumerico valido per un identificatore: esso rappresenta l'operatore aritmetico di sottrazione.\nPertanto, la dichiarazione `float g-stock=9.89;` viene analizzata dal compilatore come l'espressione di sottrazione `float g - stock = 9.89;`, provocando un errore di sintassi non sanabile in fase di compilazione.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** `float g-stock=9.89;` non è valida poiché il trattino '-' è l'operatore di sottrazione e non un carattere valido per identificatori.\n- **Opzione B (Errata):** `float g_stock=9.89;` è una dichiarazione perfettamente valida con un singolo underscore.\n- **Opzione D (Errata):** `float g__stock=9.89;` è valida: il C consente identificatori contenenti due underscore consecutivi.\n- **Opzione C (Errata):** Essendo l'opzione A non valida (e quindi corretta come risposta al quesito), questa opzione non si applica."
+  },
+  {
+    "id": 184,
+    "topic": "Comandi Unix",
+    "question": "Supponiamo di avere un file `nomefile` memorizzato nel nostro filesystem.\nQuale è il risultato del comando `touch nomefile`?",
+    "options": [
+      "Aggiorna, al tempo corrente, gli attributi atime e mtime di nomefile",
+      "Crea un file vuoto con nome nomefile in sostituzione dell'esistente",
+      "Nessuna risposta (0 punti)",
+      "Crea un file vuoto con nome nomefile in sostituzione dell'esistente e valore del ctime aggiornato al tempo corrente"
+    ],
+    "correct_index": 0,
+    "explanation": "Il comando Unix `touch` ha un duplice comportamento a seconda dell'esistenza del file indicato:\n- Se il file specificato NON esiste, viene creato come file vuoto regolare (con permessi determinati dalla umask corrente).\n- Se il file specificato **esiste già** nel filesystem (come precisato nel testo del quesito), `touch` non ne modifica né ne cancella il contenuto: si limita ad aggiornare i timestamp di ultimo accesso (`atime`) e di ultima modifica dei dati (`mtime`) alla data e ora correnti (modificando di conseguenza anche il timestamp di cambio metadati dell'inode `ctime`).\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Aggiorna al tempo corrente gli attributi `atime` e `mtime` del file già esistente, senza alterarne i dati.\n- **Opzione B (Errata):** Non cancella né sostituisce il file esistente con un file vuoto.\n- **Opzione D (Errata):** Non effettua alcuna sovrascrittura o ricreazione del file.\n- **Opzione C (Errata):** Essendo l'opzione A corretta, questa opzione non si applica."
+  },
+  {
+    "id": 185,
+    "topic": "File System Paths",
+    "question": "Quanti file system principali ha Linux?",
+    "options": [
+      "Dipende dal numero di filesystem montati al boot",
+      "Dipende dal numero di dischi installati",
+      "Nessuna risposta (0 punti)",
+      "Un solo file system principale"
+    ],
+    "correct_index": 3,
+    "explanation": "Nei sistemi operativi Unix e Linux, l'intero spazio di memorizzazione è organizzato secondo una **singola gerarchia ad albero unificata**.\nA differenza di altri sistemi operativi (come MS-DOS o Windows, che assegnano una radice e una lettera di unità separata per ciascuna partizione o disco fisico, es. `C:\\`, `D:\\`), Linux possiede un **unico file system principale** che parte dall'unica radice globale `/` (*root directory*).\nTutti gli altri dischi, partizioni, memorie rimovibili o filesystem speciali (come `/proc` o `/sys`) vengono resi accessibili 'innestandosi' come punti di montaggio (*mount points*) all'interno di questo unico albero gerarchico principale.\n\n**Analisi delle opzioni:**\n- **Opzione D (Corretta):** Linux adotta un solo file system principale con un'unica radice `/`.\n- **Opzione A (Errata):** Il montaggio al boot innesta filesystem secondari in directory dell'albero, ma non crea radici principali multiple.\n- **Opzione B (Errata):** Il numero di dischi fisici o partizioni non influisce sulla struttura logica ad albero unico di Linux.\n- **Opzione C (Errata):** Essendo l'opzione D corretta, questa opzione non si applica."
+  },
+  {
+    "id": 186,
+    "topic": "Segnali",
+    "question": "Assumiamo di voler modificare il comportamento di default di un processo quando riceve un segnale.\nQuale system call (o combinazione di system call) di seguito riportate è possibile utilizzare?",
+    "options": [
+      "signal(2) seguita da una fork(2) che esegue l'handler del segnale",
+      "sigaction(2) seguita da una fork(2) che esegue l'handler del segnale",
+      "signal(2)",
+      "Nessuna risposta (0 punti)"
+    ],
+    "correct_index": 2,
+    "explanation": "Per alterare o ridefinire l'azione di default associata alla ricezione di un segnale (ad eccezione di `SIGKILL` e `SIGSTOP`, che non possono essere intercettati), un processo installa un gestore personalizzato (*signal handler*) tramite la system call standard `sigaction(2)` oppure la più datata `signal(2)`.\nL'esecuzione del gestore di segnale avviene direttamente e in modo asincrono nel contesto del thread/processo ricevente; non richiede assolutamente la creazione di processi figli né l'invocazione di `fork(2)`.\nTra le combinazioni proposte, l'unica invocazione valida ed efficace è `signal(2)` da sola.\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** `signal(2)` è la system call idonea a registrare un handler per modificare il comportamento del processo alla ricezione del segnale.\n- **Opzione A (Errata):** Non occorre eseguire alcuna `fork(2)`: l'handler viene eseguito all'interno del processo stesso che ha ricevuto il segnale.\n- **Opzione B (Errata):** Anche qui, l'aggiunta di una `fork(2)` è concettualmente errata e non fa parte del meccanismo di gestione dei segnali.\n- **Opzione D (Errata):** Essendo l'opzione C corretta, questa opzione non si applica."
   }
 ];
