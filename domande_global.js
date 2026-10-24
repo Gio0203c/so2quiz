@@ -361,8 +361,8 @@ const QUESTIONS =
       "Per usare una variabile che non è visibile nel punto in cui la si vuole utilizzare.",
       "Per rendere le variabili utilizzabili dalle funzioni di libreria sul file."
     ],
-    "correct_index": 1,
-    "explanation": "*Argomento: Preprocessore e compilazione*\n\n**Perché la risposta è corretta:**\nLa parola chiave `extern` dichiara una variabile o funzione indicando al compilatore che il simbolo è definito in un'altra unità di traduzione (un altro file `.c`). Questo permette al linker di risolvere i riferimenti a variabili globali condivise tra più file sorgente.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** È errata in quanto l'opzione B risponde in modo esatto e completo al quesito.\n- **Opzione C (Per usare una variabile che non è visibile nel punto in cui la si vuole utilizzare.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (Per rendere le variabili utilizzabili dalle funzioni di libreria sul file.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
+    "correct_index": 2,
+    "explanation": "*Argomento: Preprocessore e compilazione*\n\n**Perché la risposta è corretta:**\nLa parola chiave `extern` permette di dichiarare una variabile che non è ancora visibile nel punto di programma in cui si desidera utilizzarla.\n\n**Analisi delle altre opzioni (perchè sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)): E' errata perchè esiste una risposta corretta.\n- **Opzione B (Per rendere visibili variabili definite in altri file.):** Descrive un caso d'uso valido di `extern`, ma è meno generale della risposta C.\n- **Opzione D (Per rendere le variabili utilizzabili dalle funzioni di libreria sul file.):** E' errata perchè `extern non serve a concedere alle funzioni di libreria l'accesso alle variabii, ma a dichiarare simboli definiti altrove."
   },
   {
     "id": 29,
@@ -400,8 +400,8 @@ const QUESTIONS =
       "A[2][3] e B[15][7] sono validi riferimenti ad un int.",
       "L'accesso agli elementi di B e' più veloce dell'accesso a quelli di A perché effettuato con un puntatore ad ogni colonna della matrice."
     ],
-    "correct_index": 3,
-    "explanation": "*Argomento: Puntatori*\n\n**Perché la risposta è corretta:**\nL'affermazione D è falsa per due ragioni fondamentali: 1) L'accesso a un elemento tramite array di puntatori `B[i][j]` richiede un livello di indirezione in più rispetto a una matrice contigua (due accessi alla memoria anziché uno solo preceduto da una veloce operazione aritmetica), rendendolo in realtà più lento dell'accesso ad `A`. 2) Gli elementi di `B` sono puntatori alle righe della matrice, non alle colonne. L'affermazione C invece è considerata vera dal punto di vista puramente sintattico (entrambe le espressioni compilano correttamente come accessi a valori di tipo `int`).\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** È errata in quanto l'opzione D risponde in modo esatto e completo al quesito.\n- **Opzione B (Gli elementi di B devono essere array di 10 interi.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione C (A[2][3] e B[15][7] sono validi riferimenti ad un int.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
+    "correct_index": 1,
+    "explanation": "*Argomento: Puntatori*\n\n**Perché la risposta è corretta:**\nLa dichiaraziona `int A[10][10], *B[10];` definisce due strutture differenti. `A` è una matrice di 10 righe e 10 colonne, mentre `B` è un array di 10 puntatori a `int`. Gli elementi di `B` non devono necessariamente puntare ad un array di 10 interi. Pertanto, l'affermazione B è falsa.\n\n**Analisi delle altre opzioni:**\n- **Opzione A (Nessuna risposta (0 punti)):** Non è la risposta attesa.\n- **Opzione C (A[2][3] e B[15][7] sono validi riferimenti ad un int.):**Anche questa dovrebbe essere falsa, ma non è la risposta attesa del quiz.\n- **Opzione D (L'accesso agli elementi di B è più veloce dell'accesso a quelli di A perchè effettuato con un puntatore ad ogni colonna della matrice.):**Anche questa dovrebbe essere falsa, ma non è la risposta attesa del quiz."
   },
   {
     "id": 32,
@@ -2391,5 +2391,44 @@ const QUESTIONS =
     ],
     "correct_index": 2,
     "explanation": "Per alterare o ridefinire l'azione di default associata alla ricezione di un segnale (ad eccezione di `SIGKILL` e `SIGSTOP`, che non possono essere intercettati), un processo installa un gestore personalizzato (*signal handler*) tramite la system call standard `sigaction(2)` oppure la più datata `signal(2)`.\nL'esecuzione del gestore di segnale avviene direttamente e in modo asincrono nel contesto del thread/processo ricevente; non richiede assolutamente la creazione di processi figli né l'invocazione di `fork(2)`.\nTra le combinazioni proposte, l'unica invocazione valida ed efficace è `signal(2)` da sola.\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** `signal(2)` è la system call idonea a registrare un handler per modificare il comportamento del processo alla ricezione del segnale.\n- **Opzione A (Errata):** Non occorre eseguire alcuna `fork(2)`: l'handler viene eseguito all'interno del processo stesso che ha ricevuto il segnale.\n- **Opzione B (Errata):** Anche qui, l'aggiunta di una `fork(2)` è concettualmente errata e non fa parte del meccanismo di gestione dei segnali.\n- **Opzione D (Errata):** Essendo l'opzione C corretta, questa opzione non si applica."
+  },
+  {
+    "id": 187,
+    "topic": "Puntatori",
+    "question": "Dato il seguente codice C:\n```c\nint a[5] = {10, 20, 30, 40, 50};\nint *p = a;\nprintf(\"%d\", *(p+3) - *(p+1));\n```\nQual è l'output?",
+    "options": [
+      "Nessuna risposta (0 punti)",
+      "2",
+      "20",
+      "30"
+    ],
+    "correct_index": 2,
+    "explanation": "*Argomento: Puntatori*\n\n**Perché la risposta è corretta:**\nIl puntatore `p` punta al primo elemento dell'array `a`, ossia `a[0]`. In C, l'aritmetica dei puntatori permette di accedere agli elementi successivi attraverso lo spostamento del puntatore. L'espressione `*(p+3)` equivale ad `a[3]`, quindi restituisce 40, mentre `*(p+1)` equivale ad `a[1]`, quindi restituisce 20. La sottrazione `40 - 20` produce 20, che viene stampato dalla `printf`.\n\n**Analisi delle altre opzioni:**\n- **Opzione A (Nessuna risposta (0 punti)):** È errata perché esiste una risposta corretta.\n- **Opzione B (2):** È errata perché 2 rappresenta la differenza tra gli indici 3 e 1, non tra i valori contenuti nelle rispettive posizioni dell'array.\n- **Opzione D (30):** È errata perché 30 è il valore di `a[2]`, che non corrisponde al risultato della sottrazione."
+  },
+  {
+    "id": 188,
+    "topic": "Preprocessore e compilazione",
+    "question": "Data la definizione:\n```c\n#define SQ(x) x*x\n```\nA quanto viene valutata l'espressione `SQ(2+3)`?",
+    "options": [
+      "Nessuna risposta (0 punti)",
+      "11",
+      "25",
+      "Errore di compilazione"
+    ],
+    "correct_index": 1,
+    "explanation": "*Argomento: Preprocessore e compilazione*\n\n**Perché la risposta è corretta:**\nLa direttiva `#define SQ(x) x*x` definisce una macro che sostituisce testualmente ogni occorrenza di `x` con l'argomento passato, senza aggiungere automaticamente parentesi. Pertanto, l'espressione `SQ(2+3)` viene espansa in `2+3*2+3`. Poiché in C l'operatore di moltiplicazione `*` ha precedenza maggiore rispetto all'addizione `+`, l'espressione viene valutata come `2+(3*2)+3 = 11`.\n\n**Analisi delle altre opzioni:**\n- **Opzione A (Nessuna risposta (0 punti)):** È errata perché esiste una risposta corretta.\n- **Opzione C (25):** È errata perché presuppone che la macro calcoli `(2+3)*(2+3)`. Per ottenere questo risultato sarebbe necessario definire la macro come `#define SQ(x) ((x)*(x))`.\n- **Opzione D (Errore di compilazione):** È errata perché l'espansione della macro produce un'espressione sintatticamente valida in C, anche se il risultato non corrisponde al quadrato della somma."
+  },
+  {
+    "id": 189,
+    "topic": "Ricorsione",
+    "question": "Che cosa stampa il seguente frammento di codice?\n```c\nint ricfun(int n) {\n    static int p;\n    if (n == 0)\n        return n;\n    else\n        p++;\n    printf(\"p = %d\\n\", p);\n    return p * ricfun(p-1);\n}\n\nint main(void) {\n    printf(\"ricfun() = %d\\n\", ricfun(10));\n    return 0;\n}\n```",
+    "options": [
+      "Nessuna risposta (0 punti)",
+      "La funzione entra in un ciclo ricorsivo e stampa infinitamente: p = 1 ricfun() = 1 ...",
+      "p = 1 ricfun() = 0",
+      "p = 1 ricfun() = 1"
+    ],
+    "correct_index": 2,
+    "explanation": "*Argomento: Ricorsione*\n\n**Perché la risposta è corretta:**\nLa variabile `p` è dichiarata `static`, quindi viene inizializzata a 0 una sola volta e mantiene il proprio valore tra le chiamate ricorsive. Alla prima chiamata `ricfun(10)`, la condizione `n == 0` è falsa, quindi viene eseguito `p++`, che porta `p` a 1. La funzione stampa `p = 1` e successivamente esegue `return p * ricfun(p-1)`. Poiché `p` vale 1, viene chiamata `ricfun(0)`. In questa seconda chiamata la condizione `n == 0` è vera, quindi la funzione restituisce immediatamente 0 senza incrementare `p` né eseguire altre stampe. Il risultato finale è `1 * 0 = 0`, quindi il programma stampa `p = 1` e `ricfun() = 0`.\n\n**Analisi delle altre opzioni:**\n- **Opzione A (Nessuna risposta (0 punti)):** È errata perché esiste una risposta corretta.\n- **Opzione B (La funzione entra in un ciclo ricorsivo e stampa infinitamente):** È errata perché la chiamata ricorsiva `ricfun(0)` soddisfa immediatamente il caso base `n == 0`, interrompendo la ricorsione.\n- **Opzione D (p = 1 ricfun() = 1):** È errata perché, anche se `p` assume il valore 1, la chiamata ricorsiva restituisce 0. Di conseguenza, il risultato della moltiplicazione è 0 e non 1."
   }
 ];
