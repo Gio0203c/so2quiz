@@ -2430,5 +2430,41 @@ const QUESTIONS =
     ],
     "correct_index": 2,
     "explanation": "La variabile `p` è qualificata con lo specificatore `static`: viene allocata nel segmento di memoria statica del programma, inizializzata a 0 una sola volta prima dell'inizio dell'esecuzione e preserva il proprio valore tra le successive chiamate di funzione.\n\nTracciamento dell'esecuzione:\n1. Prima chiamata `ricfun(10)`: `n == 10`, la condizione `n == 0` è falsa, quindi viene eseguito il ramo `else` che incrementa `p` a 1. Viene eseguita la stampa `p = 1\\n`. Successivamente la funzione valuta `return p * ricfun(p-1)`. Essendo `p = 1`, calcola `p - 1 = 0` e invoca `ricfun(0)`.\n2. Seconda chiamata `ricfun(0)`: la condizione di terminazione `if (n == 0)` è vera, per cui la funzione restituisce immediatamente 0 senza incrementare `p` e senza eseguire alcuna stampa.\n3. Chiusura della prima chiamata: l'espressione di ritorno diventa `1 * ricfun(0) = 1 * 0 = 0`, che viene restituito al `main`.\n4. Nel `main`: la `printf` stampa `ricfun() = 0\\n`.\n\nL'output complessivo generato sullo standard output è quindi:\n`p = 1`\n`ricfun() = 0`\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** Descrive esattamente la sequenza deterministica delle due righe stampate a video dal programma.\n- **Opzione A (Errata):** Il programma termina regolarmente producendo un output ben definito presente tra le opzioni.\n- **Opzione B (Errata):** La funzione non entra in un ciclo infinito perché alla seconda chiamata ricorsiva il parametro passato è `p - 1 = 0`, che attiva immediatamente il caso base (`n == 0`) arrestando la ricorsione.\n- **Opzione D (Errata):** Anche se `p` ha assunto il valore 1, il prodotto calcolato è `1 * ricfun(0) = 1 * 0 = 0`; di conseguenza la funzione restituisce 0 al `main` e non 1."
+  },
+  {
+    "id": 190,
+    "topic": "Operatori e Espressioni",
+    "question": "Qual è l'output del seguente codice C?\n```c\nint i = 0, j = 0;\nif (i++ && ++j) { }\nprintf(\"%d %d\", i, j);\n```",
+    "options": [
+      "0 1",
+      "1 0",
+      "1 1"
+    ],
+    "correct_index": 1,
+    "explanation": "L'output è `1 0` perché l'operatore logico `&&` utilizza la valutazione a corto circuito (short-circuit): se il primo operando è falso, il secondo non viene valutato.\n\n**Analisi del codice:**\n- `int i = 0, j = 0;`: entrambe le variabili vengono inizializzate a 0.\n- `i++`: è un post-incremento, quindi viene utilizzato prima il valore corrente di `i` (0) e successivamente `i` viene incrementato a 1.\n- Poiché il valore restituito da `i++` è 0 (falso), l'operatore `&&` interrompe la valutazione dell'espressione.\n- `++j`: non viene eseguito, quindi `j` rimane 0.\n- `printf(\"%d %d\", i, j);`: stampa `1 0`.\n\n**Analisi delle opzioni:**\n- **Opzione A (Errata):** `0 1` è sbagliata perché `i++` incrementa comunque `i`, mentre `++j` non viene eseguito.\n- **Opzione B (Corretta):** `1 0` è corretta perché `i` viene incrementato a 1 e `j` rimane 0 grazie alla valutazione a corto circuito.\n- **Opzione C (Errata):** `1 1` sarebbe possibile se anche `++j` venisse eseguito, ma il primo operando di `&&` è falso e impedisce la valutazione del secondo."
+  },
+  {
+    "id": 191,
+    "topic": "Permessi Linux",
+    "question": "Data la seguente stringa di permessi di un file Linux:\n```text\n-rwsrw-r-x\n```\nQuale delle seguenti affermazioni è falsa?",
+    "options": [
+      "Il bit SetUID è impostato.",
+      "Lo sticky bit è impostato.",
+      "Gli utenti che non sono proprietari del file e non appartengono al gruppo proprietario possono eseguirlo."
+    ],
+    "correct_index": 1,
+    "explanation": "La risposta falsa è quella relativa allo sticky bit, perché nella stringa dei permessi è presente il bit SetUID, ma non lo sticky bit.\n\n**Analisi dei permessi:**\n- `-`: indica che si tratta di un file regolare.\n- `rws`: il proprietario può leggere, scrivere ed eseguire il file. La `s` minuscola al posto della `x` indica che il bit SetUID è attivo e che il proprietario ha anche il permesso di esecuzione.\n- `rw-`: gli utenti appartenenti al gruppo proprietario possono leggere e scrivere il file, ma non eseguirlo.\n- `r-x`: gli altri utenti possono leggere ed eseguire il file, ma non modificarlo.\n\n**Analisi delle opzioni:**\n- **Opzione A (Vera):** Il SetUID è effettivamente impostato, come indicato dalla `s` nella terna dei permessi del proprietario. Quando il file eseguibile viene avviato, il processo assume normalmente l'UID effettivo del proprietario del file, che non è necessariamente root.\n- **Opzione B (Falsa - Risposta corretta):** Lo sticky bit non è impostato. Se fosse attivo, nella terna dei permessi degli altri utenti comparirebbe una `t` oppure una `T` al posto della `x`.\n- **Opzione C (Vera):** Gli utenti che rientrano nella categoria 'altri' possono eseguire il file perché è presente il permesso `x` nella terza terna (`r-x`)."
+  },
+  {
+    "id": 192,
+    "topic": "Puntatori e Stringhe",
+    "question": "Dato il seguente codice C:\n```c\nchar *s = \"hello\";\ns[0] = 'H';\n```\nChe cosa accade durante l'esecuzione?",
+    "options": [
+      "Si verifica un comportamento indefinito perché si tenta di modificare una stringa letterale, che può essere memorizzata in memoria di sola lettura.",
+      "Si verifica un errore di compilazione.",
+      "La stringa viene modificata correttamente e diventa \"Hello\"."
+    ],
+    "correct_index": 0,
+    "explanation": "La risposta corretta è il comportamento indefinito, perché in C non è consentito modificare il contenuto di una stringa letterale.\n\n**Analisi del codice:**\n- `char *s = \"hello\";`: dichiara un puntatore a carattere che punta al primo elemento della stringa letterale `\"hello\"`.\n- `s[0] = 'H';`: tenta di modificare il primo carattere della stringa letterale, sostituendo `h` con `H`.\n- In C, la modifica di una stringa letterale provoca un comportamento indefinito, indipendentemente dal fatto che la memoria sia effettivamente protetta in sola lettura.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Modificare una stringa letterale causa comportamento indefinito. Su molti sistemi il programma termina con un segmentation fault perché la stringa è memorizzata in una zona di memoria di sola lettura.\n- **Opzione B (Errata):** Il codice non richiede necessariamente un errore di compilazione. Un compilatore può generare un avviso, ma il problema si manifesta quando si tenta di modificare la stringa letterale.\n- **Opzione C (Errata):** Non è garantito che la stringa diventi `\"Hello\"`, perché la modifica di una stringa letterale non è consentita. Per modificarla correttamente bisogna dichiarare un array, ad esempio `char s[] = \"hello\";`, e successivamente eseguire `s[0] = 'H';`."
   }
 ];
