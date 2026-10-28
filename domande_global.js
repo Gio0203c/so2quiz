@@ -1145,7 +1145,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Memoria Dinamica*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'void *alloca( size_t size );'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione B (void *malloc( size_t size );):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (void *calloc( size_t nmemb, size_t size );):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 90,
+    "id": 89,
     "topic": "I/O e File Locking",
     "question": "Si consideri il seguente frammento di codice:\n\n```c\nint fd, fd1;\nstruct stat buf, buf1;\nfd = open(\"filename\", O_RDWR);\nfd1 = dup(fd);\nfstat(fd, &buf);\nfstat(fd1, &buf1);\n```\n\nquale delle seguenti affermazioni e’ vera?",
     "options": [
@@ -1158,7 +1158,7 @@ const QUESTIONS =
     "explanation": "*Argomento: I/O e File Locking*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'buf.st_ino e' uguale a buf1.st_ino'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (buf.st_ino e’ diverso da buf1.st_ino):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione B (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione C (st_ino non e’ membro della struttura stat):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 91,
+    "id": 90,
     "topic": "Segnali",
     "question": "Si assuma di avere due shell aperte, etichettate come `shell_1` e `shell_2`, e si consideri la seguente sequenza di comandi (`shell_i:cmd` indica che `cmd` e' eseguito nella shell `i`, `i=1,2`):\n\n```bash\nshell_1: xterm\nshell_2: ps -C xterm # restituisce xtermPID\nshell_2: kill -s SIGINT xtermPID\n```\n\nQuale e’ il loro effetto?",
     "options": [
@@ -1171,7 +1171,7 @@ const QUESTIONS =
     "explanation": "Il comando `kill` con il segnale `SIGINT` (segnale 2) inviato al processo `xterm` ne causa la terminazione immediata, a meno che il processo non abbia implementato una gestione specifica del segnale per ignorarlo o gestirlo in altro modo. Di default, `SIGINT` termina il processo.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Causa la terminazione immediata del processo xterm.\n- **Opzione B e D (Errate):** Il processo non viene fermato (SIGSTOP) né mandato in background (SIGCONT o job control), ma viene interrotto e terminato.\n- **Opzione C (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 92,
+    "id": 91,
     "topic": "Memoria Dinamica",
     "question": "Consideriamo la seguente invocazione della funzione `realloc`:\n\n```c\nstrptr1 = (char *) realloc(strptr, 10 * SIZE_OF_ARRAY);\n```\n\nstrptr1 puo' essere diverso da strptr?",
     "options": [
@@ -1184,7 +1184,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Memoria Dinamica*\n\n**Perché la risposta è corretta:**\nLa funzione `realloc(void *ptr, size_t size)` serve a ridimensionare (espandere o contrarre) un blocco di memoria precedentemente allocato dinamicamente sullo heap.\n\nEcco come opera effettivamente il comando e perché la risposta selezionata è corretta:\n1. **Tentativo di espansione in-place**: `realloc` verifica prima se c'è abbastanza spazio libero contiguo immediatamente dopo il blocco di memoria attuale `strptr`. Se tale spazio è disponibile, il blocco viene esteso sul posto, e l'indirizzo restituito `strptr1` rimarrà identico a `strptr`.\n2. **Allocazione di un nuovo blocco**: Se non c'è abbastanza spazio contiguo contiguo sul posto, `realloc` alloca un nuovo blocco di memoria di dimensioni adeguate in un'altra area dello heap, copia i dati esistenti dal vecchio blocco al nuovo, rilascia (effettua la `free` di) `strptr` e restituisce il puntatore al nuovo indirizzo `strptr1` (che sarà quindi diverso da `strptr`).\n3. **Fallimento**: Se lo heap non ha abbastanza spazio complessivo, `realloc` restituisce `NULL` (anche in questo caso diverso da `strptr`), ma lascia intatto il blocco di memoria originale senza liberarlo.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione B (No, strptr1 e' sempre uguale a strptr):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione C (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione D (Si', la realloc modifica sempre l'indirizzo di partenza dell'area di memoria ridimensionata):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 93,
+    "id": 92,
     "topic": "Gestione Memoria Dinamica",
     "question": "Un processo puo' allocare memoria nello stack?",
     "options": [
@@ -1197,7 +1197,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Gestione Memoria Dinamica*\n\n**Perché la risposta è corretta:**\nLa funzione `alloca(3)` alloca memoria dinamica direttamente sullo stack frame del chiamante, liberandola automaticamente al ritorno della funzione.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione B (Si', mediante la funziona di libreria malloc(3)):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (No, un processo può allocare memoria sono nell'heap):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 94,
+    "id": 93,
     "topic": "Processi",
     "question": "Quale  attributi di un processo non sono ereditati dal processo figlio?",
     "options": [
@@ -1210,7 +1210,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Processi*\n\n**Perché la risposta è corretta:**\nIl processo figlio non eredita i timer pendenti, i record lock (fcntl) e i memory lock, né i contatori delle risorse.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Real ed effective user e group ID; working directory; ambiente del processo):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione C (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione D (Descrittori dei file; terminale di controllo; memoria condivisa):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 95,
+    "id": 94,
     "topic": "Gestione Utenti",
     "question": "Quale  e’ la differenza tra i comandi  sudo   e  su   ?",
     "options": [
@@ -1223,7 +1223,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Gestione Utenti*\n\n**Perché la risposta è corretta:**\nsu permette di cambiare l'utente corrente aprendo una nuova shell, mentre sudo consente ad utenti autorizzati di eseguire specifici comandi con i privilegi di super-utente.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione C (sudo si riferisce ad un gruppo di utenti. su è invece un comando che permette di cambiare utente.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (sudo è un comando che permette di eseguire altri comandi come root . su è una scorciatoia per invocare il comando sudo .):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 96,
+    "id": 95,
     "topic": "Comandi Unix",
     "question": "In quale sezione del man sono descritte le  chiamate di sistema  di Unix/Linux?",
     "options": [
@@ -1236,7 +1236,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Comandi Unix*\n\n**Perché la risposta è corretta:**\nLa sezione 2 del manuale Unix (man) descrive le chiamate di sistema (system call), mentre la sezione 3 descrive le funzioni di libreria standard.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione C (7):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (3):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 97,
+    "id": 96,
     "topic": "Gestione Utenti",
     "question": "Si supponga di eseguire la sequenza di comandi\n```bash\nsudo adduser utente1\nsudo adduser utente1 studente\n```\n\nQuale sarà il risultato?",
     "options": [
@@ -1249,7 +1249,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Gestione Utenti*\n\n**Perché la risposta è corretta:**\nIl comando `adduser` (uno script Perl di alto livello) crea l'utente ed il relativo gruppo primario (con lo stesso nome). Se invocato come `adduser utente gruppo`, aggiunge l'utente al gruppo specificato solo se quest'ultimo esiste già, altrimenti fallisce.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Il primo comando crea l'utente ed il gruppo utente1; il secondo comando aggiunge l'utente utente1 al gruppo studente. Se il gruppo studente non esiste lo crea.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione B (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione D (Il primo comando crea l'utente utente1 ed il gruppo utente1; il secondo comando da errore):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 98,
+    "id": 97,
     "topic": "Generale",
     "question": "Quanti\njob in background crea il comando seguente?\n```bash\nsleep 30 | sleep 15 | sleep 10 &\n```",
     "options": [
@@ -1262,7 +1262,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Generale*\n\n**Perché la risposta è corretta:**\nL'intero costrutto in pipeline (`sleep 30 | sleep 15 | sleep 10`) viene eseguito in background come un singolo job complessivo, identificato da un unico Job ID, anche se al suo interno vengono avviati tre processi separati legati tramite pipe.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione B (3):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (Nessuno, da' errore):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 99,
+    "id": 98,
     "topic": "Compilazione e Preprocessore",
     "question": "Assumiamo di compilare un file .c nei seguenti modi\n\n```bash\ngcc file.c -o file1.o\ngcc -g file.c -o file2.o\n```\nPerche' le dimensioni di file1.o e file2.o sono diverse?",
     "options": [
@@ -1275,7 +1275,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Compilazione e Preprocessore*\n\n**Perché la risposta è corretta:**\nL'opzione `-g` indica al compilatore `gcc` di includere le informazioni di debug (simboli, associazioni righe-istruzioni) all'interno dell'eseguibile, aumentandone le dimensioni rispetto a una compilazione standard.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione C (Non e' vero che i due comandi di compilazione producono file di dimensioni diverse):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (Perché file2.o e' stato ottimizzato, per occupare meno spazio in memoria, rispetto a file1.o):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 100,
+    "id": 99,
     "topic": "Compilazione e Preprocessore",
     "question": "Supponiamo di avere il seguente makefile (memorizzato in un file di nome makefile):\n\n```makefile\nmerge_sorted_lists: merge_sorted_lists.c\n    gcc -Wall -Wextra -O3 merge_sorted_lists.c -o merge_sorted_lists\nsort_file_int: sort_file_int.c\n    gcc -Wall -Wextra -O3 sort_file_int.c -o sort_file_int\n.PHONY: clean\nclean:\n    rm -f *.o merge_sorted_lists\n```\nIn quali condizioni viene eseguito il target sort_file_int?",
     "options": [
@@ -1288,7 +1288,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Compilazione e Preprocessore*\n\n**Perché la risposta è corretta:**\nNel Makefile, le dipendenze determinano l'esecuzione del target. Se viene invocato `make sort_file_int`, il compilatore esegue la compilazione solo se il file sorgente (`sort_file_int.c`) ha una data di modifica più recente del file oggetto (`sort_file_int.o`).\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Il target sort_file_int non verrà mai eseguito):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione B (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione C (Sempre, se invochiamo il comando make sort_file_int):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 101,
+    "id": 100,
     "topic": "Compilazione e Preprocessore",
     "question": "Cosa\nproduce il seguente comando? \n```bash\ngcc file1.o file2.o file3.o\n```",
     "options": [
@@ -1301,7 +1301,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Compilazione e Preprocessore*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'Un file eseguibile a.out.'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione B (Nulla, la sintassi del comando e' sbagliata.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione C (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione D (Fa il linking dei file oggetto ma non produce nessun risultato finché non si specifica l'output.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 102,
+    "id": 101,
     "topic": "Memoria Dinamica",
     "question": "Supponiamo di aver utilizzato, nella nostra funzione C,  la  funzione di libreria alloca(3) per allocare un'area di memoria.E' necessario liberare tale area di memoria mediante una free(3) prima della terminazione della funzione?",
     "options": [
@@ -1314,7 +1314,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Memoria Dinamica*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'No. l'area di memoria allocata nello stack viene liberata automaticamente'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (No, deve essere invocata la funzione dealloca(3)):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione C (Si. Bisogna sempre liberare la memoria per evitare dei memory leak):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n"
   },
   {
-    "id": 103,
+    "id": 102,
     "topic": "Permessi del Filesystem",
     "question": "Assumiamo di avere un file eseguibile il cui proprietario e' l'utente `root`, ad esempio:\n`-rwxr-xr-x 1 root root 60296 feb 22 2017 /bin/chmod`\n\nAffinché l'effective UID del processo cambi quando eseguito da un utente senza privilegi di root cosa bisogna fare?",
     "options": [
@@ -1327,7 +1327,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Permessi del Filesystem*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'Impostare il permesso speciale Setuid bit'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione C (Non occorre fare nulla perché quello descritto e' il comportamento standard, ovvero l'effective UID cambia sempre in quello dell'utente che esegue il file.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (Impostare il permesso speciale stiky bit):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 104,
+    "id": 103,
     "topic": "Generale",
     "question": "Supponiamo di avere un file di nome  filename e di creare un link a filename con il comando\nln filename link1quale delle seguenti affermazioni e' vera?",
     "options": [
@@ -1340,7 +1340,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Generale*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'filename e link1 hanno lo stesso inode'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione B (filename e link1 hanno inode diverso):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (link1 occupa zero blocchi su disco anche se filename ne occupa un numero diverso da 0.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 106,
+    "id": 104,
     "topic": "Generale",
     "question": "Assumiamo di avere due shell aperte, etichettate come shell_1 e shell_2 e supponiamo di eseguire la sequenza di comandi che segue (shell_i: cmd indica che cmd e' eseguitto nella shell_i, i=1,2).\n\n```bash\nshell_1: xterm\nshell_2: ps -C xterm\n#restituisce xtermPID\nshell_2: kill -s SIGSTOP xtermPID\nshell_2: kill -s SIGCONT xtermPID\n```\n\nQuale e' il loro effetto sul processo xterm?",
     "options": [
@@ -1353,7 +1353,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Generale*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'Il processo xterm viene prima portato nello stato stopped (T) e poi mandato nuovamente in esecuzione (esecuzione in background)'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Il processo xterm viene prima mandato in esecuzione in background e poi riportato in foreground):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione B (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione C (Il processo xterm viene mandato in esecuzione in background):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 107,
+    "id": 105,
     "topic": "Generale",
     "question": "In cosa differisce il contenuto  dei file  /etc/mtab e /etc/fstab ?",
     "options": [
@@ -1366,7 +1366,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Generale*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è '/etc/mtab contiene i filesystem montati attualmente/etc/fstab contiene i filesystem che vengono montati al boot'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione B (/etc/fstab contiene i filesystem montati attualmente; /etc/mtab invece contiene i filesystem che vengono montati al boot):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione C (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione D (/etc/mtab contiene i filesystem disponibili/etc/fstab contiene i filesystem che vengono montati al boot):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 108,
+    "id": 106,
     "topic": "I/O e File Locking",
     "question": "Supponiamo di avere il seguente  frammento di codice\n```c\nstruct dirent *dentry; //directory stream\n\tchar *filename;\n\tDIR *dstr=opendir(\"mydir\");\n\twhile ((dentry=readdir(dstr)) != NULL) {\n\t\t/* Memorizza i nome file nella  directory in filename  */\n        }\n```\nQuale delle seguenti istruzioni deve  essere  posta all'interno  del  ciclo while per  memorizzare in filename  il nome dei file  contenuti all'interno della directory mydir ?",
     "options": [
@@ -1379,7 +1379,7 @@ const QUESTIONS =
     "explanation": "*Argomento: I/O e File Locking*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'filename = dentry --> d_name;'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione B (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione C (filename = dentry.filename;):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (filename = dentry --> filename;):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 109,
+    "id": 107,
     "topic": "Generale",
     "question": "Supponiamo\ndi aver dichiarato ed inizializzato la seguenti variabili \n```c\nint x=1, y=7;\n```\nquale delle seguenti espressioni logiche e' vera?",
     "options": [
@@ -1392,7 +1392,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Generale*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'x && y == 7'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione B (!(x & y == x | y )):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (x & y == x && y):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 110,
+    "id": 108,
     "topic": "Gestione Utenti",
     "question": "I permessi di accesso del file eseguibile  /usr/bin/passwd sono 4755/-rwsr-xr-x . Cosa significa?",
     "options": [
@@ -1405,7 +1405,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Gestione Utenti*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'Il bit SetUid è settato'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Il bit SetUid non e' settato):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione C (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione D (Lo sticky bit e' settato):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 111,
+    "id": 109,
     "topic": "Generale",
     "question": "Si consideri il seguente frammento di codice, \n\n```c\nint n=2;\nint r=2 * (n++);\nn=2;\nint r1=2 * (++n);\n```\n\nquale valori assumeranno le variabili r e r1 dopo l'esecuzione?",
     "options": [
@@ -1418,7 +1418,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Generale*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'r=4 e r1=6'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (r = r1 = 4):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione C (r=6 e r1=4):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n"
   },
   {
-    "id": 112,
+    "id": 110,
     "topic": "Generale",
     "question": "Supponiamo di aver mappato un file in memoria con la system call mmap(2). A cosa serve invocare la msync(2)?",
     "options": [
@@ -1431,7 +1431,7 @@ const QUESTIONS =
     "explanation": "*Argomento: Generale*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'Impostando il tipo di mapping a MAP_SHARED la msync(2) permette di scrivere le modifiche su disco prima dell'invocazione di una unmap(2) o prima della chiusura del file descriptor.'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (E' necessario invocare sempre la msync(2) se non si vogliono perdere le modifiche fatte in memoria.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione B (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione D (Non serve invocare la mysinc perché quando si chiude il file descriptor tutte le modifiche fatte in memoria vengono scritte su disco.):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 113,
+    "id": 111,
     "topic": "I/O e File Locking",
     "question": "Si consideri il seguente frammento di codice\n```c\nsigset_t set, oset, pset;\n...\nsigemptyset( &set ); \nsigaddset( &set, SIGINT ); \nsigaddset( &set, SIGUSR1 ); \nsigprocmask( SIG_BLOCK, &set, &oset );\n...\n```\nCosa produce come  risultato una volta eseguito?",
     "options": [
@@ -1444,7 +1444,7 @@ const QUESTIONS =
     "explanation": "*Argomento: I/O e File Locking*\n\n**Perché la risposta è corretta:**\nLa risposta corretta è 'Disabilita i segnali SIGINT e SIGUSR1'. Questa opzione risponde in modo corretto ed esaustivo ai vincoli logici e di sistema posti dal quesito.\n\n**Analisi delle altre opzioni (perché sono errate):**\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione B (Termina una sezione critica precedentemente iniziata):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n- **Opzione D (Disabilita tutti i segnali tranne SIGINT e SIGUSR1):** Questa opzione non descrive il comportamento corretto o contiene affermazioni che non corrispondono alle specifiche o alle regole del linguaggio C o di Unix/Linux per la situazione descritta.\n"
   },
   {
-    "id": 114,
+    "id": 112,
     "topic": "Sistemi Operativi II",
     "question": "A quanti gruppi può appartenere un utente nel SO Linux?",
     "options": [
@@ -1457,7 +1457,7 @@ const QUESTIONS =
     "explanation": "In Linux, ogni utente deve essere associato a un gruppo principale (chiamato anche gruppo primario) al momento della sua creazione, il quale è specificato nel file `/etc/passwd`. Di conseguenza, un utente appartiene sempre ad *almeno un gruppo*.\n\n- **Perché l'opzione A è corretta:** Un utente deve per definizione appartenere a un gruppo primario e può opzionalmente essere aggiunto a zero o più gruppi secondari. Quindi il numero minimo di gruppi a cui appartiene è 1 (almeno uno).\n- **Perché le altre opzioni sono errate:** L'opzione B ('Ad un solo gruppo') è errata perché un utente può far parte di molti gruppi secondari (ad esempio per accedere a risorse specifiche come audio, docker, sudo). L'opzione C ('A zero o più gruppi') è errata perché non è possibile avere un utente che appartiene a zero gruppi; il gruppo primario è obbligatorio.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 115,
+    "id": 113,
     "topic": "System Call e File",
     "question": "Si supponga che nel sistema esiste un gruppo \"studente\" ed anche l'utente \"utente1\". Si supponga quindi di eseguire il comando seguente. Quale delle seguenti affermazioni è sbagliata?\n\n```bash\nadduser utente1 studente\n```",
     "options": [
@@ -1470,7 +1470,7 @@ const QUESTIONS =
     "explanation": "Il comando `adduser` è un'interfaccia ad alto livello (solitamente uno script Perl in Debian/Ubuntu) che facilita la gestione di utenti e gruppi, richiamando internamente utilità a basso livello come `useradd` o `usermod`.\n\n- **Perché l'opzione A è corretta (ovvero è l'affermazione SBAGLIATA):** L'affermazione sostiene che il comando generi errore perché si può usare solo `addgroup` per aggiungere un utente a un gruppo. Questo è falso: `adduser utente gruppo` è una sintassi perfettamente valida e standard in Debian/Ubuntu per aggiungere un utente esistente a un gruppo esistente. Inoltre, `addgroup` serve principalmente a creare nuovi gruppi, non ad associarvi utenti.\n- **Perché le altre opzioni non sono selezionabili (sono affermazioni vere):** L'opzione B è corretta (se l'utente non è nel gruppo lo aggiunge, altrimenti non fa nulla). L'opzione C descrive fedelmente il comportamento reale del comando, che restituisce un messaggio informativo se l'utente appartiene già al gruppo.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 116,
+    "id": 114,
     "topic": "System Call e File",
     "question": "Si supponga che nel sistema esiste un gruppo \"studente\" e non esista ancora l'utente \"utente1\". Si supponga quindi di eseguire il seguente comando. Quale sarà il risultato?\n\n```bash\nsudo adduser utente1 studente\n```",
     "options": [
@@ -1483,7 +1483,7 @@ const QUESTIONS =
     "explanation": "La sintassi `adduser <utente> <gruppo>` serve esclusivamente ad aggiungere un utente *già esistente* a un gruppo *già esistente*.\n\n- **Perché l'opzione A è corretta:** Poiché `utente1` non è ancora presente nel sistema, il comando `adduser` non può completare l'associazione e restituisce immediatamente un errore del tipo 'L'utente utente1 non esiste'.\n- **Perché le altre opzioni sono errate:** Le opzioni B e C ipotizzano che il comando crei automaticamente l'utente mancante. Questo è errato: `adduser` non crea implicitamente un utente se viene invocato con due argomenti (utente e gruppo). Per creare un utente si usa `adduser <nuovo_utente>` (con un solo argomento).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 117,
+    "id": 115,
     "topic": "Gestione Utenti",
     "question": "Supponga di eseguire, come utente sudoer, i seguenti comandi. Quale affermazione è corretta?\n\n```bash\nC1) sudo ls  /home\nC2) sudo su --command='ls /home'\n```",
     "options": [
@@ -1496,7 +1496,7 @@ const QUESTIONS =
     "explanation": "Entrambi i comandi mirano a eseguire il comando `ls /home` con i privilegi di super-utente (root).\n\n- **Perché l'opzione B è corretta:** `C1` esegue direttamente `ls /home` tramite `sudo`, assumendo i privilegi di root per quel singolo comando. `C2` usa `sudo` per diventare root (`su`) ed esegue il comando specificato tramite l'opzione `--command` (o `-c`). In entrambi i casi, l'effetto finale è l'esecuzione di `ls /home` come root, con la stampa dello stesso output su stdout. Quindi sono semanticamente equivalenti.\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché `su` supporta l'opzione `--command` (o `-c`), quindi non dà errore \"comando non trovato\". L'opzione C è errata perché il meccanismo SetUID (bit SUID) è una proprietà del file eseguibile (es. `/usr/bin/sudo` o `/usr/bin/su`) e non viene 'eseguito' o alterato in modo diverso tra C1 e C2.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 118,
+    "id": 116,
     "topic": "Sistemi Operativi II",
     "question": "Di quante sezioni e' composto il man di Linux?",
     "options": [
@@ -1509,7 +1509,7 @@ const QUESTIONS =
     "explanation": "Il manuale di sistema (man pages) in Linux è tradizionalmente organizzato in 9 sezioni standard numerate da 1 a 9.\n\n- **Perché l'opzione C è corretta:** Le sezioni sono: 1. Comandi utente, 2. System Call (chiamate di sistema), 3. Funzioni di libreria C, 4. File speciali (dispositivi), 5. Formati dei file e file di configurazione, 6. Giochi, 7. Miscellanea, 8. Comandi di amministrazione di sistema, 9. Routine del kernel (non standard/specifiche Linux).\n- **Perché le altre opzioni sono errate:** I numeri 5 e 7 non corrispondono al numero totale delle sezioni storiche del manuale Unix/Linux, che sono 9.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 119,
+    "id": 117,
     "topic": "Sistemi Operativi II",
     "question": "Supponiamo vogliate visualizzare l'albero delle directory con radice nella vostra home. In particolare volete visualizzare solo le directory e non i file in esse contenuti. Quali tra i seguenti comandi e' il piu' appropriato?",
     "options": [
@@ -1522,7 +1522,7 @@ const QUESTIONS =
     "explanation": "Il comando `tree` viene utilizzato per visualizzare graficamente la struttura di directory e file.\n\n- **Perché l'opzione A è corretta:** L'opzione `-d` dice a `tree` di elencare *solo le directory* (omettendo i file). Il carattere `~` rappresenta la home directory dell'utente corrente. Quindi `tree -d ~` risponde perfettamente alla richiesta.\n- **Perché le altre opzioni sono errate:** L'opzione B (`tree -d -L 3 /home/myhomedir`) limita la visualizzazione a 3 livelli di profondità (opzione `-L 3`), il che non era richiesto e potrebbe escludere directory annidate più a fondo. Inoltre, usa un percorso specifico hardcoded anziché la variabile generica `~`. L'opzione C (`tree -a ~`) include file nascosti (opzione `-a`) e mostra tutti i file, non solo le directory.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 120,
+    "id": 118,
     "topic": "Sistemi Operativi II",
     "question": "Quanti file system principali ha linux?",
     "options": [
@@ -1535,7 +1535,7 @@ const QUESTIONS =
     "explanation": "L'architettura dei sistemi operativi Unix e Linux prevede che esista un unico grande albero logico dei file.\n\n- **Perché l'opzione B è corretta:** Linux possiede un unico filesystem principale (la directory radice `/`). Qualsiasi altro filesystem (su dischi diversi, partizioni o risorse di rete) viene montato all'interno di questo unico albero in un punto di mount (mount point). Pertanto, la vista logica per l'utente e per i processi è un unico filesystem (1).\n- **Perché le altre opzioni sono errate:** Le opzioni A e C sono errate perché confondono la struttura fisica (partizioni, dischi) o il numero di filesystem montati fisicamente con la struttura logica del sistema operativo, che è sempre unificata sotto un'unica radice.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 121,
+    "id": 119,
     "topic": "Gestione dei Processi",
     "question": "Si assuma  di avere due shell aperte, etichettate come \"shell_1\" e \"shell_2\", e si consideri la seguente sequenza di comandi (\"shell_i\":cmd indica che cmd e' eseguitto nella  shell i, i=1,2). Quale e' il loro effetto?\n\n```bash\nshell_1: xterm\nshell_2: ps -C xterm\n#restituisce xtermPID\nshell_2: kill -s SIGSTOP xtermPID\n```",
     "options": [
@@ -1548,7 +1548,7 @@ const QUESTIONS =
     "explanation": "In Linux, i segnali sono notifiche asincrone inviate ai processi. Il segnale `SIGSTOP` costringe il sistema operativo a sospendere immediatamente l'esecuzione del processo target, mettendolo in uno stato di stop.\n\n- **Perché l'opzione C è corretta:** Il comando `kill -s SIGSTOP` invia il segnale di stop. Il processo destinatario (`xterm`) interrompe la sua esecuzione e passa allo stato Stopped (indicato con la lettera 'T' nell'output del comando `ps`). La sua finestra sul display si bloccherà e non risponderà più agli input fino alla ricezione di un segnale `SIGCONT`.\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché `SIGSTOP` non termina il processo (per quello si usa `SIGTERM` o `SIGKILL`). L'opzione B è errata perché mettere un processo in background (con `&` o `bg`) lo mantiene in esecuzione (stato Running), mentre `SIGSTOP` lo sospende completamente.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 122,
+    "id": 120,
     "topic": "Programmazione Concorrente",
     "question": "Quale e' la differenza tra thread posix e processo linux?",
     "options": [
@@ -1561,7 +1561,7 @@ const QUESTIONS =
     "explanation": "I thread (detti anche processi leggeri o LWP in Linux) condividono la maggior parte delle risorse del processo che li ha creati.\n\n- **Perché l'opzione C è corretta:** I thread concorrenti che appartengono allo stesso processo condividono lo spazio d'indirizzamento (incluso il codice eseguibile e il segmento dati/heap) e la tabella dei file descriptor aperti. Al contrario, i processi concorrenti (creati ad esempio con `fork`) possiedono spazi d'indirizzamento separati e indipendenti e tabelle di descrittori separate, anche se inizialmente duplicate.\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché i processi concorrenti *non* condividono di default il segmento dati modificabile. L'opzione B è errata perché ciascun thread ha il proprio stack privato per gestire le chiamate a funzione locali; non condividono lo stack.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 123,
+    "id": 121,
     "topic": "Gestione dei Processi",
     "question": "Per mostrare il pid dei job in esecuzione in background quali di questi comandi e' corretto?",
     "options": [
@@ -1574,7 +1574,7 @@ const QUESTIONS =
     "explanation": "La shell bash gestisce i processi avviati interattivamente tramite il meccanismo dei \"jobs\".\n\n- **Perché l'opzione A è corretta:** Il comando `jobs` elenca i job attivi nella shell corrente. L'opzione `-p` modifica l'output per mostrare esclusivamente i PID (Process ID) dei processi leader di ciascun job in background.\n- **Perché le altre opzioni sono errate:** L'opzione B (`ps -p -u`) ha una sintassi errata e non serve specificamente a elencare i job della shell corrente con i relativi PID. L'opzione C (`jobs` senza opzioni) mostra lo stato del job (es. Running, Stopped) e la riga di comando associata, ma non mostra direttamente i PID.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 124,
+    "id": 122,
     "topic": "Input/Output e Gestione Stringhe",
     "question": "Si consideri la seguente funzione f. Cosa produce come risultato quando eseguita?\n\n```c\nchar *f(char *a, const char *b, size_t n) {\n        size_t l = strlen(a);\n        size_t i;\n             for (i = 0 ; i < n && b[i] != '\\0' ; i++)\n                     a[l + i] = b[i];\n      a[l + i] = '\\0';\nreturn a;\n}\n```",
     "options": [
@@ -1587,7 +1587,7 @@ const QUESTIONS =
     "explanation": "Analizzando il codice della funzione `f`:\n```c\nsize_t l = strlen(a);\nfor (i = 0 ; i < n && b[i] != '\\0' ; i++)\n    a[l + i] = b[i];\na[l + i] = '\\0';\n```\nLa variabile `l` memorizza la lunghezza iniziale della stringa `a`. Il ciclo `for` copia i caratteri di `b` a partire dalla posizione `l` di `a` (quindi subito dopo la fine della stringa originaria `a`), fermandosi dopo `n` caratteri o quando incontra il terminatore `\\0` in `b`. Infine, viene aggiunto correttamente il terminatore nullo `\\0`.\n\n- **Perché l'opzione C è corretta:** Questa è esattamente la definizione di concatenazione: accodare i caratteri di `b` a quelli esistenti in `a`. Poiché il ciclo si ferma dopo al più `n` iterazioni, vengono concatenati al massimo i primi `n` caratteri della stringa `b`.\n- **Perché le altre opzioni sono errate:** Le opzioni A e B parlano di 'copia' della stringa `b` in `a`. La copia sovrascriverebbe i caratteri esistenti di `a` a partire dall'indice 0, mentre questo codice scrive a partire dall'indice `l` (concatenazione).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 125,
+    "id": 123,
     "topic": "Input/Output e Gestione Stringhe",
     "question": "Si consideri il seguente ciclo for. Cosa produrebbe come risultato, se eseguito?\n\n```c\nint scoreCount, a;\nfor(scoreCount=0; scanf(\"%d\",&a)==1; scoreCount++);\n```",
     "options": [
@@ -1600,7 +1600,7 @@ const QUESTIONS =
     "explanation": "La funzione `scanf(\"%d\", &a)` tenta di leggere un intero dallo standard input e memorizzarlo in `a`.\nEssa restituisce il numero di elementi convertiti con successo (in questo caso `1` se legge un intero, `0` se l'input non è numerico, o la costante `EOF` (-1) in caso di fine del file o errore di lettura).\n\n- **Perché l'opzione C è corretta:** Il ciclo `for` continua finché la condizione `scanf(...) == 1` è vera. Finché l'utente fornisce numeri interi validi, il ciclo continua a leggerli uno alla volta, incrementando `scoreCount`. Il ciclo termina solo quando viene inserito un input non numerico o si raggiunge la fine dell'input (EOF).\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché il ciclo non legge una sola volta, ma continua finché la conversione ha successo. L'opzione B è errata perché il ciclo ha una condizione di terminazione ben definita (scanf != 1), quindi termina non appena l'input non è un intero.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 126,
+    "id": 124,
     "topic": "System Call e File",
     "question": "Cosa  stampa su stdout la seguente chiamata a printf?\n\n```c\nprintf(\"aaaaa\\nbbbbb\\f\\rccccc\\r\\fddddd\\reeeee\\r\\n\");\n```",
     "options": [
@@ -1613,7 +1613,7 @@ const QUESTIONS =
     "explanation": "Per comprendere l'output di questa chiamata a `printf`, dobbiamo analizzare l'effetto dei caratteri di escape di controllo:\n- `\\n` (newline): manda a capo la riga.\n- `\\r` (carriage return): riporta il cursore all'inizio della riga corrente, permettendo la sovrascrittura del testo già stampato.\n- `\\f` (form feed): sui terminali moderni si comporta come una andata a capo mantenendo la posizione orizzontale del cursore, o semplicemente va a capo.\n\nEsecuzione passo-passo:\n1. Stampa `aaaaa` e va a capo (`\\n`).\n2. Stampa `bbbbb`.\n3. `\\f` sposta il cursore alla riga successiva (sotto la 'b' finale). `\\r` sposta il cursore all'inizio di questa nuova riga.\n4. Stampa `ccccc`.\n5. `\\r` sposta il cursore all'inizio della riga dove c'è `ccccc`.\n6. `\\f` va alla riga successiva. Stampa `ddddd`.\n7. `\\r` sposta il cursore all'inizio della riga contenente `ddddd`.\n8. Stampa `eeeee` che sovrascrive interamente `ddddd` (poiché hanno la stessa lunghezza di 5 caratteri).\n9. Va a capo (`\\r\\n`).\nQuindi, sul terminale vedremo stampate le righe contenenti: `aaaaa`, `bbbbb`, `ccccc` e infine `eeeee` (che ha sovrascritto `ddddd`).\n\n- **Perché l'opzione A è corretta:** Visualizza le stringhe `aaaaa bbbbb ccccc eeeee` sulle rispettive righe.\n- **Perché le altre opzioni sono errate:** Le altre opzioni non tengono conto del fatto che `eeeee` sovrascrive completamente `ddddd` a causa del ritorno carrello `\\r` posizionato prima di `eeeee`.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 127,
+    "id": 125,
     "topic": "Gestione della Memoria Dinamica",
     "question": "Si consideri il seguente frammento di codice. Per de-allocare tutta la memoria allocata, quale delle seguenti opzioni e' coretta?\n\n```c\nchar **mptr, **mptr1, *ptr1;\nint i;\nmptr = calloc(10,sizeof(char *));\nmptr1 = mptr;\nfor(i=0;i<10;i++){\n   mptr[i]=(char *)malloc(10);\n}\n```",
     "options": [
@@ -1626,7 +1626,7 @@ const QUESTIONS =
     "explanation": "Il codice alloca dinamicamente un array di 10 puntatori a `char` (`mptr`), e per ciascuno di essi alloca un blocco di 10 byte.\nPer liberare tutta la memoria senza lasciare leak:\n1. Bisogna prima scorrere l'array e liberare ciascuno dei 10 blocchi puntati da `mptr[i]` (o dal suo equivalente `mptr1[i]`).\n2. Successivamente, si deve liberare l'array di puntatori stesso (`mptr` o `mptr1`).\n\n- **Perché l'opzione B è corretta:** Il ciclo `for` dealloca ogni singolo blocco di caratteri (`free(mptr1[i])`), e al termine il comando `free(mptr1)` dealloca l'array di puntatori. Questo pulisce perfettamente tutta la memoria allocata sullo heap.\n- **Perché le altre opzioni sono errate:** L'opzione A libera i singoli elementi ma lascia allocato l'array di puntatori (`mptr1`), causando un leak di `10 * sizeof(char*)` byte. L'opzione C libera solo l'array di puntatori senza liberare i 10 blocchi allocati al suo interno. Poiché i puntatori a tali blocchi vengono persi, si genera un leak di 100 byte e i blocchi non potranno più essere deallocati.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 128,
+    "id": 126,
     "topic": "Gestione della Memoria Dinamica",
     "question": "Si consideri il seguente frammento di codice. Quale delle seguenti strategie di de-allocazione crea un memory leakage?\n\n```c\nchar **mptr, *ptr1;\nint i;\nmptr = calloc(10,sizeof(char *));\nfor(i=0;i<10;i++){\n   mptr[i]=(char *)malloc(10);\n}\n```",
     "options": [
@@ -1639,7 +1639,7 @@ const QUESTIONS =
     "explanation": "Un memory leak si verifica quando la memoria allocata dinamicamente non viene liberata e i relativi puntatori vengono persi, rendendo impossibile la deallocazione futura.\n\n- **Perché l'opzione C è corretta:** Entrambe le strategie (a) e (b) sono scorrette e creano memory leakage:\n  - La strategia (a) (`free(mptr);`) dealloca solo l'array di puntatori primario. I 10 blocchi di memoria da 10 byte ciascuno precedentemente allocati rimangono nello heap, e non vi è più alcun puntatore che consenta di accedervi per liberarli.\n  - La strategia (b) (il ciclo `for` che fa `free(mptr[i])`) libera i singoli blocchi, ma si dimentica di liberare l'array di puntatori `mptr` stesso, che rimane allocato nello heap.\nDi conseguenza, entrambe le opzioni singolarmente causano leak, rendendo corretta l'opzione C ('entrambe, ovvero sia (a) che (b)').\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 129,
+    "id": 127,
     "topic": "Preprocessore e compilazione",
     "question": "Si consideri un file contenente un programma in linguaggio C. Si assuma che e' stata inserita la direttiva #include \"stdio.h\" . Perche' la compilazione potrebbe generare errori?",
     "options": [
@@ -1652,7 +1652,7 @@ const QUESTIONS =
     "explanation": "In C, la direttiva `#include` accetta due sintassi:\n1. `#include <file.h>`: indica al preprocessore di cercare il file nei percorsi di sistema predefiniti (es. `/usr/include`).\n2. `#include \"file.h\"`: indica di cercare il file prima nella directory corrente (dove si trova il file sorgente) e, solo in caso di insuccesso, nei percorsi di sistema standard.\n\n- **Perché l'opzione A è corretta:** L'uso delle virgolette impone al compilatore di cercare prima nella directory corrente. Se in tale directory esiste un file personalizzato chiamato `stdio.h` (scritto dall'utente o da terzi), il preprocessore includerà quest'ultimo anziché quello standard di libreria. Ciò potrebbe ridefinire prototipi o macro fondamentali, causando errori di compilazione nel codice che si aspetta la libreria standard.\n- **Perché le altre opzioni sono errate:** L'opzione B è errata perché la compilazione fallisce se il file incluso non rispetta le definizioni necessarie, anche se esiste. L'opzione C è errata perché il file standard di libreria `stdio.h` esiste sempre nell'ambiente di sviluppo standard.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 130,
+    "id": 128,
     "topic": "Input/Output e Gestione Stringhe",
     "question": "Quale e' il modo corretto per controllare che due stringhe str1 e str2 sono uguali?",
     "options": [
@@ -1665,7 +1665,7 @@ const QUESTIONS =
     "explanation": "In linguaggio C, le stringhe sono array di caratteri e non possono essere confrontate direttamente con gli operatori di confronto standard.\n\n- **Perché l'opzione A è corretta:** La funzione `strcmp(s1, s2)` della libreria `<string.h>` confronta due stringhe carattere per carattere. Restituisce `0` se le due stringhe sono identiche, un valore negativo se `s1` è lessicograficamente minore di `s2`, e un valore positivo altrimenti. Quindi la condizione `strcmp(s1, s2) == 0` è il modo corretto per testare l'uguaglianza.\n- **Perché le altre opzioni sono errate:** L'opzione B (`s1 == s2`) confronta i valori dei puntatori (le zone di memoria in cui risiedono le stringhe) e non il contenuto delle stringhe stesse; sarà vera solo se i due puntatori puntano esattamente allo stesso indirizzo. L'opzione C (`if strcmp(s1,s2)`) è errata perché se le stringhe sono uguali, `strcmp` restituisce `0`, che in C è interpretato come valore booleano FALSO; quindi il blocco non verrebbe eseguito.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 131,
+    "id": 129,
     "topic": "System Call e File",
     "question": "Si consideri il seguente frammento di codice. Assumendo che myfile.txt non esiste, quale delle seguenti affermazioni e' vera?\n\n```c\nFILE * pFile;\npFile = open(\"myfile.txt\",\"rw+\");\nfprintf(pFile, \"%f %s\", 3.1416, \"PI\");\n```",
     "options": [
@@ -1678,7 +1678,7 @@ const QUESTIONS =
     "explanation": "Analizzando il codice:\n```c\nFILE * pFile;\npFile = open(\"myfile.txt\",\"rw+\");\nfprintf(pFile, \"%f %s\", 3.1416, \"PI\");\n```\nCi sono diversi errori macroscopici in questo frammento:\n1. La funzione chiamata è `open`, che è una system call di basso livello che restituisce un descrittore di tipo `int`, ma il codice assegna il risultato a `pFile` che è di tipo `FILE *` (puntatore a struttura gestita da `stdio.h`).\n2. La system call `open` non accetta una stringa come secondo parametro (come `\"rw+\"`), ma richiede costanti intere (es. `O_RDWR`, `O_CREAT`).\n3. La funzione `fprintf` richiede come primo argomento un puntatore di tipo `FILE *`, ma riceve un intero convertito a puntatore (o causa disallineamenti di tipo).\nIl compilatore C rileva questi disallineamenti di tipo critici (o l'assenza di prototipi compatibili) e solleva un errore di compilazione.\n\n- **Perché l'opzione B è corretta:** Il codice genera un errore in fase di compilazione a causa dell'incompatibilità dei tipi.\n- **Perché le altre opzioni sono errate:** L'opzione A e C assumono che il codice possa essere compilato ed eseguito, il che è falso.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 132,
+    "id": 130,
     "topic": "System Call e File",
     "question": "Supponiamo di eseguire  separatamente i seguenti frammenti di codice. Quale delle seguenti affermazioni e' falsa?\n\n```c\nFrammento_1\nclose(2);\nif (fopen(\".\",\"r\")) {\n    perror(\"main\");\n}\n\nFrammento_2\nclose(2);\nif (fopen(\".\",\"r\")) {\n    printf(\"main:%s\\n\", strerror(errno));\n}\n```",
     "options": [
@@ -1691,7 +1691,7 @@ const QUESTIONS =
     "explanation": "Il descrittore di file `2` rappresenta lo Standard Error (`stderr`).\nNel `Frammento_1`, viene chiamato `close(2);` che chiude lo standard error. Successivamente, `fopen(\".\", \"r\")` fallisce (perché su Linux non si può aprire una directory in modalità di sola lettura standard con fopen o fallisce per altri motivi legati a permessi/flussi). Quando fallisce, viene chiamato `perror(\"main\");`. La funzione `perror` scrive il messaggio di errore specificamente sul descrittore `2` (stderr). Poiché `2` è stato chiuso, `perror` non produrrà alcun output visibile sul terminale.\nNel `Frammento_2`, dopo aver chiuso `2`, in caso di errore viene chiamato `printf(\"main:%s\\n\", strerror(errno));`. La funzione `printf` scrive sullo standard output (`stdout`, descrittore `1`), che è ancora regolarmente aperto. Quindi il messaggio di errore verrà visualizzato su stdout.\n\n- **Perché l'opzione B è corretta (ovvero è l'affermazione FALSA):** L'opzione B sostiene che l'esecuzione dei due frammenti produca sul terminale due stringhe identiche. Questo è falso perché il Frammento 1 non produce alcun output (poiché scrive su stderr che è chiuso), mentre il Frammento 2 stampa il messaggio su stdout.\n- **Perché le altre opzioni non sono selezionabili (sono affermazioni vere):** L'opzione A è vera (Frammento 1 non produce output). L'opzione C è vera (Frammento 2 produce output su stdout).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 133,
+    "id": 131,
     "topic": "Sistemi Operativi II",
     "question": "Quale e' la differenza  tra  la system call _exit(2)  e la funzione di libreria exit(3)?",
     "options": [
@@ -1704,7 +1704,7 @@ const QUESTIONS =
     "explanation": "La funzione `exit(3)` è una funzione di libreria C ad alto livello, mentre `_exit(2)` è una chiamata di sistema a basso livello.\n\n- **Perché l'opzione B è corretta:** `exit(3)` esegue diverse operazioni di pulizia prima di terminare il processo: invoca le funzioni registrate con `atexit(3)` e `on_exit(3)`, svuota (flush) tutti i buffer dei flussi di I/O aperti (es. `stdout`, `stderr`), e chiude i flussi. Invece, la system call `_exit(2)` termina immediatamente il processo nel kernel, senza invocare alcun handler e senza effettuare il flush dei buffer dello spazio utente.\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché entrambe le chiamate chiudono tutti i file descriptor aperti del processo (operazione svolta dal kernel durante la terminazione). L'opzione C inverte la realtà, affermando erroneamente che `_exit` esegua gli handler e `exit` no.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 134,
+    "id": 132,
     "topic": "Gestione dei Processi",
     "question": "Supponiamo che la seguente system call sia invocata con valore di pid uguale a 0. Quale e' il suo comportamento?\n\n```c\npid_t waitpid(pid_t pid, int *status, int options);\n```",
     "options": [
@@ -1717,7 +1717,7 @@ const QUESTIONS =
     "explanation": "La chiamata di sistema `waitpid(pid_t pid, int *status, int options)` serve a sospendere il processo chiamante in attesa di modifiche dello stato dei suoi figli.\n\n- **Perché l'opzione B è corretta:** Come specificato nella pagina man di `waitpid(2)`, quando il parametro `pid` è uguale a `0`, la chiamata attende la terminazione di un qualsiasi processo figlio il cui Group ID (PGID) sia uguale a quello del processo chiamante al momento dell'invocazione della waitpid.\n- **Perché le altre opzioni sono errate:** L'opzione A descrive il comportamento per `pid < -1` (attesa di un figlio con PGID pari al valore assoluto di `pid`). L'opzione C descrive il comportamento quando `pid == -1`, che equivale a una chiamata a `wait(2)` (attesa di un figlio qualunque, indipendentemente dal gruppo).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 135,
+    "id": 133,
     "topic": "System Call e File",
     "question": "Si consideri il seguente frammento di codice. Quale e' il suo comportamento?\n\n```c\nchar* file = argv[1];\nint fd;\nstruct flock lock;\nfd = open (file, O_WRONLY);\nmemset (&lock, 0, sizeof(lock));\nlock.l_type = F_WRLCK;\nfcntl (fd, F_SETLKW, &lock);\n....\n```",
     "options": [
@@ -1730,7 +1730,7 @@ const QUESTIONS =
     "explanation": "Il codice configura una struttura `struct flock` per inserire un lock in scrittura:\n```c\nlock.l_type = F_WRLCK;\nfcntl (fd, F_SETLKW, &lock);\n```\nL'argomento `F_SETLKW` indica che l'operazione deve impostare il lock e che, nel caso in cui un altro processo detenga già un lock incompatibile sullo stesso file, il processo chiamante deve *bloccarsi* (la 'W' in `F_SETLKW` sta per 'Wait') fino a quando il lock non si rende disponibile.\n\n- **Perché l'opzione C è corretta:** L'uso di `F_SETLKW` crea specificamente un lock bloccante (se fosse stato usato `F_SETLK` senza W, la chiamata sarebbe fallita immediatamente con l'errore `EACCES` o `EAGAIN` in caso di conflitto, rendendolo non-bloccante).\n- **Perché le altre opzioni sono errate:** L'opzione A parla di lock 'mandatory' (obbligatorio). Per impostazione predefinita, su Linux i lock impostati con `fcntl` sono 'advisory' (consigliati/cooperativi), a meno che il filesystem e i permessi del file non siano configurati appositamente per abilitare il meccanismo mandatory. L'opzione B parla genericamente di lock advisory, ma non specifica la caratteristica cruciale del comportamento bloccante indotta da `F_SETLKW`.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 136,
+    "id": 134,
     "topic": "System Call e File",
     "question": "Quale e'  la  differenza tra i seguenti frammenti di codice?\n\n```c\nC1:\nint fd, fd1;\nfd = open(\"filename\", O_RDWR);\nfd1 = fd;\n\nC2:\nint fd, fd1;\nfd = open(\"filename\", O_RDWR);\nfd1 = dup(fd);\n```",
     "options": [
@@ -1743,7 +1743,7 @@ const QUESTIONS =
     "explanation": "Questo quesito confronta due modalità per copiare un file descriptor:\n- In `C1`, l'istruzione `fd1 = fd;` copia semplicemente il valore intero del descrittore. Entrambe le variabili contengono lo stesso intero (es. `3`), riferito allo stesso elemento nella tabella dei file descriptor del processo.\n- In `C2`, la chiamata `fd1 = dup(fd);` è una system call che alloca un *nuovo* slot libero nella tabella dei file descriptor del processo (il numero intero più piccolo disponibile, ad esempio `4`), e lo fa puntare alla stessa descrizione del file aperto (open file description) nel kernel.\n\n- **Perché l'opzione C è corretta:** In `C1`, `fd1` assume lo stesso valore numerico di `fd`. In `C2`, `fd1` assume il valore numerico del più piccolo descrittore disponibile, che sarà diverso da `fd` (sebbene entrambi puntino alla stessa risorsa sottostante).\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché in C2 `fd1` conterrà un intero diverso da `fd`. L'opzione B è errata perché `dup` non duplica fisicamente il file sul disco, duplica solo il riferimento interno (descrittore) nello spazio del kernel.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 137,
+    "id": 135,
     "topic": "Gestione dei Processi",
     "question": "Si consideri la system call execve(2). Quale delle seguenti affermazioni e' corretta?",
     "options": [
@@ -1756,7 +1756,7 @@ const QUESTIONS =
     "explanation": "La chiamata di sistema `execve(2)` carica ed esegue un nuovo programma all'interno del processo corrente.\n\n- **Perché l'opzione B è corretta:** Quando un processo invoca con successo `execve`, l'intero spazio di indirizzamento del processo chiamante (codice, dati, heap, stack) viene sovrascritto e sostituito con quello del nuovo programma specificato. Il processo mantiene lo stesso PID, i descrittori di file aperti (salvo quelli con il flag close-on-exec impostato), i permessi utente e l'appartenenza ai gruppi, ma esegue un codice completamente diverso.\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché `execve` *non* esegue implicitamente una `fork`; non crea un nuovo processo figlio, ma trasforma il processo corrente. L'opzione C è errata perché `execve` non è un'estensione di `system(3)`; semmai è il contrario (la funzione `system` viene implementata internamente effettuando una `fork` e richiamando `exec` per avviare `/bin/sh`).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 138,
+    "id": 136,
     "topic": "System Call e File",
     "question": "Si consideri il seguente frammento di codice. Cosa produce come  risultato una volta eseguito?\n\n```c\nsigset_t set, oset, pset;\n...\nsigemptyset( &set ); \nsigaddset( &set, SIGINT ); \nsigaddset( &set, SIGUSR1 );\nsigprocmask( SIG_BLOCK, &set, &oset );\n…\n```",
     "options": [
@@ -1769,7 +1769,7 @@ const QUESTIONS =
     "explanation": "La chiamata `sigprocmask` viene utilizzata per esaminare e modificare la maschera dei segnali bloccati del processo chiamante.\nNel codice:\n```c\nsigemptyset(&set);\nsigaddset(&set, SIGINT);\nsigaddset(&set, SIGUSR1);\nsigprocmask(SIG_BLOCK, &set, &oset);\n```\nViene creato un set contenente i segnali `SIGINT` e `SIGUSR1`. La chiamata a `sigprocmask` con il parametro `SIG_BLOCK` aggiunge questi segnali alla maschera corrente dei segnali bloccati del processo. Questo significa che se arrivano `SIGINT` o `SIGUSR1`, essi verranno messi in attesa (pending) dal kernel e non saranno consegnati al processo finché non verranno sbloccati.\n\n- **Perché l'opzione A è corretta:** Bloccare i segnali asincroni sensibili permette di iniziare una \"sezione critica\" di codice, ovvero una porzione di programma che deve essere eseguita senza interruzioni asincrone che potrebbero lasciare le strutture dati in uno stato incoerente.\n- **Perché le altre opzioni sono errate:** La maschera non impedisce l'arrivo dei segnali nel sistema, semplicemente ne sospende la consegna al processo, quindi non si tratta di 'ignorarli' permanentemente (cosa che si fa con `SIG_IGN` in `sigaction`).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 139,
+    "id": 137,
     "topic": "Sistemi Operativi II",
     "question": "Si consideri il seguente frammento di codice; quando termina il ciclo for?\n\n```bash\nfor (i=0;((i<n1)&&(i<n2));i++)\n       m2[i]=m1[i];\n```",
     "options": [
@@ -1782,7 +1782,7 @@ const QUESTIONS =
     "explanation": "Analizzando la condizione di permanenza nel ciclo `for`:\n`((i < n1) && (i < n2))`\nL'operatore logico utilizzato è `&&` (AND logico). Ciò significa che per continuare ad eseguire il ciclo, la variabile di controllo `i` deve essere contemporaneamente minore sia di `n1` che di `n2`.\n\n- **Perché l'opzione C è corretta:** Il ciclo si interrompe non appena *una sola* delle due sotto-condizioni diventa falsa. Questo avviene quando `i` raggiunge il valore del più piccolo tra `n1` e `n2`. A quel punto, l'AND logico fallisce e il ciclo termina.\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché il ciclo funziona correttamente e termina anche se `n1` e `n2` sono diversi. L'opzione B è errata perché se il ciclo continuasse fino al più grande dei due limiti, andrebbe a violare la condizione di essere minore del più piccolo, causando accessi fuori dai limiti dell'array minore.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 140,
+    "id": 138,
     "topic": "Gestione dei Processi",
     "question": "A seguito di una chiamata a fork(2), quale dei seguenti attributi del processo padre non è ereditato dal processo figlio?",
     "options": [
@@ -1795,7 +1795,7 @@ const QUESTIONS =
     "explanation": "Quando viene eseguita una `fork(2)`, il processo figlio riceve una copia quasi identica del contesto del padre.\n\n- **Perché l'opzione B è corretta:** La coda dei segnali pendenti (segnali inviati al padre ma non ancora consegnati) *non* viene ereditata dal figlio. Il processo figlio nasce con una coda dei segnali pendenti completamente vuota.\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché l'appartenenza ai gruppi (Groups ID secondari) viene ereditata fedelmente dal processo figlio. L'opzione C è errata perché tutti i descrittori di file aperti dal padre vengono duplicati nel figlio, ed entrambi i processi condivideranno gli stessi puntatori ai file aperti (offset compresi).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 141,
+    "id": 139,
     "topic": "Sistemi Operativi II",
     "question": "Per visualizzare l'atime di un file, quale dei seguenti comandi è corretto?",
     "options": [
@@ -1808,7 +1808,7 @@ const QUESTIONS =
     "explanation": "In Unix/Linux, i file hanno tre timestamp principali:\n- `mtime` (modification time): tempo dell'ultima modifica al contenuto del file.\n- `ctime` (change time): tempo dell'ultimo cambio dei metadati (permessi, proprietario) o del contenuto.\n- `atime` (access time): tempo dell'ultimo accesso (lettura) al file.\n\n- **Perché l'opzione B è corretta:** Il comando `ls -l` di default mostra il tempo di modifica (`mtime`). L'opzione `-u` indica a `ls` di utilizzare il tempo di accesso (`atime`) per l'ordinamento e la visualizzazione logica. Quindi `ls -lu` mostra l'atime del file.\n- **Perché le altre opzioni sono errate:** L'opzione A (`ls -lc`) mostra il tempo di modifica dello stato/metadati (`ctime`). L'opzione C (`ls -la`) mostra tutti i file (inclusi quelli nascosti che iniziano con `.`), ma mostra comunque il tempo `mtime` standard.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 142,
+    "id": 140,
     "topic": "System Call e File",
     "question": "Sia mylink un soft link al file myfile (ln -s myfile mylink). Quale di queste affermazioni è vera?",
     "options": [
@@ -1821,7 +1821,7 @@ const QUESTIONS =
     "explanation": "Un soft link (o collegamento simbolico) è un tipo speciale di file che contiene semplicemente una stringa di testo corrispondente al percorso del file reale (il target).\n\n- **Perché l'opzione A è corretta:** Poiché il soft link è a tutti gli effetti un file distinto creato nel filesystem, esso possiede un proprio numero di inode separato e differente rispetto al file originale (`myfile`).\n- **Perché le altre opzioni sono errate:** L'opzione B ('stesso numero inode') descrive il comportamento degli *hard link*, non dei soft link. L'opzione C è errata perché la dimensione del soft link è pari alla lunghezza in caratteri del nome del file a cui punta (es. 'myfile' ha dimensione 6 byte), mentre il file originale ha una sua dimensione indipendente che può essere arbitrariamente grande.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 143,
+    "id": 141,
     "topic": "Gestione Utenti",
     "question": "Quale tra i seguenti comandi è il modo più corretto di verificare a quali gruppi appartiene un utente?\n\n```bash\nC1) groups nomeutente\nC2) cat /etc/groups | grep nomeutente\n```",
     "options": [
@@ -1834,7 +1834,7 @@ const QUESTIONS =
     "explanation": "Confrontiamo i due comandi proposti:\n- `C1) groups nomeutente` interroga direttamente le chiamate di sistema e i database degli utenti attivi nel sistema (attraverso il Name Service Switch), garantendo di restituire l'elenco esatto e aggiornato di tutti i gruppi (primari e secondari) a cui l'utente appartiene.\n- `C2) cat /etc/groups | grep nomeutente` (a parte il fatto che il file corretto è `/etc/group` senza la 's' finale) effettua una semplice ricerca testuale nel file locale dei gruppi. Questo metodo ha due grossi limiti: non elenca il gruppo primario se questo è configurato solo in `/etc/passwd`, ed effettua un matching testuale grezzo che potrebbe intercettare sottostringhe errate (es. se cerchiamo 'user' troverà anche righe contenenti 'user1', 'superuser', ecc.).\n\n- **Perché l'opzione C è corretta:** `C1` (`groups nomeutente`) è il modo corretto e sicuro fornito dal sistema operativo.\n- **Perché le altre opzioni sono errate:** `C2` è un metodo grossolano, soggetto a falsi positivi e incompleto (manca del gruppo primario).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 144,
+    "id": 142,
     "topic": "Input/Output e Gestione Stringhe",
     "question": "Si consideri la seguente funzione f. Cosa produce come risultato quando eseguita?\n\n```c\nchar *f(char* dest, const char* src, size_t n) {\n    size_t i; size_t dest_len = strlen(dest);\n    for (i = 0; i < n && src[i] != '\\0'; i++) dest[dest_len + i] = src[i];\n    for (; i < n; i++) dest[dest_len + i] = '\\0';\n    return dest;\n}\n```",
     "options": [
@@ -1847,7 +1847,7 @@ const QUESTIONS =
     "explanation": "Analizzando il codice della funzione `f`:\n```c\nsize_t dest_len = strlen(dest);\nfor (i = 0; i < n && src[i] != '\\0'; i++) dest[dest_len + i] = src[i];\nfor (; i < n; i++) dest[dest_len + i] = '\\0';\n```\nQuesta funzione si comporta in modo analogo alla funzione standard `strncat(3)`:\n1. Calcola la lunghezza corrente di `dest`.\n2. Copia i caratteri di `src` accodandoli a `dest` fino a un massimo di `n` caratteri o finché non trova il terminatore di `src`.\n3. Se la fine di `src` viene raggiunta prima di `n` caratteri, il secondo ciclo `for` riempie il rimanente spazio fino a `n` con caratteri nulli (`'\\0'`).\nIn ogni caso, l'effetto finale è l'accodamento del contenuto di `src` a `dest` (concatenazione).\n\n- **Perché l'opzione B è corretta:** La funzione effettua una concatenazione della stringa `src` a `dest`, ritornando il puntatore `dest`.\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché, sebbene non ci sia un controllo esplicito sui buffer overflow, la funzione in sé non genera 'sempre' un errore (funziona regolarmente se lo spazio allocato per `dest` è sufficiente). L'opzione C parla di semplice copia (che sovrascriverebbe l'inizio di `dest`), mentre qui i caratteri vengono aggiunti a partire dall'offset `dest_len` (concatenazione).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 145,
+    "id": 143,
     "topic": "Gestione Utenti",
     "question": "Cosa produce il seguente comando come risultato?\n\n```bash\ncat /etc/group | grep nomeutente\n```",
     "options": [
@@ -1860,7 +1860,7 @@ const QUESTIONS =
     "explanation": "Il file `/etc/group` definisce la configurazione dei gruppi presenti nel sistema, elencando per ciascun gruppo il nome del gruppo, la password, il Group ID (GID) e la lista dei membri del gruppo separati da virgole.\n\n- **Perché l'opzione A è corretta:** Eseguendo `cat /etc/group | grep nomeutente`, verranno filtrate e stampate tutte le righe del file che contengono la stringa `nomeutente`. Questo mostrerà tutti i gruppi secondari di cui l'utente fa parte (poiché il suo nome utente appare nella lista dei membri) e mostrerà anche il gruppo privato avente lo stesso nome dell'utente `nomeutente` (se esistente), poiché la riga del gruppo inizierà proprio con quel nome.\n- **Perché le altre opzioni sono errate:** L'opzione B è errata perché `/etc/group` contiene i membri appartenenti a ciascun gruppo, non l'elenco dei gruppi a cui appartiene un ipotetico 'gruppo'. L'opzione C è errata perché il file `/etc/group` (singolare) è un file di sistema fondamentale e sempre esistente in qualsiasi sistema operativo Linux.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 146,
+    "id": 144,
     "topic": "Permessi del Filesystem",
     "question": "Se una directory ha i permessi di accesso settati come 0222, quali operazioni e' possibile fare su di essa?",
     "options": [
@@ -1873,7 +1873,7 @@ const QUESTIONS =
     "explanation": "In Unix/Linux, i permessi di una directory hanno un significato diverso rispetto a quelli dei file regolari:\n- `r` (read, valore 4): permette di leggere l'elenco dei nomi dei file contenuti nella directory (es. con `ls`).\n- `w` (write, valore 2): permette di modificare il contenuto della directory (creare, eliminare o rinominare file), ma solo se combinato con il permesso di esecuzione.\n- `x` (execute, valore 1): permette l'accesso alla directory (attraversamento), indispensabile per accedere agli inode dei file contenuti, leggerne i metadati o aprirli.\n\n- **Perché l'opzione A è corretta:** La directory ha permessi `0222` (ovvero solo scrittura `w` per tutti, senza lettura `r` e senza esecuzione `x`). Poiché manca il permesso di esecuzione (`x`), è impossibile accedere alla directory o a qualsiasi file in essa contenuto. Poiché manca anche il permesso di lettura (`r`), è impossibile elencarne i file. Inoltre, il permesso di scrittura `w` da solo, senza `x`, non consente alcuna modifica reale (poiché non si può attraversare la directory per modificare gli inode). Quindi non è possibile effettuare *nessuna operazione*.\n- **Perché le altre opzioni sono errate:** Le opzioni B e C ipotizzano che si possano fare operazioni di scrittura o visualizzazione. Senza il bit `x` impostato, qualsiasi tentativo di accesso alla directory restituirà un errore di 'Permission denied'.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 147,
+    "id": 145,
     "topic": "Sistemi Operativi II",
     "question": "Quale delle seguenti dichiarazioni di variabile è non valida, generando quindi un errore di compilazione?",
     "options": [
@@ -1886,7 +1886,7 @@ const QUESTIONS =
     "explanation": "In C, i nomi delle variabili devono essere identificatori validi e non possono coincidere con le parole chiave riservate del linguaggio.\n\n- **Perché l'opzione A è corretta:** La parola `goto` è una parola chiave riservata del linguaggio C (utilizzata per i salti incondizionati). Di conseguenza, dichiarare una variabile con nome `goto` (`int goto = 1;`) viola la sintassi del linguaggio e genera un errore di compilazione.\n- **Perché le altre opzioni sono errate:** Le parole `goTo` (il C è case-sensitive, quindi è diversa da `goto`) e `go_to` non sono parole riservate del linguaggio, e sono quindi identificatori perfettamente validi per le variabili.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 148,
+    "id": 146,
     "topic": "Sistemi Operativi II",
     "question": "Dopo aver eseguito il comando seguente, cosa conterrà il file \"hw\"?\n\n```bash\ncpp helloworld.c > hw\n```",
     "options": [
@@ -1899,7 +1899,7 @@ const QUESTIONS =
     "explanation": "Il comando `cpp` corrisponde al *C Preprocessor* (il preprocessore C).\n\n- **Perché l'opzione B è corretta:** Il preprocessore C ha il compito di elaborare le direttive del preprocessore (come `#include`, `#define` o `#ifdef`) prima della compilazione effettiva. Il comando `cpp helloworld.c > hw` genera un file di testo `hw` contenente il codice sorgente \"precompilato\" (o pre-elaborato), in cui tutte le macro sono state espanse e i file di intestazione inclusi sono stati copiati integralmente nel testo.\n- **Perché le altre opzioni sono errate:** L'opzione A descrive i file di simboli per il debugger (generati con l'opzione `-g` del compilatore). L'opzione C è errata perché il file precompilato differirà moltissimo da quello originale a causa dell'inclusione di migliaia di righe di codice provenienti dagli header inclusi (es. `stdio.h`).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 149,
+    "id": 147,
     "topic": "Permessi del Filesystem",
     "question": "Assumiamo che quando viene creata una directory i suoi permessi di accesso sono 0644. Quale sara la umask?",
     "options": [
@@ -1912,7 +1912,7 @@ const QUESTIONS =
     "explanation": "In Unix/Linux, la creazione di una directory richiede di default i permessi massimi di lettura, scrittura ed esecuzione per tutti (`0777`), poiché il permesso `x` è indispensabile per potervi accedere. I permessi effettivi con cui una directory viene creata sul disco sono calcolati applicando una maschera di bit chiamata `umask` secondo la formula:\n`Permessi_Effettivi = Permessi_Default & ~Umask` (ovvero sottraendo i permessi specificati nella umask).\n\n- **Perché l'opzione C è corretta:** Sappiamo che:\n  - I permessi di default per le directory sono `0777` (in binario: `111 111 111`).\n  - I permessi effettivi desiderati sono `0644` (in binario: `110 100 100`).\n  - Per passare da `0777` a `0644`, dobbiamo negare i bit corrispondenti: il primo gruppo passa da `7` (rwx) a `6` (rw-), quindi dobbiamo togliere `1` (x); il secondo gruppo passa da `7` (rwx) a `4` (r--), quindi dobbiamo togliere `3` (wx); il terzo gruppo passa da `7` a `4`, quindi togliamo `3` (wx).\nLa maschera che rimuove questi bit è proprio `0133` (in ottale).\n- **Perché le altre opzioni sono errate:** L'opzione A (`0644`) applicata come umask produrrebbe permessi `0133`. L'opzione B (`0022`) è la umask standard di Linux e applicata a `0777` produce directory con permessi `0755`.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 150,
+    "id": 148,
     "topic": "Sistemi Operativi II",
     "question": "Quando si esegue il comando ls -l viene mostrato, come prima informazione, il totale. Quale è il significato di questo campo?",
     "options": [
@@ -1925,7 +1925,7 @@ const QUESTIONS =
     "explanation": "Quando si esegue il comando `ls -l` su una directory, la prima riga stampata è simile a `totale 44` (o `total 44`).\n\n- **Perché l'opzione A è corretta:** Questo valore rappresenta lo spazio su disco occupato cumulativamente da tutti i file contenuti nella directory corrente, espresso come numero totale di blocchi fisici di memoria di massa (generalmente blocchi da 1024 byte o da 512 byte a seconda della configurazione del filesystem).\n- **Perché le altre opzioni sono errate:** L'opzione B e C ipotizzano che il totale conti il numero di file o sotto-directory, il che è errato (il numero mostrato è una misura di occupazione fisica di memoria, non un conteggio di elementi).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 151,
+    "id": 149,
     "topic": "Sistemi Operativi II",
     "question": "Si consideri il seguente frammento di codice. Dopo la sua esecuzione, quale sarà il valore contenuto in num?\n\n```c\nint num = 5;\nint *numPtr;\nnumPtr = &num;\n*numPtr = 10;\n```",
     "options": [
@@ -1938,7 +1938,7 @@ const QUESTIONS =
     "explanation": "Analizziamo l'assegnazione tramite puntatore:\n1. `int num = 5;` definisce la variabile `num` con valore `5`.\n2. `numPtr = &num;` assegna a `numPtr` l'indirizzo di memoria della variabile `num`.\n3. `*numPtr = 10;` effettua la deferenziazione del puntatore, scrivendo il valore `10` direttamente nella cella di memoria puntata da `numPtr` (che coincide con la variabile `num`).\n\n- **Perché l'opzione B è corretta:** Poiché il valore in memoria è stato modificato, stampando `num` otterremo il nuovo valore `10`.\n- **Perché le altre opzioni sono errate:** L'opzione A ignora la modifica tramite puntatore. L'opzione C confonde il valore della variabile modificata con il valore del puntatore (indirizzo di memoria).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 152,
+    "id": 150,
     "topic": "Sistemi Operativi II",
     "question": "Si consideri il seguente frammento di codice. Quale delle seguenti espressioni sarà vera una volta eseguito il codice?\n\n```c\nint n= 2;\nint r= 2 * (n++);\nint r1 = 2 * (++n)\n```",
     "options": [
@@ -1951,7 +1951,7 @@ const QUESTIONS =
     "explanation": "Questo quesito valuta la differenza tra gli operatori di post-incremento (`n++`) e pre-incremento (`++n`):\n1. All'inizio `n = 2`.\n2. `int r = 2 * (n++);` usa l'operatore di post-incremento. L'espressione viene valutata usando il valore *corrente* di `n` (che è `2`), quindi `r = 2 * 2 = 4`. Subito dopo la valutazione, `n` viene incrementato e assume il valore `3`.\n3. `int r1 = 2 * (++n);` usa l'operatore di pre-incremento. La variabile `n` (che vale `3`) viene prima incrementata diventando `4`, e poi l'espressione viene valutata usando questo nuovo valore: `r1 = 2 * 4 = 8`.\n\n- **Perché l'opzione A è corretta:** Poiché `r = 4` e `r1 = 8`, la relazione `r < r1` (4 < 8) è vera.\n- **Perché le altre opzioni sono errate:** L'opzione B (`r > r1`) e C (`r == r1`) sono matematicamente false date le definizioni degli incrementi.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 153,
+    "id": 151,
     "topic": "Input/Output e Gestione Stringhe",
     "question": "Si consideri il seguente frammento di codice. Cosa fa una volta eseguito?\n\n```c\nscanf(\"%d\", &num);\nwhile(num != 0){\n printf(\"%d\\n\", num);\nscanf(\"%d\", &num);\n}\n```",
     "options": [
@@ -1964,7 +1964,7 @@ const QUESTIONS =
     "explanation": "Analizziamo il comportamento del ciclo `while` proposto:\n```c\nscanf(\"%d\", &num);\nwhile(num != 0){\n    printf(\"%d\\n\", num);\n    scanf(\"%d\", &num);\n}\n```\nIl ciclo legge un intero. Se l'utente inserisce un valore diverso da zero, il ciclo entra nel blocco, stampa il valore, e chiama nuovamente `scanf` per leggere un nuovo valore.\n\n- **Perché l'opzione B è corretta:** Se l'utente inserisce un valore `num != 0` all'inizio, il ciclo continuerà a richiedere e leggere numeri. Se non ci sono input pronti sullo standard input (ad esempio se lo stdin viene rediretto da un file finito o se viene raggiunta la fine dell'input EOF, rendendo impossibile nuove letture), la chiamata `scanf` fallirà restituendo `EOF` senza modificare il valore di `num`. Poiché `num` rimarrà diverso da zero, la condizione `num != 0` continuerà a essere vera e il ciclo entrerà in un loop infinito stampando ripetutamente l'ultimo valore letto con successo. *(Nota: il quesito ufficiale del corso fa questa assunzione o descrive in modo semplificato la tendenza al loop infinito in assenza di controlli di successo su `scanf`)*.\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché se il primo valore letto è `0`, il ciclo non viene eseguito nemmeno una volta. L'opzione C descrive parzialmente l'output ma trascura la dinamica del ciclo.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 154,
+    "id": 152,
     "topic": "System Call e File",
     "question": "Si consideri il seguente frammento di codice. Le chiamate di funzione a riga 10, 11, 12 e 13 vengono eseguite tutte?\n\n```c\n1: #include <stdio.h>\n2:  ....\n3: \n4:  char str [80];\n5:  float f;\n6:  FILE * pFile;\n7:\n8:  pFile = fopen (\"myfile.txt\",\"w+\");\n9:  fprintf (pFile, \"%f %s\\n\", 3.1416, \"PI\");\n10: close(pFile);\n11: rewind (pFile);\n12: fscanf (pFile, \"%f\", &f);\n13: fscanf (pFile, \"%s\", str);\n```",
     "options": [
@@ -1977,7 +1977,7 @@ const QUESTIONS =
     "explanation": "Analizziamo il flusso delle chiamate sulle funzioni di I/O nel file:\n```c\n8:  pFile = fopen (\"myfile.txt\",\"w+\");\n9:  fprintf (pFile, \"%f %s\\n\", 3.1416, \"PI\");\n10: close(pFile);\n11: rewind (pFile);\n12: fscanf (pFile, \"%f\", &f);\n```\nA riga 10 viene chiamata la funzione `close(pFile)`. Tuttavia, in C standard (`stdio.h`), la funzione corretta per chiudere un flusso gestito tramite `FILE *` è `fclose(pFile)`. La chiamata `close(2)` è una system call a basso livello che accetta un descrittore intero, non un puntatore a struttura. Passare `pFile` (che è un puntatore) alla funzione `close` (se dichiarata o inclusa in modo non compatibile) può causare un comportamento indefinito, o in molte implementazioni didattiche dell'esame si evidenzia che il codice compila e le chiamate vengono eseguite sollevando errori logici ma non impedendone la compilazione, oppure l'opzione corretta 'Si' riflette l'assunzione che, nonostante gli errori semantici grossolani (come fare close anziché fclose, e fare rewind su un file chiuso), tutte le righe del codice vengono sintatticamente inserite nel flusso di esecuzione (il compilatore C non impedisce la chiamata e l'esecuzione sequenziale delle istruzioni, che poi falliranno a tempo di esecuzione).\n\n- **Perché l'opzione A è corretta:** Nel database dell'esame la risposta ufficiale è 'Si' (le chiamate vengono tutte eseguite sequenzialmente dal processore, pur generando errori logici di I/O).\n- **Perché le altre opzioni sono errate:** Le altre opzioni non corrispondono alla chiave ufficiale dell'esame.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 155,
+    "id": 153,
     "topic": "Input/Output e Gestione Stringhe",
     "question": "Cosa fa il seguente segmento di codice?\n\n```c\nscanf(\"%d\",&num);\ndo {\nprintf(\"%d\\n\",num);\nscanf(\"%d\",&num);\n} while(num!=0);\n```",
     "options": [
@@ -1990,7 +1990,7 @@ const QUESTIONS =
     "explanation": "Analizziamo il costrutto `do-while`:\n```c\nscanf(\"%d\",&num);\ndo {\n    printf(\"%d\\n\",num);\n    scanf(\"%d\",&num);\n} while(num!=0);\n```\nIl ciclo `do-while` garantisce che il corpo del ciclo venga eseguito *almeno una volta*, poiché il controllo della condizione di permanenza (`num != 0`) avviene solo al termine della prima iterazione.\n\n- **Perché l'opzione C è corretta:** Poiché la prima stampa di `num` avviene all'interno del blocco `do` prima di testare la condizione, il valore iniziale letto in `num` verrà stampato in ogni caso almeno una volta (anche se fosse zero).\n- **Perché le altre opzioni sono errate:** L'opzione A trascura il fatto che se `num` è uguale a 0 all'inizio, viene comunque stampato. L'opzione B è errata perché il ciclo ha una condizione di terminazione valida e termina non appena l'utente inserisce `0`.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 156,
+    "id": 154,
     "topic": "System Call e File",
     "question": "Si consideri il seguente grammento di codice. Assumendo che myfile.txt non esista, quale delle seguenti affermazioni è vera?\n\n```c\nFILE * pFile;\npFile = fopen(\"myfile.txt\", \"rw+\");\nfprintf(pFile, \"%f %s\", 3.1416, \"PI\")\n```",
     "options": [
@@ -2003,7 +2003,7 @@ const QUESTIONS =
     "explanation": "Analizzando il codice:\n```c\nFILE * pFile; \npFile = fopen(\"myfile.txt\", \"rw+\");\nfprintf(pFile, \"%f %s\", 3.1416, \"PI\")\n```\n- La stringa di modalità `\"rw+\"` non è una modalità di apertura standard definita dallo standard C ISO (le modalità valide sono `\"r\"`, `\"w\"`, `\"a\"`, `\"r+\"`, `\"w+\"`, `\"a+\"`). Quando viene passata una modalità non valida, la libreria standard C fa fallire la chiamata e `fopen` restituisce un puntatore nullo (`NULL`).\n- Poiché `myfile.txt` non esiste e la modalità era errata, `pFile` conterrà `NULL`.\n- Successivamente, la funzione `fprintf(pFile, ...)` tenta di dereferenziare il puntatore `pFile` (che è `NULL`) per accedere ai buffer e allo stato del flusso. Questa operazione di accesso a un indirizzo di memoria non valido (`0x0`) provoca l'arresto immediato del programma da parte del sistema operativo per violazione di accesso, ovvero un errore di segmentazione (Segmentation Fault).\n\n- **Perché l'opzione B è corretta:** Il programma genera un errore di segmentazione a causa della dereferenziazione di `pFile` nullo.\n- **Perché le altre opzioni sono errate:** L'opzione A è errata perché il compilatore non controlla a tempo di compilazione la validità delle stringhe di modalità di `fopen`, quindi il codice viene compilato senza errori. L'opzione C presuppone l'esecuzione corretta, il che è impossibile.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 157,
+    "id": 155,
     "topic": "Sistemi Operativi II",
     "question": "Si consideri il frammento di codice; che valore conterra' p al termine dell'esecuzione del frammento di codice?\n\n```bash\ni=0; c=0; p=1;\nwhile (i++ < 10)\nc=c+1;\np--;\n```",
     "options": [
@@ -2016,7 +2016,7 @@ const QUESTIONS =
     "explanation": "Analizziamo il flusso dello script:\n```bash\ni=0; c=0; p=1;\nwhile (i++ < 10)\nc=c+1;\np--;\n```\nIn bash, l'assenza di parentesi graffe `{ ... }` o di blocchi indentati definiti da `do ... done` dopo un ciclo `while` (o la sintassi qui proposta in stile generico) implica che solo la prima istruzione successiva (`c=c+1;`) faccia parte del corpo del ciclo. L'istruzione `p--;` si trova *fuori* dal ciclo `while` e verrà eseguita una sola volta al termine delle 10 iterazioni.\nAll'inizio `p = 1`. Alla fine del ciclo, viene eseguito `p--` (ovvero viene decrementato di 1). Quindi `p` assumerà il valore `0`.\n\n- **Perché l'opzione A è corretta:** Il valore finale contenuto in `p` sarà `0`.\n- **Perché le altre opzioni sono errate:** Le opzioni B e C assumono erroneamente che `p--;` venga eseguito ripetutamente all'interno del ciclo `while` ad ogni iterazione, il che non avviene.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 158,
+    "id": 156,
     "topic": "System Call e File",
     "question": "Supponendo di essere \"loggato\" in una shell come utente1. Quali dei seguenti e' un path assoluto? (2 giuste)",
     "options": [
@@ -2029,7 +2029,7 @@ const QUESTIONS =
     "explanation": "In Unix/Linux, un path assoluto specifica la posizione di un file a partire dalla directory radice (`/`).\n\n- **Perché le risposte B e C sono concettualmente corrette:** La tilde `~` viene espansa automaticamente dalla shell nel percorso assoluto della home directory dell'utente corrente (ad esempio `/home/utente1`). Di conseguenza, sia `~/utente1/...` (B) che `~/dir1/...` (C) si espandono in percorsi assoluti che partono da `/`.\n- **Perché le altre opzioni sono errate:** L'opzione A (`dir1/dir11/...`) è un percorso relativo poiché non inizia né con `/` né con la tilde `~`, ma fa riferimento alla directory corrente.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 159,
+    "id": 157,
     "topic": "Input/Output e Gestione Stringhe",
     "question": "Si considerino le seguenti dichiarazioni di variabili. Quale delle seguenti assegnazioni è corretta per far si che \"ptr\" contenga il puntatore al vettore \"vect\"?\n\n```c\nint vect[10];\nint *ptr = NULL;\n```",
     "options": [
@@ -2042,7 +2042,7 @@ const QUESTIONS =
     "explanation": "In linguaggio C, il nome di un array decade a un puntatore costante al suo primo elemento quando viene valutato in un'espressione (array decay).\n\n- **Perché l'opzione A è corretta:** `ptr = vect;` assegna correttamente a `ptr` l'indirizzo del primo elemento dell'array (equivalente a `ptr = &vect[0];`). I tipi corrispondono perfettamente (`int*`).\n- **Perché le altre opzioni sono errate:** L'opzione B (`ptr = &vect;`) tenta di assegnare l'indirizzo dell'intero array (tipo `int (*)[10]`) a un puntatore a intero (`int*`), causando un'incompatibilità di tipi. L'opzione C (`ptr = vect[1];`) tenta di assegnare un valore intero (`vect[1]`) a un puntatore, determinando un errore di compilazione.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 160,
+    "id": 158,
     "topic": "Gestione dei Processi",
     "question": "Si consideri il seguente frammento di codice. Quale blocco di codice (tra Bloccco_1,  Blocco_2 e  Blocco_3) verra' eseguito nel caso in cui la fork non vada a buon fine?\n\n```c\npid_t pID = fork();\nif (pID == 0) {\n    Blocco_1;\n} else if (pID < 0) {\n    Blocco_2;\n} else {\n    Blocco_3;\n}\n```",
     "options": [
@@ -2055,7 +2055,7 @@ const QUESTIONS =
     "explanation": "La system call `fork()` viene utilizzata per creare un nuovo processo figlio.\n\n- **Perché l'opzione C è corretta:** In caso di errore (la fork non va a buon fine, ad esempio per esaurimento delle risorse di sistema), la `fork()` ritorna `-1` (un valore negativo) al processo chiamante. La condizione `else if (pID < 0)` intercetta esattamente questa situazione, mandando in esecuzione il `Blocco_2`.\n- **Perché le altre opzioni sono errate:** Il `Blocco_1` (opzione A) viene eseguito solo dal processo figlio in cui `pID` vale `0`. Il `Blocco_3` (opzione B) viene eseguito solo dal processo padre nel caso di successo, in cui `pID` contiene il PID positivo del figlio.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 161,
+    "id": 159,
     "topic": "Permessi del Filesystem",
     "question": "I permessi di acesso del file eseguibile /usr/bin/passwd sono 4755/-rwsr-xr-x. Cosa significa?",
     "options": [
@@ -2068,7 +2068,7 @@ const QUESTIONS =
     "explanation": "I permessi `4755` indicano la presenza del bit speciale **SetUID** (indicato dalla cifra `4` e dalla lettera `s` nel campo dei permessi del proprietario: `-rwsr-xr-x`).\n\n- **Perché l'opzione C è corretta:** Quando un file eseguibile ha il bit SetUID impostato, chiunque lo esegua acquisisce temporaneamente i privilegi del proprietario del file (in questo caso `root`) durante il tempo dell'esecuzione. Questo permette all'utente comune di modificare la propria password scrivendo nel file protetto `/etc/shadow`.\n- **Perché le altre opzioni sono errate:** L'opzione A è palesemente falsa poiché la cifra 4 indica proprio la presenza del SetUID. L'opzione B è errata in quanto il proprietario (`root`) ha i permessi di esecuzione (`rws` comprende la `x` che diventa `s`).\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 162,
+    "id": 160,
     "topic": "System Call e File",
     "question": "Si supponga di avere un file di testo (filein) contenente 1000 caratteri e di voler copiare in un altro file (fileout) 100 caratteri a partire dal decimo. Quale di questi comandi è corretto?",
     "options": [
@@ -2081,7 +2081,7 @@ const QUESTIONS =
     "explanation": "Il comando `dd` copia blocchi di dati a basso livello.\n\n- **Perché l'opzione B è corretta:** Impostando la dimensione dei blocchi a 1 byte (`bs=1`), usiamo `skip=10` per saltare i primi 10 blocchi (10 caratteri) del file di input, e `count=100` per copiare esattamente 100 blocchi (100 caratteri) nel file di output.\n- **Perché le altre opzioni sono errate:** L'opzione A (`cp`) non supporta tali flag. L'opzione C (`bs=100 skip=10`) salterebbe `10 * 100 = 1000` caratteri (l'intero file) anziché solo 10 caratteri.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 163,
+    "id": 161,
     "topic": "System Call e File",
     "question": "Supponiamo di avere un file di nome filenmae, e di creare un link a filename con il comando seguente. Quale delle seguenti affermazioni è vera?\n\n```bash\nln filename link1\n```",
     "options": [
@@ -2094,7 +2094,7 @@ const QUESTIONS =
     "explanation": "Il comando `ln` senza opzione `-s` crea un **hard link** (collegamento fisico).\n\n- **Perché l'opzione A è corretta:** Un hard link è semplicemente un nome aggiuntivo che punta allo stesso descrittore di file (inode) sul disco. Di conseguenza, `filename` e `link1` condividono lo stesso numero di inode.\n- **Perché le altre opzioni sono errate:** L'opzione B descrive il comportamento di un link simbolico (`ln -s`), non di un hard link. L'opzione C è falsa poiché gli hard link condividono lo stesso inode per definizione.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 164,
+    "id": 162,
     "topic": "System Call e File",
     "question": "Quali dei seguenti comandi change dir usa un path assoluto?",
     "options": [
@@ -2107,7 +2107,7 @@ const QUESTIONS =
     "explanation": "Un percorso assoluto indica una posizione fissa all'interno della gerarchia del filesystem a partire dalla directory radice (`/`).\n\n- **Perché l'opzione C è corretta:** Il comando `cd /` cambia la directory di lavoro corrente nella root directory, che è il percorso assoluto per eccellenza.\n- **Perché le altre opzioni sono errate:** `.` (opzione A) e `..` (opzione B) indicano rispettivamente la directory corrente e quella superiore, e sono per definizione percorsi relativi, dipendenti dalla posizione corrente nel filesystem.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 165,
+    "id": 163,
     "topic": "Inizializzazione Variabili",
     "question": "Data la seguente funzione ricorsiva:\n```c\nint myfun2(int a){\n    static int b;\n    if (b) return 0;\n    else return ++b*a*myfun2(a-1);\n}\n```\nquale valore e' ritornato dalla chiamata `myfun2(4)`?",
     "options": [
@@ -2120,7 +2120,7 @@ const QUESTIONS =
     "explanation": "La variabile `b` è qualificata come `static`, quindi viene allocata nella memoria statica (segmento BSS) e inizializzata implicitamente a 0 prima dell'avvio del programma; il suo valore persiste tra chiamate successive.\n\n- **Prima chiamata `myfun2(4)`:** `b` vale 0. La condizione `if (b)` è falsa. Si entra nell'else: il pre-incremento `++b` porta `b` a 1 e restituisce 1. L'espressione da valutare diventa `1 * 4 * myfun2(3)`.\n- **Seconda chiamata `myfun2(3)`:** `b` vale 1 (ereditato dalla chiamata precedente). La condizione `if (b)` è vera (1 != 0), quindi la funzione restituisce immediatamente `0`.\n- **Ritorno finale:** L'espressione della prima chiamata si risolve in `1 * 4 * 0 = 0`.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Il valore calcolato e ritornato è esattamente 0.\n- **Opzione C (Errata):** Non calcola il fattoriale completo poiché la ricorsione viene troncata al secondo passo.\n- **Opzione D (Errata):** Non vi è alcuna ricorsione infinita, la condizione di stop scatta alla seconda chiamata.\n- **Opzione B (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 166,
+    "id": 164,
     "topic": "Inizializzazione Variabili",
     "question": "Qual è l'output del seguente programma?\n```c\nvoid f(void) {\n    static int c = 0;\n    c++;\n    printf(\"%d \", c);\n}\nint main(void) {\n    f(); f(); f();\n    return 0;\n}\n```",
     "options": [
@@ -2133,7 +2133,7 @@ const QUESTIONS =
     "explanation": "Una variabile locale statica (`static int c = 0;`) viene allocata nel segmento dati/BSS e inizializzata una sola volta al caricamento del programma. La sua durata di vita coincide con quella dell'intero programma, conservando il proprio valore tra successive invocazioni della funzione `f`.\n\n- 1ª chiamata di `f()`: `c` viene incrementata da 0 a 1 e stampa `1 `.\n- 2ª chiamata di `f()`: `c` parte da 1, viene incrementata a 2 e stampa `2 `.\n- 3ª chiamata di `f()`: `c` parte da 2, viene incrementata a 3 e stampa `3 `.\n\nL'output complessivo a video è `1 2 3 `.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Mostra la sequenza corretta `1 2 3` dovuta alla persistenza della variabile statica.\n- **Opzione B (Errata):** Sarebbe `1 1 1` solo se `c` fosse una variabile automatica ordinaria (`int c = 0;`), riallocata e reinizializzata ad ogni chiamata.\n- **Opzione C (Errata):** L'incremento `c++` avviene prima della stampa, quindi alla prima chiamata `c` vale già 1 e non 0.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 167,
+    "id": 165,
     "topic": "Puntatori",
     "question": "Si consideri il seguente frammento di codice:\n```c\nstruct f2D {\n    double x; // coordinata x\n    double y; // coordinata y\n    int val; // valore della funzione\n} pA;\nvoid main(){\n    struct f2D *p = &pA;\n}\n```\nQuale istruzione C scrive il valore 0 nel campo `val` di `pA` usando il puntatore `p`?",
     "options": [
@@ -2146,7 +2146,7 @@ const QUESTIONS =
     "explanation": "In linguaggio C, quando si accede al membro di una struttura tramite un puntatore alla struttura stessa, si utilizza l'operatore freccia `->`. Tale operatore rappresenta una sintassi abbreviata equivalente alla dereferenziazione esplicita con parentesi: `(*p).val`.\n\n**Analisi delle opzioni:**\n- **Opzione B (Corretta):** `p->val = 0;` dereferenzia correttamente il puntatore `p` e assegna 0 al campo `val` di `pA`.\n- **Opzione C (Errata):** La sintassi `(p*)` non è valida in C; la dereferenziazione con operatore punto richiederebbe `(*p).val = 0;`.\n- **Opzione D (Errata):** L'operatore punto `.` si applica direttamente a una variabile di tipo struct (es. `pA.val = 0;`), e non a un puntatore a struct.\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 168,
+    "id": 166,
     "topic": "Scope delle Variabili",
     "question": "Che cosa stampa il seguente frammento di codice:\n```c\nvoid func1() {\n    extern int myvar;\n    void nestfunc1() {\n        myvar = 0;\n    }\n    nestfunc1();\n    myvar = 1;\n}\n\nint myvar = 8;\nvoid main(void) {\n    func1();\n    printf(\"myvar = %d\\n\", myvar);\n}\n```",
     "options": [
@@ -2159,7 +2159,7 @@ const QUESTIONS =
     "explanation": "La variabile globale `myvar` viene inizializzata a 8.\nQuando `main` invoca `func1()`:\n1. La clausola `extern int myvar;` dichiara la visibilità della variabile globale `myvar`.\n2. Viene definita la funzione annidata `nestfunc1` (estensione GCC) che assegna `myvar = 0;`.\n3. Viene chiamata `nestfunc1()`, azzerando la variabile globale.\n4. Subito dopo, sempre all'interno di `func1()`, viene eseguita l'assegnazione `myvar = 1;`, che sovrascrive la variabile globale col valore 1.\n5. Al ritorno nel `main`, la chiamata `printf` stampa il valore corrente della variabile globale `myvar`, che è `1`.\n\n**Analisi delle opzioni:**\n- **Opzione B (Corretta):** Stampa `myvar = 1` poiché l'assegnazione `myvar = 1;` sovrascrive lo zero impostato da `nestfunc1()`.\n- **Opzione A (Errata):** Sarebbe 0 solo in assenza della successiva istruzione `myvar = 1;`.\n- **Opzione C (Errata):** Sarebbe 8 solo se la variabile globale non fosse mai stata modificata da `func1()`.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 169,
+    "id": 167,
     "topic": "Programmazione Concorrente",
     "question": "Si consideri il seguente frammento di codice (i numeri a lato sono i numeri di riga delle istruzioni):\n```c\n1. pthread_t tid[8];\n2. for (int i=0; i<8; i++)\n3.    pthread_create(&tid[i], NULL, myfun, &i);\n4. for (int i=0; i<8; i++)\n5.    pthread_join(&tid[i], NULL);\n6. printf(\"finito!\");\n```\ndove `myfun` e' una funzione che accetta un puntatore ad intero. Quale delle seguenti affermazioni e' falsa?",
     "options": [
@@ -2172,7 +2172,7 @@ const QUESTIONS =
     "explanation": "La chiamata di libreria `pthread_join(tid, ...)` sospende l'esecuzione del thread chiamante fino a quando il thread specificato non ha completato la propria esecuzione.\nIl ciclo for alle righe 4-5 itera su tutti gli 8 thread (da 0 a 7), eseguendo la join su ciascuno di essi. L'istruzione alla riga 6 (`printf(\"finito!\");`) si trova al di fuori e a valle del ciclo, e può quindi essere eseguita solo dopo che ciascuno degli 8 thread è terminato.\n\n**Analisi delle opzioni:**\n- **Opzione D (Corretta come risposta da selezionare - in quanto FALSA):** L'affermazione che 'finito!' venga stampato al termine di almeno uno dei thread è palesemente falsa: viene stampato solo dopo che tutti gli 8 thread sono terminati.\n- **Opzione A (Vera, non da selezionare):** È un'affermazione vera perché il ciclo di join su tutti gli 8 elementi garantisce la terminazione completa prima di proseguire.\n- **Opzione C (Vera, non da selezionare):** È un'affermazione vera: il primo for crea 8 thread e il secondo attende la terminazione di ciascuno.\n- **Opzione B (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 170,
+    "id": 168,
     "topic": "Puntatori",
     "question": "Che cosa viene stampato dal seguente codice?\n```c\nvoid f(int *p) {\n    p = NULL;\n}\nint main(void) {\n    int x = 5;\n    int *q = &x;\n    f(q);\n    printf(\"%d\", *q);\n    return 0;\n}\n```",
     "options": [
@@ -2185,7 +2185,7 @@ const QUESTIONS =
     "explanation": "In linguaggio C, il passaggio dei parametri avviene rigorosamente **per valore** (per copia). Quando `f(q)` viene invocata, il parametro formale `p` riceve una copia del puntatore `q` (cioè una copia dell'indirizzo di `x`).\nAll'interno di `f`, l'assegnazione `p = NULL;` modifica unicamente la variabile locale `p` sullo stack di `f`. Il puntatore originale `q` nel frame di `main` rimane inalterato e continua a puntare a `x`.\nAl ritorno nel `main`, l'espressione `*q` dereferenzia validamente `x`, stampando il valore `5`.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Viene stampato 5 perché `q` continua a puntare a `x` (il valore di `q` non è stato alterato da `f`).\n- **Opzione B (Errata):** La variabile `x` non viene azzerata, né viene azzerato il puntatore `q`.\n- **Opzione C (Errata):** Non si verifica alcun comportamento indefinito né segmentation fault, in quanto `q` non è un puntatore nullo.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 171,
+    "id": 169,
     "topic": "Sintassi C",
     "question": "Supponiamo di avere le seguenti variabili:\n```c\nint x=1, y=7;\n```\nquale delle seguenti espressioni logiche e' falsa?",
     "options": [
@@ -2198,7 +2198,7 @@ const QUESTIONS =
     "explanation": "Esaminiamo le rappresentazioni binarie degli operandi: `x = 1` (`...0001` in binario) e `y = 7` (`...0111` in binario).\n\n- **Opzione A: `(x & y) == 7`**: L'operatore bitwise AND `&` confronta bit a bit: `0001 & 0111 = 0001` (valore decimale 1). Il confronto `1 == 7` è falso (0). Questa espressione logica è pertanto **FALSA** (ed è la risposta richiesta).\n- **Opzione C: `(x | y) == 7`**: L'operatore bitwise OR `|` esegue `0001 | 0111 = 0111` (valore decimale 7). Il confronto `7 == 7` è vero (1).\n- **Opzione D: `(x || y) == (x && y)`**: Gli operatori `||` e `&&` sono operatori booleani logici. Essendo sia `x` che `y` non nulli (veri): `(x || y)` vale 1 e `(x && y)` vale 1. Il confronto `1 == 1` è vero (1).\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta - in quanto FALSA):** `(x & y)` vale 1, rendendo l'uguaglianza con 7 falsa.\n- **Opzione C (Vera, non da selezionare):** L'OR bitwise restituisce effettivamente 7.\n- **Opzione D (Vera, non da selezionare):** Entrambi i membri valgono 1 (vero), quindi l'espressione è vera.\n- **Opzione B (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 172,
+    "id": 170,
     "topic": "Puntatori",
     "question": "Quale dichiarazione crea un puntatore che non può essere riassegnato, ma attraverso il quale i dati puntati possono essere modificati?",
     "options": [
@@ -2211,7 +2211,7 @@ const QUESTIONS =
     "explanation": "In linguaggio C, la posizione della parola chiave `const` rispetto all'asterisco `*` determina l'oggetto qualificato come immutabile:\n\n- `char * const p;`: `p` è un **puntatore costante** (`const p`) a un carattere modificabile (`char *`). Il puntatore `p` non può essere riassegnato ad un altro indirizzo (es. `p = ptr;` causa errore di compilazione), ma i dati puntati possono essere modificati attraverso dereferenziazione (es. `*p = 'A';` è pienamente lecito).\n- `const char *p;` e `char const *p;`: `p` è un puntatore modificabile a dati costanti (`const char`). Il puntatore può essere riassegnato, ma i dati non possono essere modificati tramite `*p`.\n\n**Analisi delle opzioni:**\n- **Opzione B (Corretta):** `char * const p;` crea esattamente un puntatore costante a dato modificabile.\n- **Opzione A (Errata):** Dichiara un puntatore a caratteri costanti.\n- **Opzione C (Errata):** Sintassi alternativa del tutto equivalente all'opzione A.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 173,
+    "id": 171,
     "topic": "Puntatori a Funzione",
     "question": "Sia dato il seguente frammento di codice:\n```c\nint fun(){\n    // ...\n}\nint (*fptr)();\nfptr = fun;\n```\nQuale istruzione C esegue una chiamata a `fun` tramite il puntatore `fptr`?",
     "options": [
@@ -2224,7 +2224,7 @@ const QUESTIONS =
     "explanation": "Nello standard C, un puntatore a funzione può essere invocato utilizzando direttamente il nome del puntatore seguito dalle parentesi tonde degli argomenti: `fptr();` (oppure con dereferenziazione esplicita racchiusa tra parentesi tonde `(*fptr)();`).\n\n**Analisi delle opzioni:**\n- **Opzione D (Corretta):** `fptr();` è la sintassi standard e corretta per invocare la funzione puntata da `fptr`.\n- **Opzione B (Errata):** `*fptr;` dereferenzia il puntatore ma non invoca la funzione (mancano le parentesi dell'operatore di chiamata).\n- **Opzione C (Errata):** Le parentesi di chiamata `()` hanno precedenza più alta rispetto all'asterisco `*`, quindi `*fptr()` verrebbe interpretato come invocare `fptr()` e poi dereferenziare il valore intero restituito (`int`), generando un errore di tipo del compilatore.\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 174,
+    "id": 172,
     "topic": "Gestione della Memoria Dinamica",
     "question": "L'intestazione della funzione di libreria `free` e' la seguente:\n```c\nvoid free(void *ptr);\n```\nChe cosa succede se chiamo `free` due volte con lo stesso `ptr`?",
     "options": [
@@ -2237,7 +2237,7 @@ const QUESTIONS =
     "explanation": "Secondo lo standard C (ISO C §7.22.3.4), invocare la funzione `free(ptr)` su un puntatore già deallocato (senza che esso sia stato riassegnato mediante una nuova allocazione) costituisce un **Undefined Behavior** (comportamento indefinito, noto nella sicurezza informatica come vulnerabilità di *double free*).\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Lo standard C definisce formalmente tale operazione come comportamento indefinito.\n- **Opzione B (Errata):** Anche se gli allocatori moderni (es. glibc ptmalloc) effettuano controlli di integrità e possono terminare il processo con segnale di abort (`SIGABRT`), questo è un meccanismo difensivo dell'allocatore a runtime e non un comportamento formalmente garantito dal sistema operativo o dallo standard.\n- **Opzione D (Errata):** La funzione `free` non tiene traccia automaticamente dei puntatori già liberati né li imposta a `NULL`.\n- **Opzione C (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 175,
+    "id": 173,
     "topic": "Puntatori",
     "question": "Su un tipico sistema a 64 bit:\n```c\nvoid f(int arr[10]) {\n    printf(\"%zu\", sizeof(arr));\n}\n```\nChe cosa stampa questa funzione?",
     "options": [
@@ -2250,7 +2250,7 @@ const QUESTIONS =
     "explanation": "In linguaggio C, quando un array è dichiarato come parametro formale nell'intestazione di una funzione (es. `int arr[10]`), avviene la cosiddetta conversione **array decay**: il parametro viene convertito automaticamente dal compilatore in un puntatore al primo elemento (`int *arr`), ignorando la dimensione specificata tra quadre.\nDi conseguenza, all'interno della funzione `f`, l'operatore `sizeof(arr)` valuta l'occupazione in memoria di una variabile puntatore (`sizeof(int *)`).\nSu una tipica architettura a 64 bit, tutti i puntatori occupano **8 byte**, quindi la funzione stampa `8`.\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** Stampa 8 byte, corrispondente alla dimensione di un puntatore su architettura a 64 bit.\n- **Opzione A (Errata):** 40 byte (`10 * sizeof(int)`) sarebbe la dimensione dell'array nel suo contesto originale di dichiarazione locale/globale, non all'interno di una funzione dove decade a puntatore.\n- **Opzione B (Errata):** 10 è il numero di elementi dell'array, non la dimensione in byte.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 176,
+    "id": 174,
     "topic": "Puntatori",
     "question": "Che cosa stampa il seguente frammento di codice:\n```c\nstruct fun2D {\n    long int x;\n    long int y;\n    double val;\n};\nvoid main(){\n    static struct fun2D pA, *p = pA;\n    printf(\"val = %f\\n\", (*p).val);\n}\n```",
     "options": [
@@ -2263,7 +2263,7 @@ const QUESTIONS =
     "explanation": "Nell'istruzione `static struct fun2D pA, *p = pA;`, `pA` è una variabile di tipo struttura `struct fun2D`, mentre `p` è un puntatore a struttura `struct fun2D *`.\nIn C, non è lecito inizializzare un puntatore passando direttamente il valore di una variabile di tipo struttura (errore di tipo: *incompatible types when initializing type 'struct fun2D *' using type 'struct fun2D'*).\nPer inizializzare correttamente il puntatore all'indirizzo di `pA` sarebbe stato obbligatorio l'uso dell'operatore di indirizzo `&`: `*p = &pA;`.\nPoiché il compilatore rifiuta il codice con un errore di sintassi/tipo in compilazione, il programma non compila.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Il codice non compila correttamente a causa dell'incompatibilità di tipo nell'assegnazione al puntatore.\n- **Opzione B (Errata):** Il programma non giunge mai in esecuzione per poter generare un segmentation fault.\n- **Opzione D (Errata):** Non stampa alcun valore poiché la compilazione fallisce.\n- **Opzione C (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 177,
+    "id": 175,
     "topic": "Puntatori",
     "question": "Quale delle seguenti affermazioni sul nome di un array in C è vera?",
     "options": [
@@ -2276,7 +2276,7 @@ const QUESTIONS =
     "explanation": "In linguaggio C, il nome di un array è un identificatore costante associato direttamente alla locazione di memoria in cui risiede il primo elemento dell'array (`&arr[0]`).\nIl nome dell'array non è una variabile puntatore allocata in memoria (non possiede un indirizzo proprio separato né occupa memoria per memorizzare un puntatore) e non è un l-value modificabile (operazioni come `arr = ptr` sono illegali).\n\n**Analisi delle opzioni:**\n- **Opzione D (Corretta):** Il nome dell'array è a tutti gli effetti un sinonimo per l'indirizzo (locazione) del suo primo elemento.\n- **Opzione C (Errata):** Il nome di un array non è una variabile puntatore e non può essere modificato o riassegnato.\n- **Opzione B (Errata):** Non esiste alcuna locazione di memoria separata per un presunto 'puntatore all'array'.\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 178,
+    "id": 176,
     "topic": "Scope delle Variabili",
     "question": "Quale delle seguenti affermazioni sulle variabili statiche locali è falsa?",
     "options": [
@@ -2289,7 +2289,7 @@ const QUESTIONS =
     "explanation": "Le variabili statiche locali NON vengono allocate nello heap. L'area heap è riservata esclusivamente alla memoria allocata dinamicamente su esplicita richiesta del programmatore mediante le funzioni `malloc`, `calloc` o `realloc`.\nLe variabili statiche (locali o globali) risiedono invece nel segmento dei dati statici del programma: nel segmento BSS se non inizializzate esplicitamente (dove vengono azzerate dal runtime prima dell'avvio del `main`), oppure nel segmento dati inizializzato (Data segment).\n\n**Analisi delle opzioni:**\n- **Opzione B (Corretta come risposta da selezionare - in quanto FALSA):** L'affermazione che le variabili statiche locali siano allocate nello heap è falsa.\n- **Opzione C (Vera, non da selezionare):** È una proprietà fondamentale delle variabili statiche locali mantenere il proprio valore tra successive invocazioni della funzione.\n- **Opzione D (Vera, non da selezionare):** Le variabili statiche locali non inizializzate esplicitamente hanno valore iniziale garantito pari a 0.\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 179,
+    "id": 177,
     "topic": "Puntatori",
     "question": "Volendo dichiarare un array `giorni` di 12 puntatori ad interi, quale delle seguenti dichiarazioni è corretta?",
     "options": [
@@ -2302,7 +2302,7 @@ const QUESTIONS =
     "explanation": "In C, l'operatore di indicizzazione `[]` ha una priorità di precedenza maggiore rispetto all'operatore di dereferenziazione `*`:\n- `int *giorni[12];`: la precedenza fa sì che `giorni` sia prima di tutto un **array di 12 elementi** (`giorni[12]`), in cui ciascun elemento è un **puntatore a int** (`int *`).\n- `int (*giorni)[12];`: l'uso delle parentesi tonde forza la precedenza sull'asterisco, dichiarando `giorni` come un **singolo puntatore** a un array di 12 interi.\n- `int giorni[1][2];`: dichiara una matrice bidimensionale di interi (1 riga e 2 colonne).\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** `int *giorni[12];` è la corretta dichiarazione di un array di 12 puntatori a intero.\n- **Opzione C (Errata):** Dichiara un puntatore a un array di 12 interi, non un array di puntatori.\n- **Opzione B (Errata):** Dichiara una matrice bidimensionale di interi 1x2.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 180,
+    "id": 178,
     "topic": "Scope delle Variabili",
     "question": "Quale delle seguenti affermazioni sulle variabili statiche locali è vera?",
     "options": [
@@ -2315,7 +2315,7 @@ const QUESTIONS =
     "explanation": "La peculiarità distintiva delle variabili statiche definite all'interno del corpo di una funzione (variabili statiche locali) è la loro durata di memorizzazione: a differenza delle variabili automatiche ordinarie che vengono create sullo stack all'ingresso della funzione e distrutte all'uscita, una variabile statica locale viene allocata nella memoria statica una sola volta all'avvio del programma e preserva il proprio valore tra una chiamata e l'altra per l'intera esecuzione dell'applicazione.\n\n**Analisi delle opzioni:**\n- **Opzione D (Corretta):** Le variabili statiche locali conservano il loro valore tra chiamate successive della funzione.\n- **Opzione A (Errata):** L'inizializzazione avviene una sola volta prima dell'avvio del programma, non ad ogni chiamata della funzione.\n- **Opzione C (Errata):** Sono allocate nel segmento dati statici/BSS, non nello heap.\n- **Opzione B (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 181,
+    "id": 179,
     "topic": "Programmazione Concorrente",
     "question": "Si consideri il seguente frammento di codice:\n```c\npthread_t tid;\nint i=0;\npthread_create(&tid, NULL, myfun, &i);\ni++;\npthread_join(tid, NULL);\n```\ndove `myfun` è una funzione che accetta un puntatore ad intero.\nQuesto codice può dare origine ad una race condition tra i thread sulla variabile `i`?",
     "options": [
@@ -2328,7 +2328,7 @@ const QUESTIONS =
     "explanation": "Il thread principale passa l'indirizzo di memoria della propria variabile `i` (`&i`) come argomento alla funzione `myfun` eseguita dal nuovo thread. Contemporaneamente, il thread principale prosegue l'esecuzione ed effettua l'operazione di incremento `i++` prima che il nuovo thread sia terminato (la chiamata `pthread_join` viene eseguita solo dopo `i++`).\nPoiché la variabile `i` è condivisa tramite puntatore ed entrambi i thread vi accedono contemporaneamente in modo asincrono (con almeno un accesso in scrittura), si verifica una classica **race condition** (corsa critica) priva di sincronizzazione.\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** Si ha una race condition poiché `i` è condivisa e acceduta contemporaneamente da entrambi i thread senza mutua esclusione.\n- **Opzione B (Errata):** Sebbene `i` sia allocata sullo stack del thread principale, l'averne passato l'indirizzo `&i` rende la locazione di memoria accessibile e condivisa con il thread figlio.\n- **Opzione A (Errata):** Una variabile locale dichiarata dentro `myfun` avrebbe scope locale al thread e non interferirebbe con la `i` del thread principale.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 182,
+    "id": 180,
     "topic": "Programmazione Concorrente",
     "question": "Si consideri il seguente frammento di codice:\n```c\npthread_t tid;\nint i=0;\npthread_create(&tid, NULL, myfun, &i);\npthread_join(tid, NULL);\ni++;\n```\ndove `myfun` è una funzione che accetta un puntatore ad intero.\nIl codice di cui sopra è soggetto a race condition sulla variabile `i`?",
     "options": [
@@ -2341,7 +2341,7 @@ const QUESTIONS =
     "explanation": "In questo frammento, il thread principale invoca la system call `pthread_join(tid, NULL)` **immediatamente dopo** la creazione del thread e **prima** di eseguire l'istruzione `i++`.\nLa chiamata `pthread_join` è bloccante: il thread principale viene sospeso e non riprende l'esecuzione finché il thread appena creato con `tid` non ha terminato completamente la propria funzione `myfun`.\nDi conseguenza non vi è alcuna sovrapposizione temporale (concorrenza) tra le operazioni eseguite da `myfun` sulla variabile puntata e l'istruzione `i++` eseguita dal thread principale, escludendo l'insorgere di race condition.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Non si ha race condition perché `pthread_join` serializza l'accesso attendendo la terminazione del thread figlio prima che il main thread esegua `i++`.\n- **Opzione B (Errata):** `myfun` riceve il puntatore `&i`, quindi opera sulla variabile originale e non su una copia locale.\n- **Opzione C (Errata):** Il fatto che `i` sia allocata sullo stack del thread principale non impedirebbe una race condition se i due thread vi accedessero contemporaneamente.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 183,
+    "id": 181,
     "topic": "Sintassi C",
     "question": "Quale delle seguenti dichiarazioni di variabile è non valida, generando quindi un errore di compilazione?",
     "options": [
@@ -2354,7 +2354,7 @@ const QUESTIONS =
     "explanation": "In linguaggio C, i nomi degli identificatori (variabili, funzioni, ecc.) possono essere composti esclusivamente da lettere (maiuscole e minuscole), cifre numeriche (da 0 a 9, purché non come primo carattere) e il carattere underscore `_`.\nIl carattere trattino `-` non è un carattere alfanumerico valido per un identificatore: esso rappresenta l'operatore aritmetico di sottrazione.\nPertanto, la dichiarazione `float g-stock=9.89;` viene analizzata dal compilatore come l'espressione di sottrazione `float g - stock = 9.89;`, provocando un errore di sintassi non sanabile in fase di compilazione.\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** `float g-stock=9.89;` non è valida poiché il trattino '-' è l'operatore di sottrazione e non un carattere valido per identificatori.\n- **Opzione B (Errata):** `float g_stock=9.89;` è una dichiarazione perfettamente valida con un singolo underscore.\n- **Opzione D (Errata):** `float g__stock=9.89;` è valida: il C consente identificatori contenenti due underscore consecutivi.\n- **Opzione C (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 184,
+    "id": 182,
     "topic": "Comandi Unix",
     "question": "Supponiamo di avere un file `nomefile` memorizzato nel nostro filesystem.\nQuale è il risultato del comando `touch nomefile`?",
     "options": [
@@ -2367,7 +2367,7 @@ const QUESTIONS =
     "explanation": "Il comando Unix `touch` ha un duplice comportamento a seconda dell'esistenza del file indicato:\n- Se il file specificato NON esiste, viene creato come file vuoto regolare (con permessi determinati dalla umask corrente).\n- Se il file specificato **esiste già** nel filesystem (come precisato nel testo del quesito), `touch` non ne modifica né ne cancella il contenuto: si limita ad aggiornare i timestamp di ultimo accesso (`atime`) e di ultima modifica dei dati (`mtime`) alla data e ora correnti (modificando di conseguenza anche il timestamp di cambio metadati dell'inode `ctime`).\n\n**Analisi delle opzioni:**\n- **Opzione A (Corretta):** Aggiorna al tempo corrente gli attributi `atime` e `mtime` del file già esistente, senza alterarne i dati.\n- **Opzione B (Errata):** Non cancella né sostituisce il file esistente con un file vuoto.\n- **Opzione D (Errata):** Non effettua alcuna sovrascrittura o ricreazione del file.\n- **Opzione C (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 185,
+    "id": 183,
     "topic": "File System Paths",
     "question": "Quanti file system principali ha Linux?",
     "options": [
@@ -2380,7 +2380,7 @@ const QUESTIONS =
     "explanation": "Nei sistemi operativi Unix e Linux, l'intero spazio di memorizzazione è organizzato secondo una **singola gerarchia ad albero unificata**.\nA differenza di altri sistemi operativi (come MS-DOS o Windows, che assegnano una radice e una lettera di unità separata per ciascuna partizione o disco fisico, es. `C:\\`, `D:\\`), Linux possiede un **unico file system principale** che parte dall'unica radice globale `/` (*root directory*).\nTutti gli altri dischi, partizioni, memorie rimovibili o filesystem speciali (come `/proc` o `/sys`) vengono resi accessibili 'innestandosi' come punti di montaggio (*mount points*) all'interno di questo unico albero gerarchico principale.\n\n**Analisi delle opzioni:**\n- **Opzione D (Corretta):** Linux adotta un solo file system principale con un'unica radice `/`.\n- **Opzione A (Errata):** Il montaggio al boot innesta filesystem secondari in directory dell'albero, ma non crea radici principali multiple.\n- **Opzione B (Errata):** Il numero di dischi fisici o partizioni non influisce sulla struttura logica ad albero unico di Linux.\n- **Opzione C (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 186,
+    "id": 184,
     "topic": "Segnali",
     "question": "Assumiamo di voler modificare il comportamento di default di un processo quando riceve un segnale.\nQuale system call (o combinazione di system call) di seguito riportate è possibile utilizzare?",
     "options": [
@@ -2393,7 +2393,7 @@ const QUESTIONS =
     "explanation": "Per alterare o ridefinire l'azione di default associata alla ricezione di un segnale (ad eccezione di `SIGKILL` e `SIGSTOP`, che non possono essere intercettati), un processo installa un gestore personalizzato (*signal handler*) tramite la system call standard `sigaction(2)` oppure la più datata `signal(2)`.\nL'esecuzione del gestore di segnale avviene direttamente e in modo asincrono nel contesto del thread/processo ricevente; non richiede assolutamente la creazione di processi figli né l'invocazione di `fork(2)`.\nTra le combinazioni proposte, l'unica invocazione valida ed efficace è `signal(2)` da sola.\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** `signal(2)` è la system call idonea a registrare un handler per modificare il comportamento del processo alla ricezione del segnale.\n- **Opzione A (Errata):** Non occorre eseguire alcuna `fork(2)`: l'handler viene eseguito all'interno del processo stesso che ha ricevuto il segnale.\n- **Opzione B (Errata):** Anche qui, l'aggiunta di una `fork(2)` è concettualmente errata e non fa parte del meccanismo di gestione dei segnali.\n- **Opzione D (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 187,
+    "id": 185,
     "topic": "Puntatori",
     "question": "Dato il seguente codice C:\n```c\nint a[5] = {10, 20, 30, 40, 50};\nint *p = a;\nprintf(\"%d\", *(p+3) - *(p+1));\n```\nQual è l'output?",
     "options": [
@@ -2406,7 +2406,7 @@ const QUESTIONS =
     "explanation": "Il puntatore `p` punta al primo elemento dell'array `a` (`&a[0]`, il cui valore è 10).\nIn base all'aritmetica dei puntatori:\n- `p + 3` punta all'elemento di indice 3, per cui la dereferenziazione `*(p + 3)` restituisce il valore `a[3] = 40`.\n- `p + 1` punta all'elemento di indice 1, per cui la dereferenziazione `*(p + 1)` restituisce il valore `a[1] = 20`.\nL'operazione eseguita è la sottrazione aritmetica tra i due valori dereferenziati: `40 - 20 = 20`. La funzione `printf` stampa quindi 20.\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** La sottrazione tra i valori dereferenziati `*(p+3)` (40) e `*(p+1)` (20) produce esattamente 20.\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione B (Errata):** Il valore 2 corrisponde alla differenza algebrica tra gli indici (`3 - 1 = 2`), che si otterrebbe sottraendo direttamente i puntatori senza dereferenziazione `(p+3) - (p+1)`. Con gli operatori `*`, il calcolo opera sui valori memorizzati nell'array.\n- **Opzione D (Errata):** 30 è il valore memorizzato all'indice `a[2]`, non il risultato della differenza tra il quarto elemento (40) e il secondo (20)."
   },
   {
-    "id": 188,
+    "id": 186,
     "topic": "Preprocessore e compilazione",
     "question": "Data la definizione:\n```c\n#define SQ(x) x*x\n```\nA quanto viene valutata l'espressione `SQ(2+3)`?",
     "options": [
@@ -2419,7 +2419,7 @@ const QUESTIONS =
     "explanation": "La direttiva `#define SQ(x) x*x` definisce una macro del preprocessore, la quale opera per mera sostituzione testuale (*textual substitution*) prima della compilazione, senza valutare matematicamente gli argomenti né aggiungere automaticamente parentesi protettive.\nL'espressione `SQ(2+3)` viene quindi espansa letteralmente in `2+3*2+3`.\nPoiché in C l'operatore di moltiplicazione `*` ha una precedenza maggiore rispetto all'addizione `+`, l'espressione viene valutata come:\n`2 + (3 * 2) + 3 = 2 + 6 + 3 = 11`.\n\n**Analisi delle opzioni:**\n- **Opzione B (Corretta):** L'espansione testuale `2+3*2+3` rispetta le regole standard di precedenza degli operatori in C, fornendo come risultato 11.\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione C (Errata):** Il risultato sarebbe 25 solo se la macro fosse stata definita con parentesi protettive `#define SQ(x) ((x)*(x))`, garantendo la valutazione preliminare di `(2+3)*(2+3) = 5*5 = 25`. Senza parentesi, la precedenza di `*` altera l'ordine atteso dei calcoli.\n- **Opzione D (Errata):** Non si verifica alcun errore di compilazione: l'espansione produce un'espressione sintatticamente valida e calcolabile a tempo di esecuzione."
   },
   {
-    "id": 189,
+    "id": 187,
     "topic": "Ricorsione",
     "question": "Che cosa stampa il seguente frammento di codice?\n```c\nint ricfun(int n) {\n    static int p;\n    if (n == 0)\n        return n;\n    else\n        p++;\n    printf(\"p = %d\\n\", p);\n    return p * ricfun(p-1);\n}\n\nint main(void) {\n    printf(\"ricfun() = %d\\n\", ricfun(10));\n    return 0;\n}\n```",
     "options": [
@@ -2432,7 +2432,7 @@ const QUESTIONS =
     "explanation": "La variabile `p` è qualificata con lo specificatore `static`: viene allocata nel segmento di memoria statica del programma, inizializzata a 0 una sola volta prima dell'inizio dell'esecuzione e preserva il proprio valore tra le successive chiamate di funzione.\n\nTracciamento dell'esecuzione:\n1. Prima chiamata `ricfun(10)`: `n == 10`, la condizione `n == 0` è falsa, quindi viene eseguito il ramo `else` che incrementa `p` a 1. Viene eseguita la stampa `p = 1\\n`. Successivamente la funzione valuta `return p * ricfun(p-1)`. Essendo `p = 1`, calcola `p - 1 = 0` e invoca `ricfun(0)`.\n2. Seconda chiamata `ricfun(0)`: la condizione di terminazione `if (n == 0)` è vera, per cui la funzione restituisce immediatamente 0 senza incrementare `p` e senza eseguire alcuna stampa.\n3. Chiusura della prima chiamata: l'espressione di ritorno diventa `1 * ricfun(0) = 1 * 0 = 0`, che viene restituito al `main`.\n4. Nel `main`: la `printf` stampa `ricfun() = 0\\n`.\n\nL'output complessivo generato sullo standard output è quindi:\n`p = 1`\n`ricfun() = 0`\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** Descrive esattamente la sequenza deterministica delle due righe stampate a video dal programma.\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte.\n- **Opzione B (Errata):** La funzione non entra in un ciclo infinito perché alla seconda chiamata ricorsiva il parametro passato è `p - 1 = 0`, che attiva immediatamente il caso base (`n == 0`) arrestando la ricorsione.\n- **Opzione D (Errata):** Anche se `p` ha assunto il valore 1, il prodotto calcolato è `1 * ricfun(0) = 1 * 0 = 0`; di conseguenza la funzione restituisce 0 al `main` e non 1."
   },
   {
-    "id": 190,
+    "id": 188,
     "topic": "Sintassi C",
     "question": "Qual è l'output del seguente codice C?\n```c\nint i = 0, j = 0;\nif (i++ && ++j) { }\nprintf(\"%d %d\", i, j);\n```",
     "options": [
@@ -2445,7 +2445,7 @@ const QUESTIONS =
     "explanation": "L'operatore logico `&&` impone per standard C una valutazione rigorosamente da sinistra a destra con semantica a corto circuito (*short-circuit*).\n1. Viene valutato il primo operando `i++`: trattandosi di un post-incremento, il valore restituito all'espressione è il valore precedente all'incremento, cioè `0` (falso logico in C). Subito dopo la lettura del valore, `i` viene incrementato in memoria a `1`.\n2. Essendo il primo termine dell'operazione logica `AND` falso, il risultato finale non potrà mai essere vero: il compilatore interrompe immediatamente la valutazione e scavalca il secondo operando `++j`.\n3. `j` non viene mai incrementato e conserva il valore iniziale `0`. La `printf` riceve `i = 1` e `j = 0`, stampando a video `1 0`.\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta):** `i` assume valore 1 per effetto del post-incremento, mentre `j` rimane a 0 poiché la valutazione a corto circuito impedisce l'esecuzione del ramo destro `++j`.\n- **Opzione B (Errata):** Per ottenere `0 1`, la variabile `i` non avrebbe dovuto subire l'incremento e `j` avrebbe dovuto essere incrementata, l'esatto opposto di ciò che prescrivono il post-incremento su `i` e il cortocircuito di `&&`.\n- **Opzione D (Errata):** `j` verrebbe incrementato a 1 solo se l'operando a destra venisse eseguito; ciò si verificherebbe solo con un operatore bit a bit `&` (che valuta entrambi i lati) e non con l'operatore logico `&&`.\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 191,
+    "id": 189,
     "topic": "Permessi del Filesystem",
     "question": "Data la seguente stringa di permessi di un file Linux:\n```text\n-rwsrw-r-x\n```\nQuale delle seguenti affermazioni è falsa?",
     "options": [
@@ -2458,7 +2458,7 @@ const QUESTIONS =
     "explanation": "Analisi della stringa di permessi `-rwsrw-r-x`:\n- Tipo: `-` (file ordinario).\n- Proprietario (*user*): `rws`. Lettura (`r`), scrittura (`w`) ed esecuzione con bit SetUID attivo (`s` minuscola).\n- Gruppo (*group*): `rw-`. Lettura (`r`), scrittura (`w`), nessuna esecuzione (`-`).\n- Altri (*others*): `r-x`. Lettura (`r`), nessuna scrittura (`-`), esecuzione (`x`).\n\n**Analisi delle opzioni:**\n- **Opzione C (Corretta in quanto affermazione FALSA):** Lo sticky bit (`S_ISVTX`, valore ottale 1000) viene indicato posizionando la lettera `t` (o `T`) nell'ultimo carattere dei permessi (*others*). Nella stringa in esame l'ultimo carattere è una normale `x`, dimostrando che lo sticky bit non è impostato.\n- **Opzione B (Errata in quanto affermazione VERA):** La presenza della lettera `s` minuscola nella prima terzina certifica che il bit speciale **SetUID** (`S_ISUID`, valore ottale 4000) è attivo e che il proprietario possiede il diritto di esecuzione del file.\n- **Opzione D (Errata in quanto affermazione VERA):** I permessi per chi non è né proprietario né membro del gruppo sono regolati dalla terza terzina (*others*, `r-x`), dove la presenza del flag `x` garantisce espressamente l'esecuzione a tali utenti.\n- **Opzione A (Nessuna risposta (0 punti)):** Al compito d'esame questa opzione serve unicamente per astenersi dal rispondere ed evitare la penalità per risposta errata (assegna 0 punti), ma nelle prove non è mai la risposta corretta del quiz: per ottenere il punteggio è sempre necessario individuare e selezionare la risposta corretta tra le alternative proposte."
   },
   {
-    "id": 192,
+    "id": 190,
     "topic": "Puntatori",
     "question": "Dato il seguente codice C:\n```c\nchar *s = \"hello\";\ns[0] = 'H';\n```\nChe cosa accade durante l'esecuzione?",
     "options": [
